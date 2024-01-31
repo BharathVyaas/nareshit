@@ -1,24 +1,56 @@
-import logo from './logo.svg';
-import './App.css';
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import AdminHomePage from "./pages/AdminHomePage";
+import Categories from "./pages/Categories";
+import ListOfAssessment, {
+  loader as AssessmentLoader,
+} from "./components/ListOfAssessment";
+import Technology, {
+  loader as TechnologyLoader,
+  action as TechnologyAction,
+} from "./components/Technology";
+import Assessments, {
+  action as AssessmentAction,
+} from "./components/Assessments";
+import QuestionView from "./components/QuestionView";
+import SheduleTime from "./components/SheduleTime";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./util/http";
 
 function App() {
+  const router = createBrowserRouter([
+    { path: "/", element: <AdminHomePage /> },
+    {
+      path: "categories",
+      element: <Categories />,
+      children: [
+        {
+          path: "assessmentlist",
+          element: <ListOfAssessment />,
+          loader: AssessmentLoader,
+        },
+        {
+          path: "technology",
+          element: <Technology />,
+          loader: TechnologyLoader,
+          action: TechnologyAction,
+        },
+        {
+          path: "assessments",
+          element: <Assessments />,
+          action: AssessmentAction,
+        },
+        {
+          path: "questionview",
+          element: <QuestionView />,
+        },
+        { path: "sheduletime", element: <SheduleTime /> },
+      ],
+    },
+  ]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   );
 }
 

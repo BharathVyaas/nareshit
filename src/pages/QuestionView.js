@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import QusetionViewTechnlogy from "../components/questionView/QuestionView";
 import { getModuleNames, queryClient } from "../util/http";
 import QuestionViewService from "../services/questionViewService";
@@ -9,8 +9,9 @@ import questionList from "../util/question.json";
 import AssessmentQuestionBox from "../components/AssessmentQuestionbox";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { LocalStorage } from "../services/LocalStorage";
 
-const Titles = ["MCQ", "coding", "freeText"];
+const Titles = ["MCQ"];
 
 function QuestionView() {
   const [selectedTechnology, setSelectedTechnology] = useState({});
@@ -21,11 +22,11 @@ function QuestionView() {
     return _;
   })();
 
+  LocalStorage.data = BuilderService.getData();
+
   QuestionViewService.updateSelectedTechnology(selectedTechnology);
 
   const MCQDifficulty = BuilderService.getDifficultyByTitle(Titles[0]);
-  const CodingDifficulty = BuilderService.getDifficultyByTitle(Titles[2]);
-  const FreeTextDifficulty = BuilderService.getDifficultyByTitle(Titles[1]);
   const selectTechnology =
     TechnologyService.technology?.programmingLanguage?.programmingLanguage;
 
@@ -54,20 +55,6 @@ function QuestionView() {
             easy={MCQDifficulty.easy}
             medium={MCQDifficulty.medium}
             hard={MCQDifficulty.hard}
-          />
-          <AssessmentQuestionBox
-            title={Titles[1]}
-            setStale={setStale}
-            easy={FreeTextDifficulty.easy}
-            medium={FreeTextDifficulty.medium}
-            hard={FreeTextDifficulty.hard}
-          />
-          <AssessmentQuestionBox
-            title={Titles[2]}
-            setStale={setStale}
-            easy={CodingDifficulty.easy}
-            medium={CodingDifficulty.medium}
-            hard={CodingDifficulty.hard}
           />
         </section>
         <section className="flex">

@@ -17,9 +17,10 @@ function QuestionTypes({
           id="data"
           name="data"
           type="checkbox"
-          checked
           value={data}
-          onClick={() => setData((prev) => !prev)}
+          checked
+          disabled
+          onChange={() => setData((prev) => !prev)}
         />
         {questionType}
       </label>

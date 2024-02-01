@@ -22,7 +22,13 @@ function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
 
       {/* Assessment radio */}
       <label htmlFor="catogaryType" className="mt-4 ml-4 pl-5">
-        <input id="catogaryType" type="radio" name="catogaryType" />
+        <input
+          id="catogaryType"
+          type="radio"
+          checked
+          disabled
+          name="catogaryType"
+        />
         <span className="p-2">Assessment</span>
       </label>
     </div>

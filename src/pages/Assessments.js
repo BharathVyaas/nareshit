@@ -2,42 +2,39 @@ import React, { useEffect, useState } from "react";
 import { Form } from "react-router-dom";
 
 import { SelectTechnology } from "../services/technologyService";
-import AssessmentService, {
-  CodingService,
-  FreeTextService,
-  MCQService,
-} from "../services/assessmentsService";
-import QuestionTypes, { NumberOfQuestions } from "../components/QuestionTypes";
+import AssessmentService, { MCQService } from "../services/assessmentsService";
+import QuestionTypes from "../components/QuestionTypes";
 import Button from "../ui/Button";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { LocalStorage } from "../services/LocalStorage";
+import BuilderService from "../services/builder";
 
 function Assessments() {
-  const [totalQuestions, setTotalQuestions] = useState(0);
-  const [MCQ, setMCQ] = useState(true);
-  const [MCQQuestions, setMCQQuestions] = useState(0);
+  console.log(
+    "assess",
+    BuilderService.assessmentService.options.MCQ.totalQuestions
+  );
+
+  console.log("assess2", BuilderService.assessmentService.options);
+  const [totalQuestions, setTotalQuestions] = useState(
+    BuilderService.assessmentService.options.MCQ.totalQuestions
+  );
+  const [MCQ, setMCQ] = useState(
+    BuilderService.assessmentService.options.MCQ.flag
+  );
+  const [MCQQuestions, setMCQQuestions] = useState(
+    BuilderService.assessmentService.options.MCQ.totalQuestions
+  );
   const [MCQDifficulty, setMCQDifficulty] = useState({
-    easy: 0,
-    medium: 0,
-    hard: 0,
-  });
-  const [freeText, setFreeText] = useState(false);
-  const [freeTextQuestions, setFreeTextQuestions] = useState(0);
-  const [freeTextDifficulty, setFreeTextDifficulty] = useState({
-    easy: 0,
-    medium: 0,
-    hard: 0,
-  });
-  const [coding, setcoding] = useState(false);
-  const [codingQuestions, setcodingQuestions] = useState(0);
-  const [codingDifficulty, setcodingDifficulty] = useState({
-    easy: 0,
-    medium: 0,
-    hard: 0,
+    easy: BuilderService.assessmentService.options.MCQ.difficulty.easy,
+    medium: BuilderService.assessmentService.options.MCQ.difficulty.medium,
+    hard: BuilderService.assessmentService.options.MCQ.difficulty.hard,
   });
 
   useEffect(() => {
     AssessmentService.updateTotalQuestionCount(totalQuestions);
+    LocalStorage.data = BuilderService.getData();
   }, [totalQuestions]);
 
   useEffect(() => {
@@ -45,6 +42,7 @@ function Assessments() {
       key: "flag",
       value: MCQService.updateFlag(MCQ).getFlag(),
     });
+    LocalStorage.data = BuilderService.getData();
   }, [MCQ]);
 
   useEffect(() => {
@@ -54,6 +52,7 @@ function Assessments() {
         Number(MCQQuestions)
       ).getTotalQuestionCount(),
     });
+    LocalStorage.data = BuilderService.getData();
   }, [MCQQuestions]);
 
   useEffect(() => {
@@ -61,54 +60,8 @@ function Assessments() {
       key: "difficulty",
       value: MCQService.updateDifficulty(MCQDifficulty).getDifficulty(),
     });
+    LocalStorage.data = BuilderService.getData();
   }, [MCQDifficulty]);
-
-  useEffect(() => {
-    AssessmentService.insertOptions("freeText", {
-      key: "flag",
-      value: FreeTextService.updateFlag(freeText).getFlag(),
-    });
-  }, [freeText]);
-
-  useEffect(() => {
-    AssessmentService.insertOptions("freeText", {
-      key: "totalQuestions",
-      value: FreeTextService.updateTotalQuestionCount(
-        Number(freeTextQuestions)
-      ).getTotalQuestionCount(),
-    });
-  }, [freeTextQuestions]);
-
-  useEffect(() => {
-    AssessmentService.insertOptions("freeText", {
-      key: "difficulty",
-      value:
-        FreeTextService.updateDifficulty(freeTextDifficulty).getDifficulty(),
-    });
-  }, [freeTextDifficulty]);
-
-  useEffect(() => {
-    AssessmentService.insertOptions("coding", {
-      key: "flag",
-      value: CodingService.updateFlag(coding).getFlag(),
-    });
-  }, [coding]);
-
-  useEffect(() => {
-    AssessmentService.insertOptions("coding", {
-      key: "totalQuestions",
-      value: CodingService.updateTotalQuestionCount(
-        Number(codingQuestions)
-      ).getTotalQuestionCount(),
-    });
-  }, [codingQuestions]);
-
-  useEffect(() => {
-    AssessmentService.insertOptions("coding", {
-      key: "difficulty",
-      value: CodingService.updateDifficulty(codingDifficulty).getDifficulty(),
-    });
-  }, [codingDifficulty]);
 
   return (
     <AnimatePresence>

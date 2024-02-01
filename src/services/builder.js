@@ -2,6 +2,8 @@ import AssessmentService from "./assessmentsService";
 import TechnologyService from "./technologyService";
 import QuestionViewService from "./questionViewService";
 
+import { LocalStorage } from "./LocalStorage";
+
 class Builder {
   static instance;
   static getInstance() {
@@ -12,6 +14,17 @@ class Builder {
     this.assessmentService = AssessmentService;
     this.technologyService = TechnologyService;
     this.questionService = QuestionViewService;
+  }
+
+  init() {
+    const data = LocalStorage.data;
+
+    if (data) {
+      this.assessmentService.options = data.assessmentData;
+      this.technologyService.options = data.technologyData;
+      this.questionService.options = data.questionData;
+      console.log("options", this.technologyService.options);
+    }
   }
 
   getDifficulty() {
@@ -45,6 +58,24 @@ class Builder {
     const total = easy + medium + hard;
 
     return total;
+  }
+
+  setData({ assessmentService, technologyService, questionService }) {
+    this.assessmentService.options = assessmentService;
+    this.technologyService.options = technologyService;
+    this.questionService.options = questionService;
+  }
+
+  getData() {
+    const data = {};
+
+    data.assessmentData = this.assessmentService.options;
+    data.technologyData = this.technologyService;
+    data.questionData = this.questionService;
+
+    const returnValue = JSON.stringify(data);
+
+    return returnValue;
   }
 }
 

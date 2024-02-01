@@ -20,8 +20,41 @@ export const getProgLangs = async () => {
 };
 
 export const getModuleNames = async () => {
-  const res = await axios.get("https://www.nareshit.net/fetchModules/2");
-  console.log(res);
+  try {
+    const res = await axios.get("http://localhost:4000/query/view-moduleNames");
 
-  return res;
+    const data = res.data;
+    return data;
+  } catch (err) {
+    console.log("getModuleNames", err);
+  }
+};
+
+export const getTopicNames = async () => {
+  try {
+    const res = await axios.get("http://localhost:4000/query/view-topicNames", {
+      body: 2,
+    });
+
+    const data = res.data;
+    return data;
+  } catch (err) {
+    console.log("getModuleNames", err);
+  }
+};
+
+export const getSubTopicNames = async () => {
+  try {
+    const res = await axios.get(
+      "http://localhost:4000/query/view-subTopicNames",
+      {
+        body: 2,
+      }
+    );
+
+    const data = res.data;
+    return data;
+  } catch (err) {
+    console.log("getModuleNames", err);
+  }
 };

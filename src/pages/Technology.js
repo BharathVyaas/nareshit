@@ -13,34 +13,50 @@ import Randoms from "../components/Randoms";
 import Button from "../ui/Button";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { LocalStorage } from "../services/LocalStorage";
+import BuilderService from "../services/builder";
 
 const formNames = ["proglangs", "catogaryType", "assessmentNature", "random"];
 
 function Technology() {
+  console.log(
+    BuilderService.technologyService._technology.programmingLanguage
+      ?.programmingLanguage
+  );
   const { programmingLanguages } = useLoaderData();
+  const [proglang, setProgLang] = useState(
+    BuilderService.technologyService._technology.programmingLanguage
+      ?.programmingLanguage || ".net"
+  );
 
-  const [proglang, setProgLang] = useState(programmingLanguages[0].language);
+  const [nature, setNature] = useState(
+    BuilderService.technologyService._technology.natureOfAssessment
+      ?.natureOfAssessment || "fixed"
+  );
 
-  const [nature, setNature] = useState("dynamic");
-
-  const [random, setRandom] = useState("completeTest");
-
+  const [random, setRandom] = useState(
+    BuilderService.technologyService._technology?.assessmentNature?.random ||
+      "completeTest"
+  );
   useEffect(() => {
     TechnologyService.updateData({
       programmingLanguage: SelectTechnology.updateData(proglang),
     });
+    LocalStorage.data = BuilderService.getData();
   }, [proglang]);
 
   useEffect(() => {
     TechnologyService.updateData({
-      assessmentNature: NatureOfAssessment.updateData(nature),
+      natureOfAssessment: NatureOfAssessment.updateData(nature),
     });
+    LocalStorage.data = BuilderService.getData();
   }, [nature]);
 
   useEffect(() => {
     TechnologyService.updateData({
       assessmentNature: Random.updateData(random),
     });
+    LocalStorage.data = BuilderService.getData();
   }, [random]);
 
   return (

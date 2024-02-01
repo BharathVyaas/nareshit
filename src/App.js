@@ -13,8 +13,12 @@ import QuestionView from "./pages/QuestionView";
 import SheduleTime, { action as SheduleTimeAction } from "./pages/SheduleTime";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./util/http";
+import { LocalStorage } from "./services/LocalStorage";
+import BuilderService from "./services/builder";
 
 function App() {
+  BuilderService.init();
+
   const router = createBrowserRouter([
     { path: "/", element: <AdminHomePage /> },
     {

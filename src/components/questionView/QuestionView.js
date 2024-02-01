@@ -1,22 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { Form } from "react-router-dom";
-import moduledata from "../../util/moduleNames.json";
 import topicdata from "../../util/topicNames.json";
 import subtopicdata from "../../util/subTopic.json";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getModuleNames,
+  getSubTopicNames,
+  getTopicNames,
+} from "../../util/http";
 
 function QusetionViewTechnlogy({ setSelectedTechnology }) {
   return (
     <>
-      <ModuleName setSelectedTechnology={setSelectedTechnology} />
-      <TopicName setSelectedTechnology={setSelectedTechnology} />
-      <SubTopicName setSelectedTechnology={setSelectedTechnology} />
+      <ModuleDataLoader setSelectedTechnology={setSelectedTechnology} />
+      <TopicDataLoader setSelectedTechnology={setSelectedTechnology} />
+      <SubTopicDataLoader setSelectedTechnology={setSelectedTechnology} />
     </>
   );
 }
 
 export default QusetionViewTechnlogy;
 
-function ModuleName({ setSelectedTechnology }) {
+function ModuleDataLoader({ setSelectedTechnology }) {
+  const { data: moduleData, isLoading: isModuleDataLoading } = useQuery({
+    queryKey: ["QuestionView", "ModuleName"],
+    queryFn: getModuleNames,
+  });
+
+  if (moduleData && typeof moduleData === "object") {
+    return (
+      <ModuleName
+        moduledata={moduleData.moduleNames}
+        setSelectedTechnology={setSelectedTechnology}
+      />
+    );
+  }
+  return <h1>loading</h1>;
+}
+
+function ModuleName({ setSelectedTechnology, moduledata }) {
   const moduleNames = moduledata.map((element) => ({
     moduleName: element.ModuleName,
     moduleId: element.ModuleID,
@@ -32,13 +54,11 @@ function ModuleName({ setSelectedTechnology }) {
 
   const [selectedModule, setSelectedModule] = useState(moduleNames[0]);
 
-  useEffect(
-    () =>
-      setSelectedTechnology((prev) => {
-        return { ...prev, module: selectedModule };
-      }),
-    [setSelectedTechnology, selectedModule]
-  );
+  useEffect(() => {
+    setSelectedTechnology((prev) => {
+      return { ...prev, module: selectedModule };
+    });
+  }, [setSelectedTechnology, selectedModule]);
 
   const handleModuleChange = (event) => {
     const selectedModuleName = event.target.value;
@@ -70,6 +90,23 @@ function ModuleName({ setSelectedTechnology }) {
       </Form>
     </>
   );
+}
+
+function TopicDataLoader({ setSelectedTechnology }) {
+  const { data: topicData, isLoading: isModuleDataLoading } = useQuery({
+    queryKey: ["QuestionView", "TopicName"],
+    queryFn: getTopicNames,
+  });
+
+  if (topicData && typeof topicData === "object") {
+    return (
+      <TopicName
+        topicData={topicData.moduleNames}
+        setSelectedTechnology={setSelectedTechnology}
+      />
+    );
+  }
+  return <h1>loading</h1>;
 }
 
 function TopicName({ setSelectedTechnology }) {
@@ -124,6 +161,23 @@ function TopicName({ setSelectedTechnology }) {
       </label>
     </Form>
   );
+}
+
+function SubTopicDataLoader({ setSelectedTechnology }) {
+  const { data: topicData, isLoading: isModuleDataLoading } = useQuery({
+    queryKey: ["QuestionView", "SubTopicName"],
+    queryFn: getSubTopicNames,
+  });
+
+  if (topicData && typeof topicData === "object") {
+    return (
+      <SubTopicName
+        topicData={topicData.moduleNames}
+        setSelectedTechnology={setSelectedTechnology}
+      />
+    );
+  }
+  return <h1>loading</h1>;
 }
 
 function SubTopicName({ setSelectedTechnology }) {

@@ -3,16 +3,14 @@ import AdminHomePage from "./pages/AdminHomePage";
 import Categories from "./pages/Categories";
 import ListOfAssessment, {
   loader as AssessmentLoader,
-} from "./components/ListOfAssessment";
+} from "./pages/ListOfAssessment";
 import Technology, {
   loader as TechnologyLoader,
   action as TechnologyAction,
-} from "./components/Technology";
-import Assessments, {
-  action as AssessmentAction,
-} from "./components/Assessments";
-import QuestionView from "./components/QuestionView";
-import SheduleTime from "./components/SheduleTime";
+} from "./pages/Technology";
+import Assessments, { action as AssessmentAction } from "./pages/Assessments";
+import QuestionView from "./pages/QuestionView";
+import SheduleTime, { action as SheduleTimeAction } from "./pages/SheduleTime";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./util/http";
 
@@ -43,7 +41,11 @@ function App() {
           path: "questionview",
           element: <QuestionView />,
         },
-        { path: "sheduletime", element: <SheduleTime /> },
+        {
+          path: "sheduletime",
+          element: <SheduleTime />,
+          action: SheduleTimeAction,
+        },
       ],
     },
   ]);

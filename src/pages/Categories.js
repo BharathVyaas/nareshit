@@ -7,11 +7,11 @@ function Categories() {
   return (
     <>
       <header className="bg-gray-100">
-        <ul className="flex justify-between ">
-          <li>
+        <ul className="flex justify-between h-10">
+          <li className="grid place-content-center mx-10">
             <img alt="Logo" />
           </li>
-          <li>
+          <li className="grid place-content-center mx-10">
             <img src={userLogo} width="30" height="30" alt="userLogo" />
           </li>
         </ul>
@@ -21,7 +21,9 @@ function Categories() {
               <NavLink
                 to="assessmentlist"
                 className={({ isActive }) =>
-                  isActive ? "bg-gray-700 px-6 py-3" : "px-6 py-3"
+                  isActive
+                    ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                    : "text-white font-medium rounded px-6 py-3"
                 }
                 end
               >
@@ -32,7 +34,9 @@ function Categories() {
               <NavLink
                 to="technology"
                 className={({ isActive }) =>
-                  isActive ? "bg-gray-700 px-6 py-3" : "px-6 py-3"
+                  isActive
+                    ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                    : "text-white font-medium rounded px-6 py-3"
                 }
                 end
               >
@@ -43,7 +47,9 @@ function Categories() {
               <NavLink
                 to="assessments"
                 className={({ isActive }) =>
-                  isActive ? "bg-gray-700 px-6 py-3" : "px-6 py-3"
+                  isActive
+                    ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                    : "text-white font-medium rounded px-6 py-3"
                 }
                 end
               >
@@ -54,7 +60,9 @@ function Categories() {
               <NavLink
                 to="questionview"
                 className={({ isActive }) =>
-                  isActive ? "bg-gray-700 px-6 py-3" : "px-6 py-3"
+                  isActive
+                    ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                    : "text-white font-medium rounded px-6 py-3"
                 }
                 end
               >
@@ -65,7 +73,9 @@ function Categories() {
               <NavLink
                 to="sheduletime"
                 className={({ isActive }) =>
-                  isActive ? "bg-gray-700 px-6 py-3" : "px-6 py-3"
+                  isActive
+                    ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                    : "text-white font-medium rounded px-6 py-3"
                 }
                 end
               >
@@ -75,9 +85,9 @@ function Categories() {
           </ul>
         </nav>
       </header>
-      <main className="bg-gray-50 min-h-[70vh]">
-        <Outlet />
-      </main>
+
+      <Outlet />
+
       <footer className=" grid place-content-center p-6 w-full">
         © 2023 Naresh i Technologies | Software Training - Online | All Rights
         Reserved.

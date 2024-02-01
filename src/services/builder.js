@@ -30,6 +30,22 @@ class Builder {
     const titleValues = this.assessmentService.options[title];
     return titleValues.difficulty;
   }
+
+  getTotal() {
+    const difficulty = this.getDifficulty();
+    const easy = difficulty
+      .map((element) => element.easy)
+      .reduce((data, acc) => Number(data) + acc, 0);
+    const medium = difficulty
+      .map((element) => element.medium)
+      .reduce((data, acc) => Number(data) + acc, 0);
+    const hard = difficulty
+      .map((element) => element.hard)
+      .reduce((data, acc) => Number(data) + acc, 0);
+    const total = easy + medium + hard;
+
+    return total;
+  }
 }
 
 const BuilderService = Builder.getInstance();

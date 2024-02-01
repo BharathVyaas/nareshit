@@ -149,7 +149,7 @@ class AssessmentClass extends Composite {
     this._difficulty = { easy: undefined, medium: undefined, hard: undefined };
     this.options = {
       MCQ: {
-        flag: false,
+        flag: true,
         totalQuestions: 0,
         difficulty: { easy: 0, medium: 0, hard: 0 },
       },

@@ -61,4 +61,16 @@
   ._text-start {
     text-align: start;
   }
+
+  .green {
+    background-color: rgb(187 247 208);
+  }
+
+  .rose {
+    background-color: rgb(254 205 211);
+  }
+
+  .red {
+    background-color: rgb(248 113 113);
+  }
 }

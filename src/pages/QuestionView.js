@@ -103,6 +103,7 @@ function Questions({ fetchQuestionType }) {
         questions.moduleNames.map((question) => (
           <Question
             key={question.QuestionID}
+            difficultyId={question.DifficultyLevelID}
             questions={questions.moduleNames}
             questionId={question.QuestionID}
             question={question}
@@ -114,7 +115,14 @@ function Questions({ fetchQuestionType }) {
   );
 }
 
-function Question({ question, questions, includes, setIncludes, questionId }) {
+function Question({
+  question,
+  questions,
+  includes,
+  setIncludes,
+  questionId,
+  difficultyId,
+}) {
   function removeElement(arr, value) {
     return arr.filter((item) => item !== value);
   }
@@ -131,6 +139,13 @@ function Question({ question, questions, includes, setIncludes, questionId }) {
   }, [questions, setIncludesCtxFn]);
 
   useEffect(() => {
+    setIncludesCtxFn(() => {
+      return {
+        includes:
+          Number(BuilderService.getTotal()) - LocalStorage.exclude?.length || 0,
+        excludes: LocalStorage.exclude?.length || 0,
+      };
+    });
     setIncludes((prev) =>
       prev.filter((element) => !LocalStorage.exclude.includes(element))
     );
@@ -164,8 +179,16 @@ function Question({ question, questions, includes, setIncludes, questionId }) {
     }
   }
 
+  let bgColor;
+
+  if (difficultyId == 2) bgColor = "rose";
+  else if (difficultyId == 3) bgColor = "red";
+  else bgColor = "green";
+
   return (
-    <section className="scroll flex items-center border-2 border-white overflow-auto justify-between">
+    <section
+      className={` ${bgColor} scroll min-h-[6rem] flex items-center border-2 border-white overflow-auto justify-between`}
+    >
       <input
         type="checkbox"
         checked={includes.includes(questionId)}
@@ -179,6 +202,9 @@ function Question({ question, questions, includes, setIncludes, questionId }) {
       <Option option="Option2" question={question} questionKey="OptionB" />
       <Option option="Option3" question={question} questionKey="OptionC" />
       <Option option="Option4" question={question} questionKey="OptionD" />
+      <aside className="max-w-[30%] min-w-[30%] overflow-hidden ">
+        <h3>{question.CorrectAnswer}</h3>
+      </aside>
     </section>
   );
 }
@@ -228,7 +254,7 @@ function FetchData({ fetchDataTypeHandler }) {
               setFetchCount(easy);
               fetchDataTypeHandler("1", easy);
             }}
-            className="bg-green-200 px-6 py-[.6px] rounded-lg"
+            className="bg-green-200 px-6 py-[.6px] rounded border-2 border-green-400"
           >
             Easy
           </button>
@@ -244,7 +270,7 @@ function FetchData({ fetchDataTypeHandler }) {
               setFetchCount(medium);
               fetchDataTypeHandler("2", medium);
             }}
-            className="bg-rose-200 px-6 py-[.6px] rounded-lg"
+            className="bg-rose-200 px-6 py-[.6px] rounded border-2 border-rose-400"
           >
             Medium
           </button>
@@ -259,7 +285,7 @@ function FetchData({ fetchDataTypeHandler }) {
               setFetchCount(hard);
               fetchDataTypeHandler("3", hard);
             }}
-            className="bg-red-400 px-6 py-[.6px] rounded-lg"
+            className="bg-red-400 px-6 py-[.6px] rounded border-2 border-red-600"
           >
             Hard
           </button>

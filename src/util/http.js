@@ -1,6 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { LocalStorage } from "../services/LocalStorage";
+import BuilderService from "../services/builder";
 
 export const queryClient = new QueryClient();
 
@@ -65,7 +66,9 @@ export const getQuestions = async (DifficultyLevelID, count) => {
 
   try {
     const res = await axios.get(
-      `http://localhost:4000/query/questions?DifficultyLevelID=${DifficultyLevelID}&count=${count}`
+      `http://localhost:4000/query/questions?DifficultyLevelID=${DifficultyLevelID}&count=${count}&excludes='${JSON.stringify(
+        LocalStorage.exclude
+      )}'&easy=${BuilderService.getEasy()}&medium=${BuilderService.getMedium()}&hard=${BuilderService.getHard()}`
     );
 
     const data = res.data;

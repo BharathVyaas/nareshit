@@ -55,17 +55,38 @@ class Builder {
     return titleValues.difficulty;
   }
 
-  getTotal() {
+  getEasy() {
     const difficulty = this.getDifficulty();
     const easy = difficulty
       .map((element) => element.easy)
       .reduce((data, acc) => Number(data) + acc, 0);
+
+    return easy;
+  }
+
+  getMedium() {
+    const difficulty = this.getDifficulty();
     const medium = difficulty
       .map((element) => element.medium)
       .reduce((data, acc) => Number(data) + acc, 0);
+
+    return medium;
+  }
+
+  getHard() {
+    const difficulty = this.getDifficulty();
     const hard = difficulty
       .map((element) => element.hard)
       .reduce((data, acc) => Number(data) + acc, 0);
+
+    return hard;
+  }
+
+  getTotal() {
+    const difficulty = this.getDifficulty();
+    const easy = this.getEasy();
+    const medium = this.getMedium();
+    const hard = this.getHard();
     const total = easy + medium + hard;
 
     return total;

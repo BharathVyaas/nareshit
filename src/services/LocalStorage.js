@@ -11,11 +11,8 @@ class LocalStorageClass {
   }
 
   get data() {
-    const response = localStorage.getItem("data");
-    let result;
-    if (response === "undefined") result = undefined;
-    else result = response;
-    if (result) result = JSON.parse(result);
+    const result = this.parse("data");
+
     return result;
   }
 
@@ -24,11 +21,8 @@ class LocalStorageClass {
   }
 
   get programmingLanguageData() {
-    const response = localStorage.getItem("programmingLanguageData");
-    let result;
-    if (response === "undefined") result = undefined;
-    else result = response;
-    if (result) result = JSON.parse(result);
+    const result = this.parse("programmingLanguageData");
+
     return result;
   }
 
@@ -38,11 +32,8 @@ class LocalStorageClass {
   }
 
   get moduleData() {
-    const response = localStorage.getItem("moduleData");
-    let result;
-    if (response === "undefined") result = undefined;
-    else result = response;
-    if (result) result = JSON.parse(result);
+    const result = this.parse("moduleData");
+
     return result;
   }
 
@@ -52,11 +43,8 @@ class LocalStorageClass {
   }
 
   get topicData() {
-    const response = localStorage.getItem("topicData");
-    let result;
-    if (response === "undefined") result = undefined;
-    else result = response;
-    if (result) result = JSON.parse(result);
+    const result = this.parse("topicData");
+
     return result;
   }
 
@@ -66,11 +54,8 @@ class LocalStorageClass {
   }
 
   get subTopicData() {
-    const response = localStorage.getItem("subTopicData");
-    let result;
-    if (response === "undefined") result = undefined;
-    else result = response;
-    if (result) result = JSON.parse(result);
+    const result = this.parse("subTopicData");
+
     return result;
   }
 
@@ -80,17 +65,23 @@ class LocalStorageClass {
   }
 
   get exclude() {
-    const response = localStorage.getItem("exclude");
-    let result;
-    if (response === "undefined") result = undefined;
-    else result = response;
-    if (result) result = JSON.parse(result);
+    const result = this.parse("exclude");
+
     return result;
   }
 
   set exclude(newData) {
     const data = JSON.stringify(newData);
     if (newData) localStorage.setItem("exclude", data);
+  }
+
+  parse(key) {
+    const response = localStorage.getItem(key);
+    let result;
+    if (response === "undefined") result = undefined;
+    else result = response;
+    if (result) result = JSON.parse(result);
+    return result;
   }
 
   pullExclude(x) {
@@ -103,7 +94,7 @@ class LocalStorageClass {
 
   pushExclude(x) {
     let arr = this.exclude;
-    console.log(x, arr);
+
     if (arr) arr.filter((element) => element !== x);
     if (!arr) arr = [];
 

@@ -13,7 +13,7 @@ class SelectTechnologyClass extends Composite {
 
   constructor() {
     super();
-    this.programmingLanguage = ".net";
+    this.programmingLanguage = "DotNet";
   }
 
   updateData(newLanguage) {
@@ -32,7 +32,7 @@ class NatureOfAssessmentClass extends Composite {
 
   constructor() {
     super();
-    this.natureOfAssessment = "";
+    this.natureOfAssessment = "dynamic";
   }
 
   updateData(newType) {
@@ -51,7 +51,7 @@ class RandomClass extends Composite {
 
   constructor() {
     super();
-    this.random = "";
+    this.random = "noRandom";
   }
 
   updateData(newRandom) {

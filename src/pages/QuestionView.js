@@ -132,6 +132,7 @@ function Question({
   useEffect(() => {
     if (questions) {
       setIncludes(questions.map((question) => question.QuestionID));
+
       setIncludesCtxFn((prev) => {
         return { ...prev, includes: questions.length };
       });
@@ -147,14 +148,14 @@ function Question({
       };
     });
     setIncludes((prev) =>
-      prev.filter((element) => !LocalStorage.exclude.includes(element))
+      prev.filter((element) => !LocalStorage.exclude?.includes(element))
     );
   }, []);
 
   function handler(flag) {
     if (flag) {
       LocalStorage.pullExclude(questionId);
-      if (!includes.includes(questionId))
+      if (includes && !includes.includes(questionId))
         setIncludes((prev) => {
           const arr = [...prev];
           arr.push(questionId);
@@ -168,7 +169,7 @@ function Question({
       });
     } else {
       LocalStorage.pushExclude(questionId);
-      if (includes.includes(questionId))
+      if (includes && includes.includes(questionId))
         setIncludes((prev) => removeElement([...prev], questionId));
       setIncludesCtxFn((prev) => {
         const includes = prev.includes - 1;
@@ -188,6 +189,9 @@ function Question({
   return (
     <section
       className={` ${bgColor} scroll min-h-[6rem] flex items-center border-2 border-white overflow-auto justify-between`}
+      onClick={() => {
+        console.log(question);
+      }}
     >
       <input
         type="checkbox"

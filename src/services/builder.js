@@ -98,7 +98,7 @@ class Builder {
     questionService,
     scheduleTimeService,
   }) {
-    this.assessmentService.options = assessmentService;
+    this.assessmentService = assessmentService;
     this.technologyService = technologyService;
     this.questionService = questionService;
     this.scheduleTimeService = scheduleTimeService;

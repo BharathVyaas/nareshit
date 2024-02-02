@@ -22,7 +22,7 @@ function Technology() {
   const { programmingLanguages } = useLoaderData();
 
   const [proglang, setProgLang] = useState(
-    BuilderService.technologyService._technology.programmingLanguage
+    BuilderService.technologyService._technology?.programmingLanguage
   );
 
   useEffect(() => {
@@ -33,12 +33,18 @@ function Technology() {
     );
   }, [proglang]);
 
+  useEffect(() => {
+    setProgLang(
+      BuilderService.technologyService._technology?.programmingLanguage
+    );
+  });
+
   const [nature, setNature] = useState(
-    BuilderService.technologyService._technology.natureOfAssessment
+    BuilderService.technologyService._technology?.natureOfAssessment
   );
 
   const [random, setRandom] = useState(
-    BuilderService.technologyService._technology.assessmentNature
+    BuilderService.technologyService._technology?.assessmentNature
   );
   useEffect(() => {
     BuilderService.technologyService = TechnologyService.updateData({

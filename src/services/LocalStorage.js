@@ -65,8 +65,8 @@ class LocalStorageClass {
   }
 
   get exclude() {
-    const result = this.parse("exclude");
-
+    let result = this.parse("exclude");
+    if (!result) result = [];
     return result;
   }
 

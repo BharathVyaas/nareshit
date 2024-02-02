@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Form } from "react-router-dom";
-import subtopicdata from "../../util/subTopic.json";
 import { useQuery } from "@tanstack/react-query";
 import {
   getModuleNames,
@@ -19,6 +18,16 @@ function QusetionViewTechnlogy({
   selectedSubTopic,
   setSelectedSubTopic,
 }) {
+  useEffect(() => {
+    /* console.log("selectedModule:update"); */
+  }, [selectedModule]);
+  useEffect(() => {
+    /* console.log("selectedTopic", selectedTopic); */
+  }, [selectedTopic]);
+  useEffect(() => {
+    /* console.log("selectedSubTopic:update"); */
+  }, [selectedSubTopic]);
+
   return (
     <>
       <ModuleDataLoader
@@ -32,13 +41,15 @@ function QusetionViewTechnlogy({
           setSelectedTopic={setSelectedTopic}
         />
       )}
-      {selectedTopic && (
-        <SubTopicDataLoader
-          selectedTopic={setSelectedTopic}
-          selectedSubTopic={selectedSubTopic}
-          setSelectedSubTopic={setSelectedSubTopic}
-        />
-      )}
+      {selectedTopic &&
+        LocalStorage.topicData &&
+        LocalStorage._getTopicDataById() && (
+          <SubTopicDataLoader
+            selectedTopic={setSelectedTopic}
+            selectedSubTopic={selectedSubTopic}
+            setSelectedSubTopic={setSelectedSubTopic}
+          />
+        )}
     </>
   );
 }
@@ -46,6 +57,7 @@ function QusetionViewTechnlogy({
 export default QusetionViewTechnlogy;
 
 function ModuleDataLoader({ selectedModule, setSelectedModule }) {
+  /* console.log("ModuleDataLoader:rerender"); */
   const { data: moduleData } = useQuery({
     queryKey: ["QuestionView", "ModuleNames"],
     queryFn: getModuleNames,
@@ -122,18 +134,20 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
 }
 
 function TopicDataLoader({ selectedTopic, setSelectedTopic, selectedModule }) {
-  const { data, isLoading: isModuleDataLoading } = useQuery({
+  /* console.log("TopicDataLoader:rerender"); */
+  const { data } = useQuery({
     queryKey: ["QuestionView", "TopicNames"],
     queryFn: getTopicNames,
   });
 
   useEffect(() => {
+    if (data) setSelectedTopic(data[0]);
+    if (data) LocalStorage.topicData = data[0];
+  }, [data]);
+
+  useEffect(() => {
     queryClient.invalidateQueries({
       queryKey: ["QuestionView", "TopicNames"],
-      exact: true,
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["QuestionView", "SubTopicNames"],
       exact: true,
     });
   }, [selectedModule]);
@@ -170,10 +184,6 @@ function TopicName({ setSelectedTechnology, data }) {
   );
 
   useEffect(() => {
-    queryClient.invalidateQueries({
-      queryKey: ["QuestionView", "SubTopicNames"],
-      exact: true,
-    });
     setSelectedTechnology((prev) => {
       return { ...prev, topic: selectedModule };
     });
@@ -185,7 +195,7 @@ function TopicName({ setSelectedTechnology, data }) {
   const handleModuleChange = (event) => {
     const selectedModuleName = event.target.value;
     const selectedModule = topicNames.find(
-      (module) => module.topicName === selectedModuleName
+      (module) => module?.topicName === selectedModuleName
     );
 
     setSelectedModule(selectedModule);
@@ -197,7 +207,7 @@ function TopicName({ setSelectedTechnology, data }) {
         <select
           id="topicName"
           name="topicName"
-          value={selectedModule.topicName}
+          value={selectedModule?.topicName}
           onChange={handleModuleChange}
         >
           {topicNames.map((element, index) => (
@@ -211,11 +221,16 @@ function TopicName({ setSelectedTechnology, data }) {
   );
 }
 
-function SubTopicDataLoader({ selectedSubTopic, setSelectedSubTopic }) {
-  const { data, isLoading: isModuleDataLoading } = useQuery({
+function SubTopicDataLoader({ setSelectedSubTopic, selectedTopic }) {
+  /* console.log("SubTopicDataLoader:rerender"); */
+  const { data } = useQuery({
     queryKey: ["QuestionView", "SubTopicNames"],
     queryFn: getSubTopicNames,
   });
+
+  useEffect(() => {
+    /* console.log("selectedTopic:update", selectedTopic); */
+  }, [selectedTopic]);
 
   if (data && typeof data === "object") {
     return (
@@ -260,7 +275,7 @@ function SubTopicName({ setSelectedTechnology, data }) {
   const handleModuleChange = (event) => {
     const selectedModuleName = event.target.value;
     const selectedModule = subTopicNames.find(
-      (module) => module.subTopicName === selectedModuleName
+      (module) => module?.subTopicName === selectedModuleName
     );
 
     setSelectedModule(selectedModule);

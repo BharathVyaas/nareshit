@@ -71,7 +71,7 @@ function Categories() {
             </li>
             <li className="">
               <NavLink
-                to="sheduletime"
+                to="scheduletime"
                 className={({ isActive }) =>
                   isActive
                     ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"

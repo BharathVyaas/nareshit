@@ -11,9 +11,6 @@ import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
 
 function Assessments() {
-  console.log("assess", BuilderService.assessmentService);
-
-  console.log("assess2", BuilderService.assessmentService.options);
   const [totalQuestions, setTotalQuestions] = useState(
     BuilderService.assessmentService.options.MCQ.totalQuestions
   );

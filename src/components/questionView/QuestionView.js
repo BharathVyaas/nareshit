@@ -24,14 +24,20 @@ function QusetionViewTechnlogy({
         selectedModule={selectedModule}
         setSelectedModule={setSelectedModule}
       />
-      <TopicDataLoader
-        selectedTopic={selectedTopic}
-        setSelectedTopic={setSelectedTopic}
-      />
-      <SubTopicDataLoader
-        selectedSubTopic={selectedSubTopic}
-        setSelectedSubTopic={setSelectedSubTopic}
-      />
+      {selectedModule && (
+        <TopicDataLoader
+          selectedModule={selectedModule}
+          selectedTopic={selectedTopic}
+          setSelectedTopic={setSelectedTopic}
+        />
+      )}
+      {selectedTopic && (
+        <SubTopicDataLoader
+          selectedTopic={setSelectedTopic}
+          selectedSubTopic={selectedSubTopic}
+          setSelectedSubTopic={setSelectedSubTopic}
+        />
+      )}
     </>
   );
 }
@@ -113,11 +119,12 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
   );
 }
 
-function TopicDataLoader({ selectedTopic, setSelectedTopic }) {
+function TopicDataLoader({ selectedTopic, setSelectedTopic, selectedModule }) {
   const { data: topicData, isLoading: isModuleDataLoading } = useQuery({
     queryKey: ["QuestionView", "TopicName"],
-    queryFn: getTopicNames,
+    queryFn: () => getTopicNames(selectedModule.ModuleID),
   });
+  console.log(isModuleDataLoading);
 
   if (topicData && typeof topicData === "object") {
     return (

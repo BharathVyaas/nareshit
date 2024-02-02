@@ -10,7 +10,9 @@ import Technology, {
 } from "./pages/Technology";
 import Assessments, { action as AssessmentAction } from "./pages/Assessments";
 import QuestionView from "./pages/QuestionView";
-import SheduleTime, { action as SheduleTimeAction } from "./pages/SheduleTime";
+import ScheduleTime, {
+  action as ScheduleTimeAction,
+} from "./pages/ScheduleTime";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./util/http";
 import BuilderService from "./services/builder";
@@ -45,9 +47,9 @@ function App() {
           element: <QuestionView />,
         },
         {
-          path: "sheduletime",
-          element: <SheduleTime />,
-          action: SheduleTimeAction,
+          path: "scheduletime",
+          element: <ScheduleTime />,
+          action: ScheduleTimeAction,
         },
       ],
     },

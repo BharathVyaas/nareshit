@@ -1,4 +1,5 @@
 import React from "react";
+import { SelectTechnologyService } from "../services/technologyService";
 
 function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
   return (
@@ -9,14 +10,29 @@ function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
           id="proglang"
           name="proglang"
           className="mx-6 w-[100px]"
-          value={proglang}
-          onChange={(e) => setProgLang(e.target.value)}
+          value={proglang.programmingLanguage}
+          onChange={(e) =>
+            setProgLang(() => {
+              programmingLanguages.find((element) => {
+                return element.TechnologyName === e.target.value;
+              });
+            })
+          }
         >
-          {programmingLanguages.map(({ id, language }) => (
-            <option key={id} value={language}>
-              {language}
-            </option>
-          ))}
+          {programmingLanguages.map(({ TechnologyID, TechnologyName }) => {
+            if (TechnologyName === "DOTNET") {
+              SelectTechnologyService.programmingLanguage = {
+                programmingLanguage: TechnologyName,
+                id: TechnologyID,
+              };
+              SelectTechnologyService.id = TechnologyID;
+            }
+            return (
+              <option key={TechnologyID} value={TechnologyName}>
+                {TechnologyName}
+              </option>
+            );
+          })}
         </select>
       </div>
 

@@ -3,6 +3,7 @@ import TechnologyService from "./technologyService";
 import QuestionViewService from "./questionViewService";
 
 import { LocalStorage } from "./LocalStorage";
+import ScheduleTimeService from "./scheduleTimeService";
 
 class Builder {
   static instance;
@@ -14,6 +15,16 @@ class Builder {
     this.assessmentService = AssessmentService;
     this.technologyService = TechnologyService;
     this.questionService = QuestionViewService;
+    this.scheduleTimeService = ScheduleTimeService;
+  }
+
+  getServices() {
+    return {
+      assessmentService: this.assessmentService,
+      technologyService: this.technologyService,
+      questionService: this.questionService,
+      scheduleTimeService: this.scheduleTimeService,
+    };
   }
 
   init() {
@@ -23,6 +34,8 @@ class Builder {
         this.assessmentService.options = data.assessmentData;
       if (data.technologyData) this.technologyService = data.technologyData;
       if (data.questionData) this.questionService = data.questionData;
+      if (data.scheduleTimeService)
+        this.scheduleTimeService = data.scheduleTimeService;
     }
   }
 
@@ -58,10 +71,18 @@ class Builder {
     return total;
   }
 
-  setData({ assessmentService, technologyService, questionService }) {
+  setData({
+    assessmentService,
+    technologyService,
+    questionService,
+    scheduleTimeService,
+  }) {
     this.assessmentService.options = assessmentService;
-    this.technologyService.options = technologyService;
-    this.questionService.options = questionService;
+    this.technologyService = technologyService;
+    this.questionService = questionService;
+    this.scheduleTimeService = scheduleTimeService;
+    console.log(this);
+    return this;
   }
 
   getData() {
@@ -69,7 +90,8 @@ class Builder {
     data.assessmentData = this.assessmentService.options;
     data.technologyData = this.technologyService;
     data.questionData = this.questionService;
-
+    data.scheduleTimeData = this.scheduleTimeService;
+    console.log(data);
     const returnValue = JSON.stringify(data);
 
     return returnValue;

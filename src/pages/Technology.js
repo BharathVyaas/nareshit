@@ -19,6 +19,7 @@ import BuilderService from "../services/builder";
 const formNames = ["proglangs", "catogaryType", "assessmentNature", "random"];
 
 function Technology() {
+  console.log(BuilderService.technologyService._technology);
   const { programmingLanguages } = useLoaderData();
   const [proglang, setProgLang] = useState(
     BuilderService.technologyService._technology.programmingLanguage
@@ -32,6 +33,7 @@ function Technology() {
     BuilderService.technologyService._technology.assessmentNature
   );
   useEffect(() => {
+    console.log("======================", proglang);
     BuilderService.technologyService = TechnologyService.updateData({
       ...TechnologyService.technology,
       programmingLanguage:

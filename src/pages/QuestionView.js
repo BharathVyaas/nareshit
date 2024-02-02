@@ -78,7 +78,7 @@ function QuestionView() {
               <Questions fetchQuestionType={fetchQuestionType} />
             )}
           </section>
-          <Button link="/categories/sheduletime" />
+          <Button link="/categories/scheduletime" />
         </motion.main>
       </IncludesContextProvider>
     </AnimatePresence>
@@ -276,19 +276,21 @@ function FetchData({ fetchDataTypeHandler }) {
           <p className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded">
             Include:
             <input
-              className="w-7 ms-2 rounded text-black"
+              className="w-7 ms-2 rounded text-black bg-white"
               type="number"
               value={includes.includes}
               onChange={() => {}}
+              disabled
             />
           </p>
           <p className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded">
-            Remove:
+            Exclude:
             <input
-              className="w-7 ms-2 rounded text-black"
+              className="w-7 ms-2 rounded text-black bg-white"
               value={includes.excludes}
               type="number"
               onChange={() => {}}
+              disabled
             />
           </p>
         </aside>

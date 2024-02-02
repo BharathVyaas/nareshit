@@ -20,23 +20,21 @@ export const getProgLangs = async () => {
 
 export const getModuleNames = async () => {
   try {
-    const res = await axios.get("http://localhost:4000/query/view-moduleNames");
-
-    const d = await axios.get(
-      `https://www.nareshit.net/fetchModules/${LocalStorage.getProgrammingLanguageId()}`
+    const res = await axios.get(
+      `https://www.nareshit.net/fetchModules/${LocalStorage.getProgrammingLanguageById()}`
     );
 
-    const data = { moduleNames: d.data };
+    const data = { moduleNames: res.data };
     return data;
   } catch (err) {
     console.log("getModuleNames", err);
   }
 };
 
-export const getTopicNames = async (id) => {
+export const getTopicNames = async () => {
   try {
     const res = await axios.get(
-      `http://localhost:4000/query/view-topicNames/:${id}`
+      `https://www.nareshit.net/FetchTopics/${LocalStorage.getModuleDataById()}`
     );
 
     const data = res.data;
@@ -49,7 +47,7 @@ export const getTopicNames = async (id) => {
 export const getSubTopicNames = async () => {
   try {
     const res = await axios.get(
-      `http://localhost:4000/query/view-subTopicNames/:${2}`
+      `https://www.nareshit.net/FetchSubTopics/${LocalStorage._getTopicDataById()}`
     );
 
     const data = res.data;

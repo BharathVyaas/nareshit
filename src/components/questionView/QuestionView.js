@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Form } from "react-router-dom";
-import topicdata from "../../util/topicNames.json";
 import subtopicdata from "../../util/subTopic.json";
 import { useQuery } from "@tanstack/react-query";
 import {
   getModuleNames,
   getSubTopicNames,
   getTopicNames,
+  queryClient,
 } from "../../util/http";
 import BuilderService from "../../services/builder";
+import { LocalStorage } from "../../services/LocalStorage";
 
 function QusetionViewTechnlogy({
   selectedModule,
@@ -46,7 +47,7 @@ export default QusetionViewTechnlogy;
 
 function ModuleDataLoader({ selectedModule, setSelectedModule }) {
   const { data: moduleData } = useQuery({
-    queryKey: ["QuestionView", "ModuleName"],
+    queryKey: ["QuestionView", "ModuleNames"],
     queryFn: getModuleNames,
   });
 
@@ -84,6 +85,7 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
     setSelectedTechnology((prev) => {
       return { ...prev, module: selectedModule };
     });
+    LocalStorage.moduleData = selectedModule;
     BuilderService.questionService.selectedTechnology.module = selectedModule;
   }, [setSelectedTechnology, selectedModule]);
 
@@ -120,15 +122,26 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
 }
 
 function TopicDataLoader({ selectedTopic, setSelectedTopic, selectedModule }) {
-  const { data: topicData, isLoading: isModuleDataLoading } = useQuery({
-    queryKey: ["QuestionView", "TopicName"],
-    queryFn: () => getTopicNames(selectedModule.ModuleID),
+  const { data, isLoading: isModuleDataLoading } = useQuery({
+    queryKey: ["QuestionView", "TopicNames"],
+    queryFn: getTopicNames,
   });
 
-  if (topicData && typeof topicData === "object") {
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: ["QuestionView", "TopicNames"],
+      exact: true,
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["QuestionView", "SubTopicNames"],
+      exact: true,
+    });
+  }, [selectedModule]);
+
+  if (data && typeof data === "object") {
     return (
       <TopicName
-        topicData={topicData.moduleNames}
+        data={data}
         selectedTopic={selectedTopic}
         setSelectedTechnology={setSelectedTopic}
       />
@@ -137,8 +150,8 @@ function TopicDataLoader({ selectedTopic, setSelectedTopic, selectedModule }) {
   return <h1>loading</h1>;
 }
 
-function TopicName({ setSelectedTechnology }) {
-  const topicNames = topicdata.map((element) => ({
+function TopicName({ setSelectedTechnology, data }) {
+  const topicNames = data.map((element) => ({
     topicName: element.TopicName,
     moduleId: element.ModuleID,
     topicId: element.TopicID,
@@ -157,9 +170,15 @@ function TopicName({ setSelectedTechnology }) {
   );
 
   useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: ["QuestionView", "SubTopicNames"],
+      exact: true,
+    });
     setSelectedTechnology((prev) => {
       return { ...prev, topic: selectedModule };
     });
+
+    LocalStorage.topicData = selectedModule;
     BuilderService.questionService.selectedTechnology.topic = selectedModule;
   }, [setSelectedTechnology, selectedModule]);
 
@@ -193,24 +212,21 @@ function TopicName({ setSelectedTechnology }) {
 }
 
 function SubTopicDataLoader({ selectedSubTopic, setSelectedSubTopic }) {
-  const { data: topicData, isLoading: isModuleDataLoading } = useQuery({
-    queryKey: ["QuestionView", "SubTopicName"],
+  const { data, isLoading: isModuleDataLoading } = useQuery({
+    queryKey: ["QuestionView", "SubTopicNames"],
     queryFn: getSubTopicNames,
   });
 
-  if (topicData && typeof topicData === "object") {
+  if (data && typeof data === "object") {
     return (
-      <SubTopicName
-        topicData={topicData.moduleNames}
-        setSelectedTechnology={setSelectedSubTopic}
-      />
+      <SubTopicName data={data} setSelectedTechnology={setSelectedSubTopic} />
     );
   }
   return <h1>loading</h1>;
 }
 
-function SubTopicName({ setSelectedTechnology }) {
-  const subTopicNames = subtopicdata.map((element) => ({
+function SubTopicName({ setSelectedTechnology, data }) {
+  const subTopicNames = data.map((element) => ({
     subTopicName: element.SubTopicName,
     moduleId: element.ModuleID,
     subTopicId: element.SubTopicID,
@@ -236,6 +252,8 @@ function SubTopicName({ setSelectedTechnology }) {
     setSelectedTechnology((prev) => {
       return { ...prev, subTopic: selectedModule };
     });
+
+    LocalStorage.subTopicData = selectedModule;
     BuilderService.questionService.selectedTechnology.subTopic = selectedModule;
   }, [setSelectedTechnology, selectedModule]);
 

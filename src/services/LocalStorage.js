@@ -79,6 +79,38 @@ class LocalStorageClass {
     if (newData) localStorage.setItem("subTopicData", data);
   }
 
+  get exclude() {
+    const response = localStorage.getItem("exclude");
+    let result;
+    if (response === "undefined") result = undefined;
+    else result = response;
+    if (result) result = JSON.parse(result);
+    return result;
+  }
+
+  set exclude(newData) {
+    const data = JSON.stringify(newData);
+    if (newData) localStorage.setItem("exclude", data);
+  }
+
+  pullExclude(x) {
+    const arr = this.exclude;
+    let result;
+    if (arr) result = arr.filter((element) => element !== x);
+
+    this.exclude = result;
+  }
+
+  pushExclude(x) {
+    let arr = this.exclude;
+    console.log(x, arr);
+    if (arr) arr.filter((element) => element !== x);
+    if (!arr) arr = [];
+
+    arr.push(x);
+    this.exclude = arr;
+  }
+
   _getTopicDataById() {
     let data = this.topicData;
 

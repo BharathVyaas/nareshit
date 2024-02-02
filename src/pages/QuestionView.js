@@ -130,8 +130,15 @@ function Question({ question, questions, includes, setIncludes, questionId }) {
     }
   }, [questions, setIncludesCtxFn]);
 
+  useEffect(() => {
+    setIncludes((prev) =>
+      prev.filter((element) => !LocalStorage.exclude.includes(element))
+    );
+  }, []);
+
   function handler(flag) {
     if (flag) {
+      LocalStorage.pullExclude(questionId);
       if (!includes.includes(questionId))
         setIncludes((prev) => {
           const arr = [...prev];
@@ -145,6 +152,7 @@ function Question({ question, questions, includes, setIncludes, questionId }) {
         return { includes, excludes };
       });
     } else {
+      LocalStorage.pushExclude(questionId);
       if (includes.includes(questionId))
         setIncludes((prev) => removeElement([...prev], questionId));
       setIncludesCtxFn((prev) => {

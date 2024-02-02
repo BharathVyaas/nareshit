@@ -65,7 +65,7 @@ export const getQuestions = async (DifficultyLevelID, count) => {
 
   try {
     const res = await axios.get(
-      `https://www.nareshit.net/mcqCheckQuestions?DifficultyLevelID=${DifficultyLevelID}&count=${count}`
+      `http://localhost:4000/query/questions?DifficultyLevelID=${DifficultyLevelID}&count=${count}`
     );
 
     const data = res.data;

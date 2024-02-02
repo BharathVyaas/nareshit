@@ -5,20 +5,7 @@ class LocalStorageClass {
     return this.instance;
   }
   constructor() {
-    this.moduleName = undefined;
     this.data = undefined;
-  }
-
-  get moduleName() {
-    const response = localStorage.getItem("moduleName");
-    let result;
-    if (response === "undefined") result = undefined;
-    else result = response;
-    return result;
-  }
-
-  set moduleName(newData) {
-    localStorage.setItem("moduleName", newData);
   }
 
   get data() {
@@ -31,7 +18,6 @@ class LocalStorageClass {
   }
 
   set data(newData) {
-    console.log("setting data");
     if (newData) localStorage.setItem("data", newData);
   }
 }

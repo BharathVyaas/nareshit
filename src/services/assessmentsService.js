@@ -1,7 +1,7 @@
 class Composite {
   constructor() {
-    this._totalQuestionCount = undefined;
-    this._difficulty = { easy: undefined, medium: undefined, hard: undefined };
+    this._totalQuestionCount = 0;
+    this._difficulty = { easy: 0, medium: 0, hard: 0 };
   }
   updateFlag(newValue) {
     this._flag = newValue;
@@ -25,9 +25,9 @@ class MCQClass extends Composite {
 
   constructor() {
     super();
-    this._flag = undefined;
-    this._totalQuestionCount = undefined;
-    this._difficulty = { easy: undefined, medium: undefined, hard: undefined };
+    this._flag = false;
+    this._totalQuestionCount = 0;
+    this._difficulty = { easy: 0, medium: 0, hard: 0 };
   }
   getFlag() {
     return this._flag;
@@ -65,9 +65,9 @@ class AssessmentClass extends Composite {
 
   constructor() {
     super();
-    this._flag = undefined;
-    this._totalQuestionCount = undefined;
-    this._difficulty = { easy: undefined, medium: undefined, hard: undefined };
+    this._flag = false;
+    this._totalQuestionCount = 0;
+    this._difficulty = { easy: 0, medium: 0, hard: 0 };
     this.options = {
       MCQ: {
         flag: true,

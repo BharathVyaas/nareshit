@@ -3,9 +3,9 @@ import { getProgLangs, queryClient } from "../util/http";
 import { useLoaderData } from "react-router";
 import { useEffect, useState } from "react";
 import TechnologyService, {
-  NatureOfAssessment,
-  Random,
-  SelectTechnology,
+  NatureOfAssessmentService,
+  RandomService,
+  SelectTechnologyService,
 } from "../services/technologyService";
 import SelectedTechnology from "../components/SelectedTechnology";
 import NatureOfAssessments from "../components/NatureOfAssessments";
@@ -19,42 +19,42 @@ import BuilderService from "../services/builder";
 const formNames = ["proglangs", "catogaryType", "assessmentNature", "random"];
 
 function Technology() {
-  console.log(
-    BuilderService.technologyService._technology.programmingLanguage
-      ?.programmingLanguage
-  );
   const { programmingLanguages } = useLoaderData();
   const [proglang, setProgLang] = useState(
     BuilderService.technologyService._technology.programmingLanguage
-      ?.programmingLanguage || ".net"
   );
 
   const [nature, setNature] = useState(
     BuilderService.technologyService._technology.natureOfAssessment
-      ?.natureOfAssessment || "fixed"
   );
 
   const [random, setRandom] = useState(
-    BuilderService.technologyService._technology?.assessmentNature?.random ||
-      "completeTest"
+    BuilderService.technologyService._technology.assessmentNature
   );
   useEffect(() => {
-    TechnologyService.updateData({
-      programmingLanguage: SelectTechnology.updateData(proglang),
+    BuilderService.technologyService = TechnologyService.updateData({
+      ...TechnologyService.technology,
+      programmingLanguage:
+        SelectTechnologyService.updateData(proglang).programmingLanguage,
     });
+    console.log(BuilderService.technologyService);
     LocalStorage.data = BuilderService.getData();
   }, [proglang]);
 
   useEffect(() => {
-    TechnologyService.updateData({
-      natureOfAssessment: NatureOfAssessment.updateData(nature),
+    BuilderService.technologyService = TechnologyService.updateData({
+      ...TechnologyService.technology,
+      natureOfAssessment:
+        NatureOfAssessmentService.updateData(nature).natureOfAssessment,
     });
+    console.log(BuilderService.technologyService);
     LocalStorage.data = BuilderService.getData();
   }, [nature]);
 
   useEffect(() => {
-    TechnologyService.updateData({
-      assessmentNature: Random.updateData(random),
+    BuilderService.technologyService = TechnologyService.updateData({
+      ...TechnologyService.technology,
+      assessmentNature: RandomService.updateData(random).random,
     });
     LocalStorage.data = BuilderService.getData();
   }, [random]);

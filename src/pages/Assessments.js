@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Form } from "react-router-dom";
 
-import { SelectTechnology } from "../services/technologyService";
+import { SelectTechnologyService } from "../services/technologyService";
 import AssessmentService, { MCQService } from "../services/assessmentsService";
 import QuestionTypes from "../components/QuestionTypes";
 import Button from "../ui/Button";
@@ -11,10 +11,7 @@ import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
 
 function Assessments() {
-  console.log(
-    "assess",
-    BuilderService.assessmentService.options.MCQ.totalQuestions
-  );
+  console.log("assess", BuilderService.assessmentService);
 
   console.log("assess2", BuilderService.assessmentService.options);
   const [totalQuestions, setTotalQuestions] = useState(
@@ -42,6 +39,7 @@ function Assessments() {
       key: "flag",
       value: MCQService.updateFlag(MCQ).getFlag(),
     });
+    console.log(BuilderService.getData());
     LocalStorage.data = BuilderService.getData();
   }, [MCQ]);
 
@@ -72,7 +70,8 @@ function Assessments() {
         className="bg-gray-50 min-h-[70vh] p-2"
       >
         <h1>
-          Selected Technology Name: {SelectTechnology.programmingLanguage}
+          Selected Technology Name:{" "}
+          {SelectTechnologyService.programmingLanguage}
         </h1>
         <Form method="POST" className="p-5">
           <fieldset className="">

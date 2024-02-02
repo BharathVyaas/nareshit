@@ -8,21 +8,38 @@ import {
   getSubTopicNames,
   getTopicNames,
 } from "../../util/http";
+import BuilderService from "../../services/builder";
 
-function QusetionViewTechnlogy({ setSelectedTechnology }) {
+function QusetionViewTechnlogy({
+  selectedModule,
+  setSelectedModule,
+  selectedTopic,
+  setSelectedTopic,
+  selectedSubTopic,
+  setSelectedSubTopic,
+}) {
   return (
     <>
-      <ModuleDataLoader setSelectedTechnology={setSelectedTechnology} />
-      <TopicDataLoader setSelectedTechnology={setSelectedTechnology} />
-      <SubTopicDataLoader setSelectedTechnology={setSelectedTechnology} />
+      <ModuleDataLoader
+        selectedModule={selectedModule}
+        setSelectedModule={setSelectedModule}
+      />
+      <TopicDataLoader
+        selectedTopic={selectedTopic}
+        setSelectedTopic={setSelectedTopic}
+      />
+      <SubTopicDataLoader
+        selectedSubTopic={selectedSubTopic}
+        setSelectedSubTopic={setSelectedSubTopic}
+      />
     </>
   );
 }
 
 export default QusetionViewTechnlogy;
 
-function ModuleDataLoader({ setSelectedTechnology }) {
-  const { data: moduleData, isLoading: isModuleDataLoading } = useQuery({
+function ModuleDataLoader({ selectedModule, setSelectedModule }) {
+  const { data: moduleData } = useQuery({
     queryKey: ["QuestionView", "ModuleName"],
     queryFn: getModuleNames,
   });
@@ -31,7 +48,8 @@ function ModuleDataLoader({ setSelectedTechnology }) {
     return (
       <ModuleName
         moduledata={moduleData.moduleNames}
-        setSelectedTechnology={setSelectedTechnology}
+        selectedModule={selectedModule}
+        setSelectedTechnology={setSelectedModule}
       />
     );
   }
@@ -52,12 +70,15 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
     createdBy: element.CreatedBy,
   }));
 
-  const [selectedModule, setSelectedModule] = useState(moduleNames[0]);
+  const [selectedModule, setSelectedModule] = useState(
+    BuilderService.questionService.selectedTechnology.module || moduleNames[0]
+  );
 
   useEffect(() => {
     setSelectedTechnology((prev) => {
       return { ...prev, module: selectedModule };
     });
+    BuilderService.questionService.selectedTechnology.module = selectedModule;
   }, [setSelectedTechnology, selectedModule]);
 
   const handleModuleChange = (event) => {
@@ -92,7 +113,7 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
   );
 }
 
-function TopicDataLoader({ setSelectedTechnology }) {
+function TopicDataLoader({ selectedTopic, setSelectedTopic }) {
   const { data: topicData, isLoading: isModuleDataLoading } = useQuery({
     queryKey: ["QuestionView", "TopicName"],
     queryFn: getTopicNames,
@@ -102,7 +123,8 @@ function TopicDataLoader({ setSelectedTechnology }) {
     return (
       <TopicName
         topicData={topicData.moduleNames}
-        setSelectedTechnology={setSelectedTechnology}
+        selectedTopic={selectedTopic}
+        setSelectedTechnology={setSelectedTopic}
       />
     );
   }
@@ -124,15 +146,16 @@ function TopicName({ setSelectedTechnology }) {
     createdBy: element.CreatedBy,
   }));
 
-  const [selectedModule, setSelectedModule] = useState(topicNames[0]);
-
-  useEffect(
-    () =>
-      setSelectedTechnology((prev) => {
-        return { ...prev, topic: selectedModule };
-      }),
-    [setSelectedTechnology, selectedModule]
+  const [selectedModule, setSelectedModule] = useState(
+    BuilderService.questionService.selectedTechnology.topic || topicNames[0]
   );
+
+  useEffect(() => {
+    setSelectedTechnology((prev) => {
+      return { ...prev, topic: selectedModule };
+    });
+    BuilderService.questionService.selectedTechnology.topic = selectedModule;
+  }, [setSelectedTechnology, selectedModule]);
 
   const handleModuleChange = (event) => {
     const selectedModuleName = event.target.value;
@@ -163,7 +186,7 @@ function TopicName({ setSelectedTechnology }) {
   );
 }
 
-function SubTopicDataLoader({ setSelectedTechnology }) {
+function SubTopicDataLoader({ selectedSubTopic, setSelectedSubTopic }) {
   const { data: topicData, isLoading: isModuleDataLoading } = useQuery({
     queryKey: ["QuestionView", "SubTopicName"],
     queryFn: getSubTopicNames,
@@ -173,7 +196,7 @@ function SubTopicDataLoader({ setSelectedTechnology }) {
     return (
       <SubTopicName
         topicData={topicData.moduleNames}
-        setSelectedTechnology={setSelectedTechnology}
+        setSelectedTechnology={setSelectedSubTopic}
       />
     );
   }
@@ -198,15 +221,17 @@ function SubTopicName({ setSelectedTechnology }) {
     modifiedBy: element.ModifiedBy,
   }));
 
-  const [selectedModule, setSelectedModule] = useState(subTopicNames[0]);
-
-  useEffect(
-    () =>
-      setSelectedTechnology((prev) => {
-        return { ...prev, subTopic: selectedModule };
-      }),
-    [setSelectedTechnology, selectedModule]
+  const [selectedModule, setSelectedModule] = useState(
+    BuilderService.questionService.selectedTechnology.subTopic ||
+      subTopicNames[0]
   );
+
+  useEffect(() => {
+    setSelectedTechnology((prev) => {
+      return { ...prev, subTopic: selectedModule };
+    });
+    BuilderService.questionService.selectedTechnology.subTopic = selectedModule;
+  }, [setSelectedTechnology, selectedModule]);
 
   const handleModuleChange = (event) => {
     const selectedModuleName = event.target.value;

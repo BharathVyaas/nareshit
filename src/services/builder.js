@@ -18,18 +18,16 @@ class Builder {
 
   init() {
     const data = LocalStorage.data;
-
     if (data) {
-      this.assessmentService.options = data.assessmentData;
-      this.technologyService.options = data.technologyData;
-      this.questionService.options = data.questionData;
-      console.log("options", this.technologyService.options);
+      if (data.assessmentData)
+        this.assessmentService.options = data.assessmentData;
+      if (data.technologyData) this.technologyService = data.technologyData;
+      if (data.questionData) this.questionService = data.questionData;
     }
   }
 
   getDifficulty() {
     const optionValues = Object.values(this.assessmentService.options);
-    //const difficultyValues = Object.values(optionValues.difficulty);
     const difficultyValues = [];
 
     optionValues.forEach((element) => {
@@ -68,7 +66,6 @@ class Builder {
 
   getData() {
     const data = {};
-
     data.assessmentData = this.assessmentService.options;
     data.technologyData = this.technologyService;
     data.questionData = this.questionService;

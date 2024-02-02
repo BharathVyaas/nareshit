@@ -32,9 +32,9 @@ export const getModuleNames = async () => {
 
 export const getTopicNames = async () => {
   try {
-    const res = await axios.get("http://localhost:4000/query/view-topicNames", {
-      body: 2,
-    });
+    const res = await axios.get(
+      `http://localhost:4000/query/view-topicNames/:${2}`
+    );
 
     const data = res.data;
     return data;
@@ -46,13 +46,29 @@ export const getTopicNames = async () => {
 export const getSubTopicNames = async () => {
   try {
     const res = await axios.get(
-      "http://localhost:4000/query/view-subTopicNames",
-      {
-        body: 2,
-      }
+      `http://localhost:4000/query/view-subTopicNames/:${2}`
     );
 
     const data = res.data;
+    return data;
+  } catch (err) {
+    console.log("getModuleNames", err);
+  }
+};
+
+export const getQuestions = async (DifficultyLevelID, count) => {
+  const params = {
+    parameter1: "value1",
+    parameter2: "value2",
+  };
+
+  try {
+    const res = await axios.get(
+      `http://localhost:4000/query/questions?DifficultyLevelID=${DifficultyLevelID}&count=${count}`
+    );
+
+    const data = res.data;
+
     return data;
   } catch (err) {
     console.log("getModuleNames", err);

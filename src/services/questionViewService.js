@@ -6,7 +6,11 @@ class QueryViewClass {
   }
 
   constructor() {
-    this.selectedTechnology = {};
+    this.selectedTechnology = {
+      moduleName: "",
+      topicName: "",
+      subTopicName: "",
+    };
   }
 
   updateSelectedTechnology(newData) {

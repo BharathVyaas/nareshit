@@ -1,7 +1,7 @@
 import { Form } from "react-router-dom";
 import { getProgLangs, queryClient } from "../util/http";
 import { useLoaderData } from "react-router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TechnologyService, {
   NatureOfAssessmentService,
   RandomService,
@@ -19,11 +19,19 @@ import BuilderService from "../services/builder";
 const formNames = ["proglangs", "catogaryType", "assessmentNature", "random"];
 
 function Technology() {
-  console.log(BuilderService.technologyService._technology);
   const { programmingLanguages } = useLoaderData();
+
   const [proglang, setProgLang] = useState(
     BuilderService.technologyService._technology.programmingLanguage
   );
+
+  useEffect(() => {
+    LocalStorage.programmingLanguageData = programmingLanguages.find(
+      (element) => {
+        return proglang === element.TechnologyName;
+      }
+    );
+  }, [proglang]);
 
   const [nature, setNature] = useState(
     BuilderService.technologyService._technology.natureOfAssessment
@@ -33,13 +41,12 @@ function Technology() {
     BuilderService.technologyService._technology.assessmentNature
   );
   useEffect(() => {
-    console.log("======================", proglang);
     BuilderService.technologyService = TechnologyService.updateData({
       ...TechnologyService.technology,
       programmingLanguage:
         SelectTechnologyService.updateData(proglang).programmingLanguage,
     });
-    console.log(BuilderService.technologyService);
+
     LocalStorage.data = BuilderService.getData();
   }, [proglang]);
 
@@ -49,7 +56,7 @@ function Technology() {
       natureOfAssessment:
         NatureOfAssessmentService.updateData(nature).natureOfAssessment,
     });
-    console.log(BuilderService.technologyService);
+
     LocalStorage.data = BuilderService.getData();
   }, [nature]);
 

@@ -91,7 +91,7 @@ class Builder {
     data.technologyData = this.technologyService;
     data.questionData = this.questionService;
     data.scheduleTimeData = this.scheduleTimeService;
-    console.log(data);
+
     const returnValue = JSON.stringify(data);
 
     return returnValue;

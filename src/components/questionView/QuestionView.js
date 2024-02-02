@@ -124,7 +124,6 @@ function TopicDataLoader({ selectedTopic, setSelectedTopic, selectedModule }) {
     queryKey: ["QuestionView", "TopicName"],
     queryFn: () => getTopicNames(selectedModule.ModuleID),
   });
-  console.log(isModuleDataLoading);
 
   if (topicData && typeof topicData === "object") {
     return (

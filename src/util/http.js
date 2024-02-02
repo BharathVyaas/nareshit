@@ -1,5 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { LocalStorage } from "../services/LocalStorage";
 
 export const queryClient = new QueryClient();
 
@@ -21,7 +22,11 @@ export const getModuleNames = async () => {
   try {
     const res = await axios.get("http://localhost:4000/query/view-moduleNames");
 
-    const data = res.data;
+    const d = await axios.get(
+      `https://www.nareshit.net/fetchModules/${LocalStorage.getProgrammingLanguageId()}`
+    );
+
+    const data = { moduleNames: d.data };
     return data;
   } catch (err) {
     console.log("getModuleNames", err);

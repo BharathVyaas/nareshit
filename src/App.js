@@ -34,6 +34,7 @@ function App() {
         {
           path: "technology",
           element: <Technology />,
+          id: "tech",
           loader: TechnologyLoader,
           action: TechnologyAction,
         },

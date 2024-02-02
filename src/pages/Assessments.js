@@ -36,7 +36,7 @@ function Assessments() {
       key: "flag",
       value: MCQService.updateFlag(MCQ).getFlag(),
     });
-    console.log(BuilderService.getData());
+
     LocalStorage.data = BuilderService.getData();
   }, [MCQ]);
 

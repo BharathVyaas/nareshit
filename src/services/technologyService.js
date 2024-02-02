@@ -13,11 +13,11 @@ class SelectTechnologyClass extends Composite {
 
   constructor() {
     super();
-    this.programmingLanguage = { programmingLanguage: "DOTNET", id: -1 };
+    this.programmingLanguage = ".net";
   }
 
-  updateData(newData) {
-    this.programmingLanguage = newData;
+  updateData(newLanguage) {
+    this.programmingLanguage = newLanguage;
 
     return this;
   }
@@ -32,7 +32,7 @@ class NatureOfAssessmentClass extends Composite {
 
   constructor() {
     super();
-    this.natureOfAssessment = "dynamic";
+    this.natureOfAssessment = "";
   }
 
   updateData(newType) {
@@ -51,7 +51,7 @@ class RandomClass extends Composite {
 
   constructor() {
     super();
-    this.random = "noRandom";
+    this.random = "";
   }
 
   updateData(newRandom) {
@@ -71,11 +71,7 @@ class TechnologyClass extends Composite {
   constructor() {
     super();
     this._technology = {
-      programmingLanguage: {
-        programmingLanguage:
-          SelectTechnologyService.programmingLanguage.programmingLanguage,
-        id: SelectTechnologyService.programmingLanguage.id,
-      },
+      programmingLanguage: SelectTechnologyService.programmingLanguage,
       natureOfAssessment: NatureOfAssessmentService.natureOfAssessment,
       assessmentNature: RandomService.random,
     };
@@ -86,10 +82,6 @@ class TechnologyClass extends Composite {
   }
 
   updateData(newTechnology) {
-    console.log(
-      "----------------------",
-      SelectTechnologyService.programmingLanguage
-    );
     this._technology = newTechnology;
 
     return this;

@@ -9,6 +9,9 @@ function QuestionTypes({
   dataDifficulty,
   setDataDifficulty,
 }) {
+  function handler(data) {
+    return data;
+  }
   return (
     <>
       <label htmlFor="data">
@@ -38,16 +41,19 @@ function QuestionTypes({
                 difficultyLevel="easy"
                 dataDifficulty={dataDifficulty}
                 setDataDifficulty={setDataDifficulty}
+                handler={handler}
               />
               <DifficultyLevel
                 difficultyLevel="medium"
                 dataDifficulty={dataDifficulty}
                 setDataDifficulty={setDataDifficulty}
+                handler={handler}
               />
               <DifficultyLevel
                 difficultyLevel="hard"
                 dataDifficulty={dataDifficulty}
                 setDataDifficulty={setDataDifficulty}
+                handler={handler}
               />
             </div>
           </fieldset>
@@ -63,6 +69,7 @@ function DifficultyLevel({
   difficultyLevel,
   dataDifficulty,
   setDataDifficulty,
+  handler,
 }) {
   return (
     <label htmlFor="dataEasy">

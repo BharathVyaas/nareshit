@@ -13,7 +13,7 @@ class SelectTechnologyClass extends Composite {
 
   constructor() {
     super();
-    this.programmingLanguage = "DotNet";
+    this.programmingLanguage = "Select A Technology";
   }
 
   updateData(newLanguage) {

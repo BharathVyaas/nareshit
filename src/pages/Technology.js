@@ -21,9 +21,29 @@ const formNames = ["proglangs", "catogaryType", "assessmentNature", "random"];
 function Technology() {
   const { programmingLanguages } = useLoaderData();
 
+  const updatedProgrammingLanguages = [
+    {
+      TechnologyID: -1,
+      TechnologyName:
+        BuilderService.technologyService._technology?.programmingLanguage,
+    },
+    ...programmingLanguages,
+  ];
+
   const [proglang, setProgLang] = useState(
     BuilderService.technologyService._technology?.programmingLanguage
   );
+
+  console.log(
+    LocalStorage.data?.technologyData._technology.programmingLanguage
+  );
+
+  useEffect(() => {
+    setProgLang(
+      LocalStorage.programmingLanguageData?.TechnologyName ||
+        BuilderService.technologyService._technology?.programmingLanguage
+    );
+  }, []);
 
   useEffect(() => {
     LocalStorage.programmingLanguageData = programmingLanguages.find(
@@ -32,12 +52,6 @@ function Technology() {
       }
     );
   }, [proglang]);
-
-  useEffect(() => {
-    setProgLang(
-      BuilderService.technologyService._technology?.programmingLanguage
-    );
-  });
 
   const [nature, setNature] = useState(
     BuilderService.technologyService._technology?.natureOfAssessment
@@ -86,7 +100,7 @@ function Technology() {
           <SelectedTechnology
             proglang={proglang}
             setProgLang={setProgLang}
-            programmingLanguages={programmingLanguages}
+            programmingLanguages={updatedProgrammingLanguages}
           />
           <NatureOfAssessments nature={nature} setNature={setNature} />
           <Randoms random={random} setRandom={setRandom} />

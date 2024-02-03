@@ -104,7 +104,7 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
   const handleModuleChange = (event) => {
     const selectedModuleName = event.target.value;
     const selectedModule = moduleNames.find(
-      (module) => module.moduleName === selectedModuleName
+      (module) => module?.moduleName === selectedModuleName
     );
 
     setSelectedModule(selectedModule);
@@ -118,7 +118,7 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
           <select
             id="moduleName"
             name="moduleName"
-            value={selectedModule.moduleName}
+            value={selectedModule?.moduleName}
             onChange={handleModuleChange}
           >
             {moduleNames.map((element) => (

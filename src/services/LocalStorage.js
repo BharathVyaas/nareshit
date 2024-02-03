@@ -10,6 +10,17 @@ class LocalStorageClass {
     this.programmingLanguageData = undefined;
   }
 
+  get programmingLanguageFirstVisit() {
+    const result = localStorage.getItem("programmingLanguageFirstVisit");
+    console.log("result", result);
+    this.programmingLanguageFirstVisit = false;
+    return result;
+  }
+
+  set programmingLanguageFirstVisit(flag) {
+    localStorage.setItem("programmingLanguageFirstVisit", flag);
+  }
+
   get data() {
     const result = this.parse("data");
 

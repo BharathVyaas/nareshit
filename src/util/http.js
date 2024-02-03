@@ -61,11 +61,6 @@ export const getSubTopicNames = async () => {
 };
 
 export const getQuestions = async (DifficultyLevelID, count) => {
-  const params = {
-    parameter1: "value1",
-    parameter2: "value2",
-  };
-
   try {
     const res = await axios.get(
       `http://localhost:4000/query/questions?DifficultyLevelID=${DifficultyLevelID}&count=${count}&excludes='${JSON.stringify(

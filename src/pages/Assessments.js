@@ -67,7 +67,7 @@ function Assessments() {
         className="bg-gray-50 min-h-[70vh] p-2"
       >
         <h1>
-          Selected Technology Name:{" "}
+          Selected Technology Name:
           {SelectTechnologyService.programmingLanguage}
         </h1>
         <Form method="POST" className="p-5">

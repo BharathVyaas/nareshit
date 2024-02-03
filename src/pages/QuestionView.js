@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import QusetionViewTechnlogy from "../components/questionView/QuestionView";
 import { getModuleNames, getQuestions, queryClient } from "../util/http";
 import BuilderService from "../services/builder";
-import TechnologyService from "../services/technologyService";
 import Button from "../ui/Button";
 import AssessmentQuestionBox from "../components/AssessmentQuestionbox";
 
@@ -22,21 +21,19 @@ function QuestionView() {
   const [selectedTopic, setSelectedTopic] = useState({});
   const [selectedSubTopic, setSelectedSubTopic] = useState({});
 
-  const [_, setStale] = useState(false);
-
-  (() => {
-    return _;
-  })();
+  const [stale, setStale] = useState(false);
 
   const fetchDataTypeHandler = (difficultyLvl, count) => {
     setFetchQuestionType([difficultyLvl, count]);
   };
 
+  function excludeHandler() {}
+
   LocalStorage.data = BuilderService.getData();
 
   const MCQDifficulty = BuilderService.getDifficultyByTitle(Titles[0]);
   const selectTechnology =
-    TechnologyService.technology?.programmingLanguage?.programmingLanguage;
+    LocalStorage.data.technologyData._technology.programmingLanguage;
 
   return (
     <AnimatePresence>
@@ -71,11 +68,19 @@ function QuestionView() {
             />
           </section>
           <section className="flex my-4 justify-between items-center">
-            <FetchData fetchDataTypeHandler={fetchDataTypeHandler} />
+            <FetchData
+              fetchDataTypeHandler={fetchDataTypeHandler}
+              setStale={setStale}
+              excludeHandler={excludeHandler}
+            />
           </section>
           <section className="bg-rose-200">
             {fetchQuestionType[0] && fetchQuestionType[1] && (
-              <Questions fetchQuestionType={fetchQuestionType} />
+              <Questions
+                fetchQuestionType={fetchQuestionType}
+                setStale={setStale}
+                stale={stale}
+              />
             )}
           </section>
           <Button link="/categories/scheduletime" />
@@ -87,20 +92,29 @@ function QuestionView() {
 
 export default QuestionView;
 
-function Questions({ fetchQuestionType }) {
-  const { data: questions } = useQuery({
+function Questions({ fetchQuestionType, stale, setStale }) {
+  const { data: questions, refetch } = useQuery({
     queryKey: ["questionview", "questions"],
     queryFn: () => getQuestions(fetchQuestionType[0], fetchQuestionType[1]),
-    staleTime: 15000,
-    gcTime: 15000,
+    enabled: stale,
   });
+
+  let updatedQuestions;
+  if (questions) updatedQuestions = [...questions.moduleNames];
+
+  useEffect(() => {
+    if (stale) {
+      refetch();
+      setStale(false);
+    }
+  }, [stale, refetch]);
 
   const [includes, setIncludes] = useState([]);
 
   return (
     <>
-      {questions &&
-        questions.moduleNames.map((question) => (
+      {updatedQuestions &&
+        updatedQuestions.map((question) => (
           <Question
             key={question.QuestionID}
             difficultyId={question.DifficultyLevelID}
@@ -189,9 +203,6 @@ function Question({
   return (
     <section
       className={` ${bgColor} scroll min-h-[6rem] flex items-center border-2 border-white overflow-auto justify-between`}
-      onClick={() => {
-        console.log(question);
-      }}
     >
       <input
         type="checkbox"
@@ -229,7 +240,7 @@ function Option({ option, question, questionKey }) {
   );
 }
 
-function FetchData({ fetchDataTypeHandler }) {
+function FetchData({ fetchDataTypeHandler, setStale, excludeHandler }) {
   const difficulty = BuilderService.getDifficulty();
   const easy = difficulty
     .map((element) => element.easy)
@@ -257,6 +268,7 @@ function FetchData({ fetchDataTypeHandler }) {
             onClick={() => {
               setFetchCount(easy);
               fetchDataTypeHandler("1", easy);
+              setStale(true);
             }}
             className="bg-green-200 px-6 py-[.6px] rounded border-2 border-green-400"
           >
@@ -273,6 +285,7 @@ function FetchData({ fetchDataTypeHandler }) {
             onClick={() => {
               setFetchCount(medium);
               fetchDataTypeHandler("2", medium);
+              setStale(true);
             }}
             className="bg-rose-200 px-6 py-[.6px] rounded border-2 border-rose-400"
           >
@@ -288,6 +301,7 @@ function FetchData({ fetchDataTypeHandler }) {
             onClick={() => {
               setFetchCount(hard);
               fetchDataTypeHandler("3", hard);
+              setStale(true);
             }}
             className="bg-red-400 px-6 py-[.6px] rounded border-2 border-red-600"
           >
@@ -311,7 +325,7 @@ function FetchData({ fetchDataTypeHandler }) {
       </div>
       <div>
         <aside className="flex me-10 text-white">
-          <p className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded">
+          <button className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded">
             Include:
             <input
               className="w-7 ms-2 rounded text-black bg-white"
@@ -320,8 +334,11 @@ function FetchData({ fetchDataTypeHandler }) {
               onChange={() => {}}
               disabled
             />
-          </p>
-          <p className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded">
+          </button>
+          <button
+            className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded"
+            onClick={excludeHandler}
+          >
             Exclude:
             <input
               className="w-7 ms-2 rounded text-black bg-white"
@@ -330,7 +347,7 @@ function FetchData({ fetchDataTypeHandler }) {
               onChange={() => {}}
               disabled
             />
-          </p>
+          </button>
         </aside>
       </div>
     </>

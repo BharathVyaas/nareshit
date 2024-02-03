@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Form, redirect } from "react-router-dom";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -7,20 +7,51 @@ import BuilderService from "../services/builder";
 import { LocalStorage } from "../services/LocalStorage";
 
 function ScheduleTime() {
-  const testName = useRef();
-  const testDescription = useRef();
-  const startDate = useRef();
-  const endDate = useRef();
-  const startTime = useRef();
-  const endTime = useRef();
+  const testNameRef = useRef();
+  const testDescriptionRef = useRef();
+  const startDateRef = useRef();
+  const endDateRef = useRef();
+  const startTimeRef = useRef();
+  const endTimeRef = useRef();
 
-  function handler() {
-    console.log(
-      BuilderService.setData({
-        ...BuilderService.getServices(),
-      }).getData()
-    );
-  }
+  const [testName, setTestName] = useState("");
+  const [testDescription, setTestDescription] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+
+  const [isValid, setIsValid] = useState(false);
+  const [isDateValid, setIsDateValid] = useState(false);
+  const [isTimeValid, setIsTimeValid] = useState(false);
+  const [isTestValid, setIsTestValid] = useState(false);
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      const startDateTime = new Date(startDate).toISOString();
+      const endDateTime = new Date(endDate).toISOString();
+
+      setIsDateValid(startDateTime <= endDateTime);
+    }
+  }, [startDate, endDate]);
+
+  useEffect(() => {
+    if (startTime && endTime) {
+      const dummyDate = "2022-01-01";
+      const startDateTime = new Date(dummyDate + "T" + startTime);
+      const endDateTime = new Date(dummyDate + "T" + endTime);
+
+      setIsTimeValid(startDateTime.getTime() <= endDateTime.getTime());
+    }
+  }, [startTime, endTime]);
+
+  useEffect(() => {
+    setIsTestValid(testName && testDescription);
+  }, [testName, testDescription]);
+
+  useEffect(() => {
+    setIsValid(isTimeValid && isTestValid && isDateValid);
+  }, [isTimeValid, isDateValid, isTestValid]);
 
   return (
     <AnimatePresence>
@@ -39,7 +70,8 @@ function ScheduleTime() {
             type="text"
             name="testName"
             id="testName"
-            ref={testName}
+            value={testName}
+            onChange={(e) => setTestName(e.target.value)}
             className="w-full border-[1.2px]  _text-start border-black h-[2.2rem] p-2"
           />
           <label htmlFor="testDescription" className="w-full block p-1">
@@ -49,7 +81,8 @@ function ScheduleTime() {
             type="text"
             name="testDescription"
             id="testDescription"
-            ref={testDescription}
+            value={testDescription}
+            onChange={(e) => setTestDescription(e.target.value)}
             className="w-full border-[1.2px]  _text-start border-black h-[2.2rem] p-2"
           />
           <label htmlFor="startDate" className="w-full block p-1">
@@ -59,7 +92,8 @@ function ScheduleTime() {
             type="date"
             name="startDate"
             id="startDate"
-            ref={startDate}
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
             className="w-full border-[1.2px]  _text-start border-black h-[2.2rem] p-2"
           />
           <label htmlFor="endDate" className="w-full block p-1">
@@ -69,7 +103,8 @@ function ScheduleTime() {
             type="date"
             name="endDate"
             id="endDate"
-            ref={endDate}
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
             className="w-full border-[1.2px]  _text-start border-black h-[2.2rem] p-2"
           />
           <label htmlFor="startTime" className="w-full block p-1">
@@ -79,7 +114,8 @@ function ScheduleTime() {
             type="time"
             name="startTime"
             id="startTime"
-            ref={startTime}
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
             className="w-full border-[1.2px]  _text-start border-black h-[2.2rem] p-2"
           />
           <label htmlFor="endTime" className="w-full block p-1">
@@ -90,10 +126,12 @@ function ScheduleTime() {
             type="time"
             name="endTime"
             id="endTime"
-            ref={endTime}
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
           />
           <button
-            onClick={handler}
+            disabled={!isValid}
+            onClick={() => console.log("enable")}
             className="px-8 py-2 mx-auto mt-4 bg-green-300 hover:bg-green-400"
           >
             Test Prepared

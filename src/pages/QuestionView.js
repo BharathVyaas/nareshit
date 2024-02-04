@@ -58,7 +58,7 @@ function QuestionView() {
           exit={{ x: "100%", transition: { duration: 0.3 } }}
           className="bg-gray-50 min-h-[70vh]"
         >
-          <section className=" py-3">
+          <section className=" pt-3">
             <div className="ms-[58%] flex">
               <div>
                 <input
@@ -77,28 +77,30 @@ function QuestionView() {
               </div>
             </div>
           </section>
-          <section className="flex justify-between m-[40px]">
-            <QusetionViewTechnlogy
-              selectedModule={selectedModule}
-              setSelectedModule={setSelectedModule}
-              selectedTopic={selectedTopic}
-              setSelectedTopic={setSelectedTopic}
-              selectedSubTopic={selectedSubTopic}
-              setSelectedSubTopic={setSelectedSubTopic}
-            />
-          </section>
-          <section className="flex p-5 bg-slate-200">
-            <h2 className="max-w-[20%]">
-              <span>{selectTechnology}</span>
-            </h2>
-            <AssessmentQuestionBox
-              title={Titles[0]}
-              setStale={setStale}
-              easy={MCQDifficulty.easy}
-              medium={MCQDifficulty.medium}
-              hard={MCQDifficulty.hard}
-            />
-          </section>
+          <div>
+            <section className="flex m-[40px]">
+              <QusetionViewTechnlogy
+                selectedModule={selectedModule}
+                setSelectedModule={setSelectedModule}
+                selectedTopic={selectedTopic}
+                setSelectedTopic={setSelectedTopic}
+                selectedSubTopic={selectedSubTopic}
+                setSelectedSubTopic={setSelectedSubTopic}
+              />
+            </section>
+            <section className="flex p-5 bg-slate-200">
+              <h2 className="max-w-[20%]">
+                <span>{selectTechnology}</span>
+              </h2>
+              <AssessmentQuestionBox
+                title={Titles[0]}
+                setStale={setStale}
+                easy={MCQDifficulty.easy}
+                medium={MCQDifficulty.medium}
+                hard={MCQDifficulty.hard}
+              />
+            </section>
+          </div>
           <section className="flex my-4 justify-between items-center">
             <FetchData setStale={setStale} />
           </section>

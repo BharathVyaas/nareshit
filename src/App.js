@@ -1,4 +1,7 @@
+import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { QueryClientProvider } from "@tanstack/react-query";
+
 import AdminHomePage from "./pages/AdminHomePage";
 import Categories from "./pages/Categories";
 import ListOfAssessment, {
@@ -9,18 +12,33 @@ import Technology, {
   action as TechnologyAction,
 } from "./pages/Technology";
 import Assessments, { action as AssessmentAction } from "./pages/Assessments";
-import QuestionView, { loader as questionLoader } from "./pages/QuestionView";
+import QuestionView, { loader as QuestionLoader } from "./pages/QuestionView";
 import ScheduleTime, {
   action as ScheduleTimeAction,
 } from "./pages/ScheduleTime";
-import { QueryClientProvider } from "@tanstack/react-query";
+
 import { queryClient } from "./util/http";
 import BuilderService from "./services/builder";
 
-function App() {
+/**
+ * Initializes the Builder service.
+ *
+ * Builder Service is Necessary to run this application,
+ * initializing it in App ensure that all the user interaction is recorded.
+ */
+function initializeBuilderService() {
   BuilderService.init();
+}
 
-  const router = createBrowserRouter([
+/**
+ *
+ * Main App component that sets up routing and provides QueryClient for React Query.
+ */
+function App() {
+  initializeBuilderService();
+
+  // Define the routing configuration
+  const appRoutes = [
     { path: "/", element: <AdminHomePage /> },
     {
       path: "categories",
@@ -46,7 +64,7 @@ function App() {
         {
           path: "questionview",
           element: <QuestionView />,
-          loader: questionLoader,
+          loader: QuestionLoader,
         },
         {
           path: "scheduletime",
@@ -55,7 +73,10 @@ function App() {
         },
       ],
     },
-  ]);
+  ];
+
+  const router = createBrowserRouter(appRoutes);
+
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />

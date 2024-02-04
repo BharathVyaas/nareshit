@@ -1,6 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+/**
+ *    *** Still Under Developement ***
+ *
+ *
+ * Functional component for the Admin Home Page.
+ * @returns {JSX.Element} The Admin Home Page component.
+ */
 function AdminHomePage() {
   return (
     <>
@@ -22,16 +29,16 @@ function AdminHomePage() {
           <p className="">This is the Admin to Create for a Test Page</p>
           <aside className="w-[90%] mx-auto">
             <nav>
-              <ul className="flex justify-between mt-4">
-                <li className="text-white bg-sky-400 w-[200px] grid place-content-center mx-2 h-10 hover:bg-sky-500 rounded-lg">
+              <ul className="flex justify-evenly mt-4">
+                <li className="text-white bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
                   <Link to="/categories/assessmentlist">
                     Test Creation Page
                   </Link>
                 </li>
-                <li className="text-white bg-sky-400 w-[200px] grid place-content-center mx-2 h-10 hover:bg-sky-500 rounded-lg">
+                <li className="text-white bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
                   <Link>Question's DB</Link>
                 </li>
-                <li className="text-white bg-sky-400 w-[200px] grid place-content-center mx-2 h-10 hover:bg-sky-500 rounded-lg">
+                <li className="text-white bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
                   <Link>Enroll Student</Link>
                 </li>
               </ul>

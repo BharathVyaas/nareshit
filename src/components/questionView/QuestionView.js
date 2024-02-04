@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Form } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -9,6 +9,9 @@ import {
 } from "../../util/http";
 import BuilderService from "../../services/builder";
 import { LocalStorage } from "../../services/LocalStorage";
+import TopicsContext, {
+  TopicsContextProvider,
+} from "../../context/topicsContext";
 
 function QusetionViewTechnlogy({
   selectedModule,
@@ -30,26 +33,37 @@ function QusetionViewTechnlogy({
 
   return (
     <>
-      <ModuleDataLoader
-        selectedModule={selectedModule}
-        setSelectedModule={setSelectedModule}
-      />
-      {selectedModule && (
-        <TopicDataLoader
+      <TopicsContextProvider>
+        <ModuleDataLoader
           selectedModule={selectedModule}
-          selectedTopic={selectedTopic}
-          setSelectedTopic={setSelectedTopic}
+          setSelectedModule={setSelectedModule}
         />
-      )}
-      {selectedTopic &&
+        {selectedModule && (
+          <TopicDataLoader
+            selectedModule={selectedModule}
+            selectedTopic={selectedTopic}
+            setSelectedTopic={setSelectedTopic}
+          />
+        )}
+        {selectedTopic &&
         LocalStorage.topicData &&
-        LocalStorage._getTopicDataById() && (
+        LocalStorage._getTopicDataById() ? (
           <SubTopicDataLoader
             selectedTopic={setSelectedTopic}
             selectedSubTopic={selectedSubTopic}
             setSelectedSubTopic={setSelectedSubTopic}
           />
+        ) : (
+          <div className="max-w-[30%] overflow-hidden flex flex-col">
+            <span>
+              <label htmlFor="subtopicName">Sub Topic Name:</label>
+            </span>
+            <select id="subtopicName" name="subtopicName" className="">
+              <option value="selectsubtopic">Select A Subtopic</option>
+            </select>
+          </div>
         )}
+      </TopicsContextProvider>
     </>
   );
 }
@@ -112,9 +126,9 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
 
   return (
     <>
-      <Form className="max-w-[20%]">
+      <Form className="max-w-[20%] me-6">
         <label htmlFor="moduleName">
-          Module Name
+          Module Name:
           <select
             id="moduleName"
             name="moduleName"
@@ -201,22 +215,27 @@ function TopicName({ setSelectedTechnology, data }) {
     setSelectedModule(selectedModule);
   };
   return (
-    <Form className="max-w-[20%]">
-      <label htmlFor="topicName">
-        Topic Name
-        <select
-          id="topicName"
-          name="topicName"
-          value={selectedModule?.topicName}
-          onChange={handleModuleChange}
-        >
-          {topicNames.map((element, index) => (
-            <option key={element.moduleId + index} value={element.topicName}>
-              {element.topicName}
-            </option>
-          ))}
-        </select>
-      </label>
+    <Form className="max-w-[45%] overflow-hidden me-6 flex flex-col">
+      <span>
+        <label htmlFor="topicName">Topic Name:</label>
+      </span>
+
+      <select
+        id="topicName"
+        name="topicName"
+        value={selectedModule?.topicName}
+        onChange={handleModuleChange}
+      >
+        {topicNames.map((element, index) => (
+          <option
+            className=""
+            key={element.moduleId + index}
+            value={element.topicName}
+          >
+            {element.topicName}
+          </option>
+        ))}
+      </select>
     </Form>
   );
 }
@@ -227,6 +246,15 @@ function SubTopicDataLoader({ setSelectedSubTopic, selectedTopic }) {
     queryKey: ["QuestionView", "SubTopicNames"],
     queryFn: getSubTopicNames,
   });
+  let placeHolder = {};
+  if (data) {
+    placeHolder = data[0];
+  }
+  placeHolder.subTopicName = "Select A Topic";
+  placeHolder.subTopicId = -1;
+
+  let updatedData;
+  if (data) updatedData = [placeHolder, ...data];
 
   useEffect(() => {
     /* console.log("selectedTopic:update", selectedTopic); */
@@ -258,10 +286,20 @@ function SubTopicName({ setSelectedTechnology, data }) {
     modifiedBy: element.ModifiedBy,
   }));
 
+  const { topics, setTopics } = useContext(TopicsContext);
+
   const [selectedModule, setSelectedModule] = useState(
     BuilderService.questionService.selectedTechnology.subTopic ||
       subTopicNames[0]
   );
+
+  useEffect(() => {
+    console.log(
+      LocalStorage.topicData,
+      LocalStorage.moduleData,
+      selectedModule
+    );
+  }, [selectedModule]);
 
   useEffect(() => {
     setSelectedTechnology((prev) => {
@@ -281,9 +319,9 @@ function SubTopicName({ setSelectedTechnology, data }) {
     setSelectedModule(selectedModule);
   };
   return (
-    <Form className="max-w-[20%] overflow-hidden">
+    <Form className="max-w-[30%] overflow-hidden">
       <label htmlFor="subtopicName">
-        Sub Topic Name
+        Sub Topic Name:
         <select
           id="subtopicName"
           name="subtopicName"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 function QuestionTypes({
   questionType,
@@ -9,9 +9,6 @@ function QuestionTypes({
   dataDifficulty,
   setDataDifficulty,
 }) {
-  function handler(data) {
-    return data;
-  }
   return (
     <>
       <label htmlFor="data">
@@ -40,20 +37,20 @@ function QuestionTypes({
               <DifficultyLevel
                 difficultyLevel="easy"
                 dataDifficulty={dataDifficulty}
+                dataQuestions={dataQuestions}
                 setDataDifficulty={setDataDifficulty}
-                handler={handler}
               />
               <DifficultyLevel
                 difficultyLevel="medium"
                 dataDifficulty={dataDifficulty}
+                dataQuestions={dataQuestions}
                 setDataDifficulty={setDataDifficulty}
-                handler={handler}
               />
               <DifficultyLevel
                 difficultyLevel="hard"
                 dataDifficulty={dataDifficulty}
+                dataQuestions={dataQuestions}
                 setDataDifficulty={setDataDifficulty}
-                handler={handler}
               />
             </div>
           </fieldset>
@@ -69,8 +66,10 @@ function DifficultyLevel({
   difficultyLevel,
   dataDifficulty,
   setDataDifficulty,
-  handler,
+  dataQuestions,
 }) {
+  const ref = useRef();
+
   return (
     <label htmlFor="dataEasy">
       {difficultyLevel}:
@@ -79,10 +78,29 @@ function DifficultyLevel({
         type="number"
         id="dataEasy"
         name="dataEasy"
+        ref={ref}
         value={dataDifficulty[difficultyLevel]}
         onChange={(e) =>
           setDataDifficulty((prev) => {
-            return { ...prev, [difficultyLevel]: Number(e.target.value) };
+            let total =
+              dataDifficulty.easy +
+              dataDifficulty.medium +
+              dataDifficulty.hard -
+              dataDifficulty[difficultyLevel] +
+              Number(e.target.value);
+            let newData;
+            if (total <= dataQuestions) {
+              ref.current.style.outline = "";
+              newData = {
+                ...dataDifficulty,
+                [difficultyLevel]: Number(e.target.value),
+              };
+            } else {
+              ref.current.style.outline = "2px solid red";
+              newData = prev;
+            }
+
+            return newData;
           })
         }
       />
@@ -99,7 +117,7 @@ export function NumberOfQuestions({ dataQuestions, setDataQuestions }) {
         type="number"
         name="No.Q-secondary"
         value={dataQuestions}
-        onChange={(e) => setDataQuestions(e.target.value)}
+        onChange={(e) => setDataQuestions(Number(e.target.value))}
       />
     </label>
   );

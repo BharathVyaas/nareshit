@@ -9,7 +9,7 @@ import Technology, {
   action as TechnologyAction,
 } from "./pages/Technology";
 import Assessments, { action as AssessmentAction } from "./pages/Assessments";
-import QuestionView from "./pages/QuestionView";
+import QuestionView, { loader as questionLoader } from "./pages/QuestionView";
 import ScheduleTime, {
   action as ScheduleTimeAction,
 } from "./pages/ScheduleTime";
@@ -46,6 +46,7 @@ function App() {
         {
           path: "questionview",
           element: <QuestionView />,
+          loader: questionLoader,
         },
         {
           path: "scheduletime",

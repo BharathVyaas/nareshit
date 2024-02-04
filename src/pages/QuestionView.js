@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import QusetionViewTechnlogy from "../components/questionView/QuestionView";
 import { getModuleNames, getQuestions, queryClient } from "../util/http";
 import BuilderService from "../services/builder";
@@ -7,14 +13,25 @@ import AssessmentQuestionBox from "../components/AssessmentQuestionbox";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { LocalStorage } from "../services/LocalStorage";
-import { useQuery } from "@tanstack/react-query";
 import IncludesContext, {
   IncludesContextProvider,
 } from "../context/includesContext";
+import UpdateQuestions from "../context/updateQuestions";
+import { useLoaderData } from "react-router";
+import { DifficultySubescribeService } from "../services/difficultySubescribe";
+import axios from "axios";
+import Modal from "../ui/Modal";
+import QuestionModelHandler from "../ui/QuestionModelHandler";
+import ExcelImport from "../components/ExcelImport";
 
 const Titles = ["MCQ"];
 
 function QuestionView() {
+  const questions = useLoaderData();
+
+  // Make Sure to destroy previous subescriptions.
+  DifficultySubescribeService.source();
+
   const [fetchQuestionType, setFetchQuestionType] = useState(["", ""]);
 
   const [selectedModule, setSelectedModule] = useState({});
@@ -23,17 +40,11 @@ function QuestionView() {
 
   const [stale, setStale] = useState(false);
 
-  const fetchDataTypeHandler = (difficultyLvl, count) => {
-    setFetchQuestionType([difficultyLvl, count]);
-  };
-
-  function excludeHandler() {}
+  const searchRef = useRef();
 
   LocalStorage.data = BuilderService.getData();
 
   const MCQDifficulty = BuilderService.getDifficultyByTitle(Titles[0]);
-  const selectTechnology =
-    LocalStorage.data.technologyData._technology.programmingLanguage;
 
   return (
     <AnimatePresence>
@@ -44,7 +55,26 @@ function QuestionView() {
           exit={{ x: "100%", transition: { duration: 0.3 } }}
           className="bg-gray-50 min-h-[70vh]"
         >
-          <section className="flex justify-between m-[40px]">
+          <section className=" py-3">
+            <div className="ms-[58%] flex">
+              <div>
+                <input
+                  name="search"
+                  className="ps-2 text-start border-2 border-[gray] rounded-s"
+                  placeholder="Enter Search Term"
+                  type="text"
+                  ref={searchRef}
+                />
+                <button className="bg-[gray] px-3 text-white border-2 border-[gray] font-medium">
+                  Search
+                </button>
+              </div>
+              <div className="ms-[1px] bg-[gray] px-3 text-white border-2 border-[gray] rounded-e font-medium">
+                <ExcelImport />
+              </div>
+            </div>
+          </section>
+          {/* <section className="flex justify-between m-[40px]">
             <h2 className="max-w-[20%]">
               Select Technology Name:<span>{selectTechnology}</span>
             </h2>
@@ -57,7 +87,7 @@ function QuestionView() {
               selectedSubTopic={selectedSubTopic}
               setSelectedSubTopic={setSelectedSubTopic}
             />
-          </section>
+          </section> */}
           <section className="flex p-5 bg-slate-200">
             <AssessmentQuestionBox
               title={Titles[0]}
@@ -68,20 +98,10 @@ function QuestionView() {
             />
           </section>
           <section className="flex my-4 justify-between items-center">
-            <FetchData
-              fetchDataTypeHandler={fetchDataTypeHandler}
-              setStale={setStale}
-              excludeHandler={excludeHandler}
-            />
+            <FetchData setStale={setStale} />
           </section>
-          <section className="bg-rose-200">
-            {fetchQuestionType[0] && fetchQuestionType[1] && (
-              <Questions
-                fetchQuestionType={fetchQuestionType}
-                setStale={setStale}
-                stale={stale}
-              />
-            )}
+          <section className="grid grid-cols-2">
+            <Questions questions={questions} />
           </section>
           <Button link="/categories/scheduletime" />
         </motion.main>
@@ -92,33 +112,103 @@ function QuestionView() {
 
 export default QuestionView;
 
-function Questions({ fetchQuestionType, stale, setStale }) {
-  const { data: questions, refetch } = useQuery({
-    queryKey: ["questionview", "questions"],
-    queryFn: () => getQuestions(fetchQuestionType[0], fetchQuestionType[1]),
-    enabled: stale,
-  });
+function Questions({ questions }) {
+  const [questionArr, setQuestionArr] = useState(questions);
 
-  let updatedQuestions;
-  if (questions) updatedQuestions = [...questions.moduleNames];
+  const questionHandler = useCallback(async (difficultyId, count) => {
+    try {
+      switch (difficultyId) {
+        case "1": {
+          setQuestionArr(
+            questions.filter((question) => {
+              return question.DifficultyLevelID === 1;
+            })
+          );
+          break;
+        }
+        case "2": {
+          setQuestionArr(
+            questions.filter((question) => {
+              return question.DifficultyLevelID === 2;
+            })
+          );
 
-  useEffect(() => {
-    if (stale) {
-      refetch();
-      setStale(false);
+          break;
+        }
+        case "3": {
+          setQuestionArr(
+            questions.filter((question) => {
+              return question.DifficultyLevelID === 3;
+            })
+          );
+          break;
+        }
+        case "all": {
+          setQuestionArr(questions);
+          break;
+        }
+        default: {
+          const excludedArr = LocalStorage.exclude;
+
+          if (excludedArr.length === 0) break;
+
+          const excludedQuestions = excludedArr.map((id) => {
+            let postFilter = questions.filter(
+              (question) => question.QuestionID === id
+            );
+            postFilter = postFilter && postFilter[0];
+            return postFilter;
+          });
+
+          let excludedMap = {};
+          excludedQuestions?.forEach((element) => {
+            if (!excludedMap[String(element?.DifficultyLevelID)])
+              excludedMap[String(element?.DifficultyLevelID)] = [];
+            excludedMap[String(element?.DifficultyLevelID)].push(
+              element?.QuestionID
+            );
+          });
+
+          const includedQuestions = questions.filter(
+            (element) => !LocalStorage.exclude.includes(element.QuestionID)
+          );
+
+          let easy = excludedMap["1"]?.length;
+          let medium = excludedMap["2"]?.length;
+          let hard = excludedMap["3"]?.length;
+
+          if (!easy) easy = 0;
+          if (!medium) medium = 0;
+          if (!hard) hard = 0;
+
+          const res = await axios.get(
+            `https://www.nareshit.net/fetchDynamicQuestions/?McqAll=${
+              easy + hard + medium
+            }&Hardcount=${hard}&MediumCount=${medium}&EasyCount=${easy}`
+          );
+          LocalStorage.exclude = [];
+
+          setQuestionArr([...includedQuestions, ...res.data]);
+          break;
+        }
+      }
+    } catch (err) {
+      console.error(err);
     }
-  }, [stale, refetch]);
+  }, []);
+
+  DifficultySubescribeService.insert(questionHandler);
 
   const [includes, setIncludes] = useState([]);
 
   return (
     <>
-      {updatedQuestions &&
-        updatedQuestions.map((question) => (
+      {questionArr &&
+        questionArr.map((question, index) => (
           <Question
-            key={question.QuestionID}
-            difficultyId={question.DifficultyLevelID}
-            questions={questions.moduleNames}
+            key={question.QuestionID + index}
+            difficultyId={question?.DifficultyLevelID}
+            questions={questionArr}
             questionId={question.QuestionID}
             question={question}
             includes={includes}
@@ -137,6 +227,8 @@ function Question({
   questionId,
   difficultyId,
 }) {
+  const [modalData, setModalData] = useState(false);
+
   function removeElement(arr, value) {
     return arr.filter((item) => item !== value);
   }
@@ -201,26 +293,32 @@ function Question({
   else bgColor = "green";
 
   return (
-    <section
-      className={` ${bgColor} scroll min-h-[6rem] flex items-center border-2 border-white overflow-auto justify-between`}
-    >
-      <input
-        type="checkbox"
-        checked={includes.includes(questionId)}
-        onChange={(e) => handler(e.target.checked)}
-        className="max-w-[5%] min-w-[5%]"
-      />
-      <article className="max-w-[35%] min-w-[35%] overflow-hidden ">
-        <h3>{question.Question}</h3>
-      </article>
-      <Option option="Option1" question={question} questionKey="OptionA" />
-      <Option option="Option2" question={question} questionKey="OptionB" />
-      <Option option="Option3" question={question} questionKey="OptionC" />
-      <Option option="Option4" question={question} questionKey="OptionD" />
-      <aside className="max-w-[30%] min-w-[30%] overflow-hidden ">
-        <h3>{question.CorrectAnswer}</h3>
-      </aside>
-    </section>
+    <>
+      {modalData && (
+        <QuestionModelHandler
+          question={modalData}
+          setModalData={setModalData}
+        />
+      )}
+      <section
+        className={` ${bgColor} scroll m-2 min-h-[6rem] flex items-center border-2 border-white overflow-auto ps-2`}
+      >
+        <input
+          type="checkbox"
+          checked={includes.includes(questionId)}
+          onChange={(e) => handler(e.target.checked)}
+          className="max-w-[5%] min-w-[5%]"
+        />
+        <article
+          className="ps-4 overflow-hidden h-full w-[90%] flex items-center cursor-pointer"
+          onClick={() => {
+            setModalData(question);
+          }}
+        >
+          <h3>{question.Question}</h3>
+        </article>
+      </section>
+    </>
   );
 }
 
@@ -240,7 +338,7 @@ function Option({ option, question, questionKey }) {
   );
 }
 
-function FetchData({ fetchDataTypeHandler, setStale, excludeHandler }) {
+function FetchData({ setStale }) {
   const difficulty = BuilderService.getDifficulty();
   const easy = difficulty
     .map((element) => element.easy)
@@ -267,8 +365,8 @@ function FetchData({ fetchDataTypeHandler, setStale, excludeHandler }) {
           <button
             onClick={() => {
               setFetchCount(easy);
-              fetchDataTypeHandler("1", easy);
               setStale(true);
+              DifficultySubescribeService.notify("1", easy);
             }}
             className="bg-green-200 px-6 py-[.6px] rounded border-2 border-green-400"
           >
@@ -284,8 +382,8 @@ function FetchData({ fetchDataTypeHandler, setStale, excludeHandler }) {
           <button
             onClick={() => {
               setFetchCount(medium);
-              fetchDataTypeHandler("2", medium);
               setStale(true);
+              DifficultySubescribeService.notify("2", medium);
             }}
             className="bg-rose-200 px-6 py-[.6px] rounded border-2 border-rose-400"
           >
@@ -300,8 +398,8 @@ function FetchData({ fetchDataTypeHandler, setStale, excludeHandler }) {
           <button
             onClick={() => {
               setFetchCount(hard);
-              fetchDataTypeHandler("3", hard);
               setStale(true);
+              DifficultySubescribeService.notify("3", hard);
             }}
             className="bg-red-400 px-6 py-[.6px] rounded border-2 border-red-600"
           >
@@ -309,18 +407,18 @@ function FetchData({ fetchDataTypeHandler, setStale, excludeHandler }) {
           </button>
         </aside>
         <aside className="mx-4">
+          <h2>
+            Fetched Questions:<span>{fetchCount}</span>
+          </h2>
           <button
+            className="bg-sky-400 border-2 border-sky-800 px-6 py-[.8px] rounded"
             onClick={() => {
               setFetchCount(total);
-              fetchDataTypeHandler("all", total);
+              DifficultySubescribeService.notify("all", total);
             }}
           >
-            Retrive All
+            Show All
           </button>
-
-          <h2>
-            Total Questions Fetched:<span>{fetchCount}</span>
-          </h2>
         </aside>
       </div>
       <div>
@@ -337,7 +435,7 @@ function FetchData({ fetchDataTypeHandler, setStale, excludeHandler }) {
           </button>
           <button
             className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded"
-            onClick={excludeHandler}
+            onClick={() => DifficultySubescribeService.notify("exclude")}
           >
             Exclude:
             <input
@@ -355,10 +453,11 @@ function FetchData({ fetchDataTypeHandler, setStale, excludeHandler }) {
 }
 
 export async function loader() {
-  const result = await queryClient.fetchQuery({
-    queryKey: ["questionView", "selectedTechnology", "moduleName"],
-    queryFn: getModuleNames,
-  });
+  const result = await getQuestions(
+    BuilderService.getDifficulty()[0].easy,
+    BuilderService.getDifficulty()[0].medium,
+    BuilderService.getDifficulty()[0].hard
+  );
 
   return result;
 }

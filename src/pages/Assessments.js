@@ -58,6 +58,10 @@ function Assessments() {
     LocalStorage.data = BuilderService.getData();
   }, [MCQDifficulty]);
 
+  const linkDisabled =
+    MCQQuestions !==
+    Object.values(MCQDifficulty).reduce((item, acc) => item + acc, 0);
+
   return (
     <AnimatePresence>
       <motion.main
@@ -84,7 +88,7 @@ function Assessments() {
               />
             </div>
           </fieldset>
-          <Button link="/categories/questionview" />
+          <Button disabled={linkDisabled} link="/categories/questionview" />
         </Form>
       </motion.main>
     </AnimatePresence>

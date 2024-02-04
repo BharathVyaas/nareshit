@@ -60,12 +60,12 @@ export const getSubTopicNames = async () => {
   }
 };
 
-export const getQuestions = async (DifficultyLevelID, count) => {
+export const getQuestions = async (easy, medium, hard) => {
   try {
     const res = await axios.get(
-      `http://localhost:4000/query/questions?DifficultyLevelID=${DifficultyLevelID}&count=${count}&excludes='${JSON.stringify(
-        LocalStorage.exclude
-      )}'&easy=${BuilderService.getEasy()}&medium=${BuilderService.getMedium()}&hard=${BuilderService.getHard()}`
+      `https://www.nareshit.net/fetchDynamicQuestions/?McqAll=${
+        LocalStorage.exclude.length
+      }&Hardcount=${BuilderService.getHard()}&MediumCount=${BuilderService.getMedium()}&EasyCount=${BuilderService.getEasy()}`
     );
 
     const data = res.data;

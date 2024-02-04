@@ -121,8 +121,8 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
             value={selectedModule?.moduleName}
             onChange={handleModuleChange}
           >
-            {moduleNames.map((element) => (
-              <option key={element.moduleId} value={element.moduleName}>
+            {moduleNames.map((element, index) => (
+              <option key={element.moduleId + index} value={element.moduleName}>
                 {element.moduleName}
               </option>
             ))}

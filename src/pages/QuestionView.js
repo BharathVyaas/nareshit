@@ -23,6 +23,7 @@ import axios from "axios";
 import Modal from "../ui/Modal";
 import QuestionModelHandler from "../ui/QuestionModelHandler";
 import ExcelImport from "../components/ExcelImport";
+import TechnologyService from "../services/technologyService";
 
 const Titles = ["MCQ"];
 
@@ -45,6 +46,8 @@ function QuestionView() {
   LocalStorage.data = BuilderService.getData();
 
   const MCQDifficulty = BuilderService.getDifficultyByTitle(Titles[0]);
+
+  const selectTechnology = TechnologyService.technology?.programmingLanguage;
 
   return (
     <AnimatePresence>
@@ -74,11 +77,7 @@ function QuestionView() {
               </div>
             </div>
           </section>
-          {/* <section className="flex justify-between m-[40px]">
-            <h2 className="max-w-[20%]">
-              Select Technology Name:<span>{selectTechnology}</span>
-            </h2>
-
+          <section className="flex justify-between m-[40px]">
             <QusetionViewTechnlogy
               selectedModule={selectedModule}
               setSelectedModule={setSelectedModule}
@@ -87,8 +86,11 @@ function QuestionView() {
               selectedSubTopic={selectedSubTopic}
               setSelectedSubTopic={setSelectedSubTopic}
             />
-          </section> */}
+          </section>
           <section className="flex p-5 bg-slate-200">
+            <h2 className="max-w-[20%]">
+              <span>{selectTechnology}</span>
+            </h2>
             <AssessmentQuestionBox
               title={Titles[0]}
               setStale={setStale}
@@ -100,7 +102,8 @@ function QuestionView() {
           <section className="flex my-4 justify-between items-center">
             <FetchData setStale={setStale} />
           </section>
-          <section className="grid grid-cols-2">
+          {/** grid grid-cols-2 */}
+          <section className="">
             <Questions questions={questions} />
           </section>
           <Button link="/categories/scheduletime" />
@@ -301,7 +304,7 @@ function Question({
         />
       )}
       <section
-        className={` ${bgColor} scroll m-2 min-h-[6rem] flex items-center border-2 border-white overflow-auto ps-2`}
+        className={` ${bgColor} scroll min-h-[6rem] flex items-center border-2 border-white overflow-auto justify-between`}
       >
         <input
           type="checkbox"
@@ -309,7 +312,8 @@ function Question({
           onChange={(e) => handler(e.target.checked)}
           className="max-w-[5%] min-w-[5%]"
         />
-        <article
+
+        {/**<article
           className="ps-4 overflow-hidden h-full w-[90%] flex items-center cursor-pointer"
           onClick={() => {
             setModalData(question);
@@ -317,6 +321,24 @@ function Question({
         >
           <h3>{question.Question}</h3>
         </article>
+         */}
+        <div
+          className="flex container items-center"
+          onClick={() => {
+            setModalData(question);
+          }}
+        >
+          <article className="max-w-[35%] min-w-[35%] overflow-hidden ">
+            <h3>{question.Question}</h3>
+          </article>
+          <Option option="Option1" question={question} questionKey="OptionA" />
+          <Option option="Option2" question={question} questionKey="OptionB" />
+          <Option option="Option3" question={question} questionKey="OptionC" />
+          <Option option="Option4" question={question} questionKey="OptionD" />
+          <aside className="max-w-[30%] min-w-[30%] overflow-hidden ">
+            <h3>{question.CorrectAnswer}</h3>
+          </aside>
+        </div>
       </section>
     </>
   );

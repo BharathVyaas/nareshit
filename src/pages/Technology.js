@@ -34,10 +34,6 @@ function Technology() {
     BuilderService.technologyService._technology?.programmingLanguage
   );
 
-  console.log(
-    LocalStorage.data?.technologyData._technology.programmingLanguage
-  );
-
   useEffect(() => {
     setProgLang(
       LocalStorage.programmingLanguageData?.TechnologyName ||

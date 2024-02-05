@@ -24,8 +24,7 @@ import Modal from "../ui/Modal";
 import QuestionModelHandler from "../ui/QuestionModelHandler";
 import ExcelImport from "../components/ExcelImport";
 import TechnologyService from "../services/technologyService";
-
-const Titles = ["MCQ"];
+import AsssessmentQuestionBoxHandler from "../components/questionView/AsssessmentQuestionBoxHandler";
 
 function QuestionView() {
   const questions = useLoaderData();
@@ -44,8 +43,6 @@ function QuestionView() {
   const searchRef = useRef();
 
   LocalStorage.data = BuilderService.getData();
-
-  const MCQDifficulty = BuilderService.getDifficultyByTitle(Titles[0]);
 
   const selectTechnology = TechnologyService.technology?.programmingLanguage;
 
@@ -92,12 +89,9 @@ function QuestionView() {
               <h2 className="max-w-[20%]">
                 <span>{selectTechnology}</span>
               </h2>
-              <AssessmentQuestionBox
-                title={Titles[0]}
+              <AsssessmentQuestionBoxHandler
+                stale={stale}
                 setStale={setStale}
-                easy={MCQDifficulty.easy}
-                medium={MCQDifficulty.medium}
-                hard={MCQDifficulty.hard}
               />
             </section>
           </div>

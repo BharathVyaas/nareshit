@@ -343,10 +343,25 @@ function SubTopicName({ setSelectedTechnology, data }) {
     setSelectedModule(selectedModule);
   };
 
+  function handler(data) {
+    setTopics((prev) => {
+      if (!prev || prev.length === 0) return data;
+      console.log("prev", prev);
+      return [...prev, data];
+    });
+  }
+
+  console.log("QuestionView", topics);
+
   return (
     <>
-      {false && (
-        <TopicModelHandlar topicData={topicData} setTopics={setTopics} />
+      {popup && (
+        <TopicModelHandlar
+          topicData={topicData}
+          setTopics={setTopics}
+          setPopup={setPopup}
+          handler={handler}
+        />
       )}
       <Form className="max-w-[30%] overflow-hidden relative">
         {popup && (

@@ -23,6 +23,8 @@ function QusetionViewTechnlogy({
   setSelectedTopic,
   selectedSubTopic,
   setSelectedSubTopic,
+  questionView,
+  setQuestionView,
 }) {
   useEffect(() => {
     /* console.log("selectedModule:update"); */
@@ -55,6 +57,8 @@ function QusetionViewTechnlogy({
             selectedTopic={setSelectedTopic}
             selectedSubTopic={selectedSubTopic}
             setSelectedSubTopic={setSelectedSubTopic}
+            questionView={questionView}
+            setQuestionView={setQuestionView}
           />
         ) : (
           <div className="max-w-[30%] overflow-hidden flex flex-col">
@@ -246,7 +250,13 @@ function TopicName({ setSelectedTechnology, data }) {
   );
 }
 
-function SubTopicDataLoader({ setSelectedSubTopic, selectedTopic, stale }) {
+function SubTopicDataLoader({
+  setSelectedSubTopic,
+  selectedTopic,
+  stale,
+  questionView,
+  setQuestionView,
+}) {
   /* console.log("SubTopicDataLoader:rerender"); */
   const [data, setData] = useState([
     { subTopicName: "Select A Topic", subTopicId: -1 },
@@ -275,7 +285,12 @@ function SubTopicDataLoader({ setSelectedSubTopic, selectedTopic, stale }) {
   return (
     <>
       {data && data[0].subTopicId === -1 ? (
-        <SubTopicName data={data} setSelectedTechnology={setSelectedSubTopic} />
+        <SubTopicName
+          data={data}
+          setSelectedTechnology={setSelectedSubTopic}
+          questionView={setQuestionView}
+          setQuestionView={setQuestionView}
+        />
       ) : (
         <div className="max-w-[30%] overflow-hidden flex flex-col">
           <span>
@@ -290,7 +305,12 @@ function SubTopicDataLoader({ setSelectedSubTopic, selectedTopic, stale }) {
   );
 }
 
-function SubTopicName({ setSelectedTechnology, data }) {
+function SubTopicName({
+  setSelectedTechnology,
+  data,
+  questionView,
+  setQuestionView,
+}) {
   const subTopicNames = data.map((element) => ({
     subTopicName: element.SubTopicName,
     moduleId: element.ModuleID,
@@ -319,7 +339,6 @@ function SubTopicName({ setSelectedTechnology, data }) {
     selectedModule: LocalStorage.moduleData,
   };
 
-  const { topics, setTopics } = useContext(TopicsContext);
   const [popup, setPopup] = useState(false);
 
   useEffect(() => {
@@ -329,7 +348,7 @@ function SubTopicName({ setSelectedTechnology, data }) {
     if (selectedModule.moduleId && selectedModule.moduleId !== -1) {
       setPopup(topicData);
     }
-    if (selectedModule) console.log(selectedModule);
+    /* if (selectedModule) console.log(selectedModule); */
     LocalStorage.subTopicData = selectedModule;
     BuilderService.questionService.selectedTechnology.subTopic = selectedModule;
   }, [setSelectedTechnology, selectedModule]);
@@ -344,21 +363,19 @@ function SubTopicName({ setSelectedTechnology, data }) {
   };
 
   function handler(data) {
-    setTopics((prev) => {
-      if (!prev || prev.length === 0) return data;
-      console.log("prev", prev);
+    const prevs = [];
+
+    setQuestionView((prev) => {
+      if (!prev || prev.length === 0) return [data];
       return [...prev, data];
     });
   }
-
-  console.log("QuestionView", topics);
 
   return (
     <>
       {popup && (
         <TopicModelHandlar
           topicData={topicData}
-          setTopics={setTopics}
           setPopup={setPopup}
           handler={handler}
         />

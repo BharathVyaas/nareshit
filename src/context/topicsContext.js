@@ -3,13 +3,13 @@ import { createContext, useState } from "react";
 import _debounce from "lodash/debounce";
 
 const TopicsContext = createContext({
-  topics: { moduleName: "", topicName: "", subTopicName: "", shouldLoad: true },
+  topics: [],
   setTopics: () => {},
   setShouldLoad: () => {},
 });
 
 export function TopicsContextProvider({ children }) {
-  const [topics, setTopics] = useState();
+  const [topics, setTopics] = useState([]);
   const [shouldLoad, setShouldLoad] = useState(true);
 
   return (

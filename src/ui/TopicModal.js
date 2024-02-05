@@ -1,6 +1,6 @@
 import React, { useId, useRef } from "react";
 
-function TopicModal({ question, setModalData, data, handler }) {
+function TopicModal({ question, setModalData, data, handler, setter }) {
   const easyRef = useRef();
   const mediumRef = useRef();
   const hardRef = useRef();
@@ -22,7 +22,8 @@ function TopicModal({ question, setModalData, data, handler }) {
     result.medium = Number(mediumRef.current?.value);
     result.hard = Number(hardRef.current?.value);
 
-    console.log(result);
+    handler(result);
+    setter(false);
   }
   return (
     <div

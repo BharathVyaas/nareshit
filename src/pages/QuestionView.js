@@ -33,6 +33,7 @@ function QuestionView() {
   DifficultySubescribeService.source();
 
   const [fetchQuestionType, setFetchQuestionType] = useState(["", ""]);
+  const [questionView, setQuestionView] = useState([]);
 
   const [selectedModule, setSelectedModule] = useState({});
   const [selectedTopic, setSelectedTopic] = useState({});
@@ -74,9 +75,11 @@ function QuestionView() {
               </div>
             </div>
           </section>
-          <div className="mt-5 bg-green-500">
-            <section className="flex ">
+          <div className="mt-5">
+            <section className="flex justify-between">
               <QusetionViewTechnlogy
+                questionView={questionView}
+                setQuestionView={setQuestionView}
                 selectedModule={selectedModule}
                 setSelectedModule={setSelectedModule}
                 selectedTopic={selectedTopic}
@@ -92,6 +95,8 @@ function QuestionView() {
               <AsssessmentQuestionBoxHandler
                 stale={stale}
                 setStale={setStale}
+                questionView={questionView}
+                setQuestionView={setQuestionView}
               />
             </section>
           </div>

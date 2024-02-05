@@ -112,7 +112,6 @@ function ExcelImport() {
     } catch (err) {
       console.error(err);
     }
-    console.log(resultArr);
   }
 
   const onDrop = (acceptedFiles) => {

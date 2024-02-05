@@ -6,7 +6,7 @@ import axios from "axios";
  *
  * Reference
  */
-const REFERENCE = {
+/* const REFERENCE = {
   Technology: "DotNet",
   Module: "C# 10.0",
   Topic: "Inheritance",
@@ -73,9 +73,8 @@ function ExcelImport() {
 }
 
 export default ExcelImport;
+ */
 
-/**
- * 
 const REFERENCE = {
   Technology: "DotNet",
   Module: "C# 10.0",
@@ -143,5 +142,3 @@ function ExcelImport() {
 }
 
 export default ExcelImport;
-
- */

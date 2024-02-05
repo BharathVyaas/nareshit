@@ -9,7 +9,6 @@
 
   html::-webkit-scrollbar-thumb {
     background-color: rgb(186, 163, 166);
-    border-radius: 50%;
   }
 
   html::-webkit-scrollbar-track {
@@ -35,21 +34,6 @@
 
   .scroll::-webkit-scrollbar-thumb:hover {
     background-color: rgb(114, 91, 91);
-  }
-
-  .scroll::-webkit-scrollbar-thumb {
-    border-top-left-radius: 100%;
-    border-bottom-left-radius: 100%;
-  }
-
-  .scroll-sharp::-webkit-scrollbar-track {
-    border-top-left-radius: 100%;
-    border-bottom-left-radius: 100%;
-  }
-
-  .scroll::-webkit-scrollbar-thumb:hover {
-    border-top-left-radius: 100%;
-    border-bottom-left-radius: 100%;
   }
 
   html {

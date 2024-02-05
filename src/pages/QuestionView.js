@@ -77,8 +77,8 @@ function QuestionView() {
               </div>
             </div>
           </section>
-          <div>
-            <section className="flex m-[40px]">
+          <div className="mt-5 bg-green-500">
+            <section className="flex ">
               <QusetionViewTechnlogy
                 selectedModule={selectedModule}
                 setSelectedModule={setSelectedModule}
@@ -88,7 +88,7 @@ function QuestionView() {
                 setSelectedSubTopic={setSelectedSubTopic}
               />
             </section>
-            <section className="flex p-5 bg-slate-200">
+            <section className="flex bg-slate-200">
               <h2 className="max-w-[20%]">
                 <span>{selectTechnology}</span>
               </h2>

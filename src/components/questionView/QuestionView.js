@@ -12,6 +12,9 @@ import { LocalStorage } from "../../services/LocalStorage";
 import TopicsContext, {
   TopicsContextProvider,
 } from "../../context/topicsContext";
+import axios from "axios";
+import Modal from "../../ui/Modal";
+import TopicModelHandlar from "../../ui/TopicModalHandlar";
 
 function QusetionViewTechnlogy({
   selectedModule,
@@ -136,7 +139,10 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
             onChange={handleModuleChange}
           >
             {moduleNames.map((element, index) => (
-              <option key={element.moduleId + index} value={element.moduleName}>
+              <option
+                key={element?.moduleId || "" + index}
+                value={element.moduleName}
+              >
                 {element.moduleName}
               </option>
             ))}
@@ -196,12 +202,12 @@ function TopicName({ setSelectedTechnology, data }) {
   const [selectedModule, setSelectedModule] = useState(
     BuilderService.questionService.selectedTechnology.topic || topicNames[0]
   );
-
+  const { setShouldLoad } = useContext(TopicsContext);
   useEffect(() => {
     setSelectedTechnology((prev) => {
       return { ...prev, topic: selectedModule };
     });
-
+    setShouldLoad(true);
     LocalStorage.topicData = selectedModule;
     BuilderService.questionService.selectedTechnology.topic = selectedModule;
   }, [setSelectedTechnology, selectedModule]);
@@ -230,7 +236,7 @@ function TopicName({ setSelectedTechnology, data }) {
           <option
             className=""
             key={element.moduleId + index}
-            value={element.topicName}
+            value={element?.topicName || ""}
           >
             {element.topicName}
           </option>
@@ -240,32 +246,48 @@ function TopicName({ setSelectedTechnology, data }) {
   );
 }
 
-function SubTopicDataLoader({ setSelectedSubTopic, selectedTopic }) {
+function SubTopicDataLoader({ setSelectedSubTopic, selectedTopic, stale }) {
   /* console.log("SubTopicDataLoader:rerender"); */
-  const { data } = useQuery({
-    queryKey: ["QuestionView", "SubTopicNames"],
-    queryFn: getSubTopicNames,
-  });
-  let placeHolder = {};
-  if (data) {
-    placeHolder = data[0];
-  }
-  placeHolder.subTopicName = "Select A Topic";
-  placeHolder.subTopicId = -1;
+  const [data, setData] = useState([
+    { subTopicName: "Select A Topic", subTopicId: -1 },
+  ]);
 
-  let updatedData;
-  if (data) updatedData = [placeHolder, ...data];
+  const { shouldLoad, setShouldLoad } = useContext(TopicsContext);
+
+  if (LocalStorage._getTopicDataById && (!data || shouldLoad))
+    axios
+      .get(
+        `https://www.nareshit.net/FetchSubTopics/${LocalStorage._getTopicDataById()}`
+      )
+      .then((res) => {
+        //console.log(res);
+        setShouldLoad(false);
+        setData([
+          { subTopicName: "Select SubTopic", subTopicId: -1 },
+          ...res.data,
+        ]);
+      });
 
   useEffect(() => {
     /* console.log("selectedTopic:update", selectedTopic); */
   }, [selectedTopic]);
 
-  if (data && typeof data === "object") {
-    return (
-      <SubTopicName data={data} setSelectedTechnology={setSelectedSubTopic} />
-    );
-  }
-  return <h1>loading</h1>;
+  return (
+    <>
+      {data && data[0].subTopicId === -1 ? (
+        <SubTopicName data={data} setSelectedTechnology={setSelectedSubTopic} />
+      ) : (
+        <div className="max-w-[30%] overflow-hidden flex flex-col">
+          <span>
+            <label htmlFor="subtopicName">Sub Topic Name:</label>
+          </span>
+          <select id="subtopicName" name="subtopicName" className="">
+            <option value="selectsubtopic">Select A Subtopic</option>
+          </select>
+        </div>
+      )}
+    </>
+  );
 }
 
 function SubTopicName({ setSelectedTechnology, data }) {
@@ -286,26 +308,27 @@ function SubTopicName({ setSelectedTechnology, data }) {
     modifiedBy: element.ModifiedBy,
   }));
 
-  const { topics, setTopics } = useContext(TopicsContext);
-
   const [selectedModule, setSelectedModule] = useState(
     BuilderService.questionService.selectedTechnology.subTopic ||
       subTopicNames[0]
   );
 
-  useEffect(() => {
-    console.log(
-      LocalStorage.topicData,
-      LocalStorage.moduleData,
-      selectedModule
-    );
-  }, [selectedModule]);
+  let topicData = {
+    selectedSubTopic: LocalStorage.subTopicData,
+    selectedTopic: LocalStorage.topicData,
+    selectedModule: LocalStorage.moduleData,
+  };
+
+  const { topics, setTopics } = useContext(TopicsContext);
+  const [popup, setPopup] = useState(false);
 
   useEffect(() => {
     setSelectedTechnology((prev) => {
       return { ...prev, subTopic: selectedModule };
     });
-
+    if (selectedModule.moduleId && selectedModule.moduleId !== -1) {
+      setPopup(topicData);
+    }
     LocalStorage.subTopicData = selectedModule;
     BuilderService.questionService.selectedTechnology.subTopic = selectedModule;
   }, [setSelectedTechnology, selectedModule]);
@@ -318,23 +341,40 @@ function SubTopicName({ setSelectedTechnology, data }) {
 
     setSelectedModule(selectedModule);
   };
+
   return (
-    <Form className="max-w-[30%] overflow-hidden">
-      <label htmlFor="subtopicName">
-        Sub Topic Name:
-        <select
-          id="subtopicName"
-          name="subtopicName"
-          value={selectedModule.subTopicName}
-          onChange={handleModuleChange}
-        >
-          {subTopicNames.map((element, index) => (
-            <option key={element.moduleId + index} value={element.subTopicName}>
-              {element.subTopicName}
-            </option>
-          ))}
-        </select>
-      </label>
-    </Form>
+    <>
+      {false && (
+        <TopicModelHandlar topicData={topicData} setTopics={setTopics} />
+      )}
+      <Form className="max-w-[30%] overflow-hidden relative">
+        {popup && (
+          <section
+            onClick={() => setPopup(false)}
+            className="absolute top-2 left-[80%] w-[10rem] h-[20rem] bg-green-600"
+          >
+            <h1>hi</h1>
+          </section>
+        )}
+        <label htmlFor="subtopicName">
+          Sub Topic Name:
+          <select
+            id="subtopicName"
+            name="subtopicName"
+            value={selectedModule.subTopicName}
+            onChange={handleModuleChange}
+          >
+            {subTopicNames.map((element, index) => (
+              <option
+                key={element.moduleId + index}
+                value={element?.subTopicName || ""}
+              >
+                {element.subTopicName || "Selecte A SubTopic"}
+              </option>
+            ))}
+          </select>
+        </label>
+      </Form>
+    </>
   );
 }

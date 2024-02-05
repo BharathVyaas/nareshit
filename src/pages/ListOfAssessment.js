@@ -12,7 +12,6 @@ import { AnimatePresence, motion } from "framer-motion";
 function ListOfAssessment() {
   // Get table titles from DataHandler
   const titles = DataHandler.getTitles();
-  console.log(titles);
 
   // Fetch assessments using react-query's useLoaderData
   const { assessments } = useLoaderData();

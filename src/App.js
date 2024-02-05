@@ -19,6 +19,8 @@ import ScheduleTime, {
 
 import { queryClient } from "./util/http";
 import BuilderService from "./services/builder";
+import UploadTopic from "./pages/UploadTopic";
+import Questiondb from "./pages/Questiondb";
 
 /**
  * Initializes the Builder service.
@@ -40,6 +42,11 @@ function App() {
   // Define the routing configuration
   const appRoutes = [
     { path: "/", element: <AdminHomePage /> },
+    {
+      path: "questiondb",
+      element: <Questiondb />,
+      children: [{ path: "uploadtopic", element: <UploadTopic /> }],
+    },
     {
       path: "categories",
       element: <Categories />,

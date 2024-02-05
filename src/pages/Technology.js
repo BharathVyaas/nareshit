@@ -1,6 +1,6 @@
 import { Form } from "react-router-dom";
 import { getProgLangs, queryClient } from "../util/http";
-import { useLoaderData } from "react-router";
+import { redirect, useLoaderData } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import TechnologyService, {
   NatureOfAssessmentService,
@@ -15,6 +15,7 @@ import Button from "../ui/Button";
 import { AnimatePresence, motion } from "framer-motion";
 import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
+import axios from "axios";
 
 const formNames = ["proglangs", "catogaryType", "assessmentNature", "random"];
 
@@ -62,7 +63,6 @@ function Technology() {
       programmingLanguage:
         SelectTechnologyService.updateData(proglang).programmingLanguage,
     });
-
     LocalStorage.data = BuilderService.getData();
   }, [proglang]);
 
@@ -101,7 +101,14 @@ function Technology() {
           <NatureOfAssessments nature={nature} setNature={setNature} />
           <Randoms random={random} setRandom={setRandom} />
 
-          <Button link="/categories/assessments" />
+          {/* <Button link="/categories/assessments" /> */}
+          <div className="w-full flex mt-14">
+            <button
+              className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
+            >
+              Submit
+            </button>
+          </div>
         </Form>
       </motion.main>
     </AnimatePresence>
@@ -119,12 +126,21 @@ export async function loader() {
   return result;
 }
 
-export async function action({ request }) {
-  const formData = await request.formData();
+export async function action() {
   const requestData = {};
-  formNames.forEach((name) => {
-    requestData[name] = formData.get(name);
-  });
+  requestData["requestDataBody"] = LocalStorage.data;
+  requestData["TestID"] = 123;
+  requestData["TestDetailsID"] = 0;
+  requestData["QuestionTypeID"] = 1;
+  requestData["Technology"] =
+    LocalStorage.data.technologyData._technology.programmingLanguage;
+  requestData["SubTopic"] = LocalStorage.data.technologyData._technology;
+  requestData["Module"] = LocalStorage.data.technologyData._technology;
+  requestData["Topic"] = LocalStorage.data.technologyData._technology;
+  requestData["CreatedBy"] = "Admin";
+  requestData["ModifiedBy"] = "Admin";
 
-  return 1;
+  console.log(requestData);
+
+  return redirect("/categories/assessments");
 }

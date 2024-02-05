@@ -48,12 +48,12 @@ export const getTopicNames = async () => {
 
 export const getSubTopicNames = async () => {
   try {
-    /* console.log("Topic_ID", LocalStorage._getTopicDataById()); */
     const res = await axios.get(
       `https://www.nareshit.net/FetchSubTopics/${LocalStorage._getTopicDataById()}`
     );
 
     const data = res.data;
+
     return data;
   } catch (err) {
     console.log("getModuleNames", err);

@@ -32,7 +32,7 @@ function QusetionViewTechnlogy({
   }, [selectedSubTopic]);
 
   return (
-    <>
+    <section className="flex justify-between">
       <TopicsContextProvider>
         <ModuleDataLoader
           selectedModule={selectedModule}
@@ -64,7 +64,7 @@ function QusetionViewTechnlogy({
           </div>
         )}
       </TopicsContextProvider>
-    </>
+    </section>
   );
 }
 
@@ -154,11 +154,20 @@ function TopicDataLoader({ selectedTopic, setSelectedTopic, selectedModule }) {
     queryFn: getTopicNames,
   });
 
+  let updatedData = data;
+
   useEffect(() => {
     if (data) setSelectedTopic(data[0]);
     if (data) LocalStorage.topicData = data[0];
   }, [data]);
+  if (data) {
+    let placeHolder = { ...data[0] };
+    if (!placeHolder) placeHolder = {};
+    placeHolder.TopicName = "Select A Topic";
+    placeHolder.TopicID = -1;
 
+    updatedData = [placeHolder, ...data];
+  }
   useEffect(() => {
     queryClient.invalidateQueries({
       queryKey: ["QuestionView", "TopicNames"],
@@ -169,7 +178,7 @@ function TopicDataLoader({ selectedTopic, setSelectedTopic, selectedModule }) {
   if (data && typeof data === "object") {
     return (
       <TopicName
-        data={data}
+        data={updatedData}
         selectedTopic={selectedTopic}
         setSelectedTechnology={setSelectedTopic}
       />
@@ -249,20 +258,26 @@ function SubTopicDataLoader({ setSelectedSubTopic, selectedTopic }) {
   let placeHolder = {};
   if (data) {
     placeHolder = data[0];
+    if (!placeHolder) placeHolder = {};
   }
   placeHolder.subTopicName = "Select A Topic";
   placeHolder.subTopicId = -1;
 
   let updatedData;
-  if (data) updatedData = [placeHolder, ...data];
 
+  if (data) updatedData = [placeHolder, ...data];
+  if (!data) updatedData = [placeHolder];
+  console.log();
   useEffect(() => {
     /* console.log("selectedTopic:update", selectedTopic); */
   }, [selectedTopic]);
 
-  if (data && typeof data === "object") {
+  if (updatedData && typeof updatedData === "object") {
     return (
-      <SubTopicName data={data} setSelectedTechnology={setSelectedSubTopic} />
+      <SubTopicName
+        data={updatedData}
+        setSelectedTechnology={setSelectedSubTopic}
+      />
     );
   }
   return <h1>loading</h1>;
@@ -270,7 +285,7 @@ function SubTopicDataLoader({ setSelectedSubTopic, selectedTopic }) {
 
 function SubTopicName({ setSelectedTechnology, data }) {
   const subTopicNames = data.map((element) => ({
-    subTopicName: element.SubTopicName,
+    subTopicName: element?.SubTopicName || "Select A SubTopic",
     moduleId: element.ModuleID,
     subTopicId: element.SubTopicID,
     parentTopicId: element.ParentTopicID,
@@ -300,6 +315,7 @@ function SubTopicName({ setSelectedTechnology, data }) {
       selectedModule
     );
   }, [selectedModule]);
+  console.log(data);
 
   useEffect(() => {
     setSelectedTechnology((prev) => {
@@ -315,9 +331,9 @@ function SubTopicName({ setSelectedTechnology, data }) {
     const selectedModule = subTopicNames.find(
       (module) => module?.subTopicName === selectedModuleName
     );
-
     setSelectedModule(selectedModule);
   };
+
   return (
     <Form className="max-w-[30%] overflow-hidden">
       <label htmlFor="subtopicName">
@@ -325,12 +341,15 @@ function SubTopicName({ setSelectedTechnology, data }) {
         <select
           id="subtopicName"
           name="subtopicName"
-          value={selectedModule.subTopicName}
+          value={selectedModule?.subTopicName || "Select A SubTopic"}
           onChange={handleModuleChange}
         >
           {subTopicNames.map((element, index) => (
-            <option key={element.moduleId + index} value={element.subTopicName}>
-              {element.subTopicName}
+            <option
+              key={element.moduleId + index}
+              value={element?.subTopicName}
+            >
+              {element?.subTopicName}
             </option>
           ))}
         </select>

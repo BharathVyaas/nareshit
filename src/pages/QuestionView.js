@@ -58,7 +58,7 @@ function QuestionView() {
           exit={{ x: "100%", transition: { duration: 0.3 } }}
           className="bg-gray-50 min-h-[70vh]"
         >
-          <section className=" pt-3">
+          {/* <section className=" pt-3">
             <div className="ms-[58%] flex">
               <div>
                 <input
@@ -76,7 +76,7 @@ function QuestionView() {
                 <ExcelImport />
               </div>
             </div>
-          </section>
+          </section> */}
           <div>
             <section className="flex m-[40px]">
               <QusetionViewTechnlogy
@@ -149,7 +149,9 @@ function Questions({ questions }) {
           break;
         }
         case "all": {
-          setQuestionArr(questions);
+          /* setQuestionArr(questions); */
+          const res = await getQuestions();
+          console.log(res);
           break;
         }
         default: {

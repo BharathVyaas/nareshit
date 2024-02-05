@@ -1,81 +1,8 @@
 import React from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
+import TopicTxt from "../assets/TopicTxt.txt";
 
-/**
- *
- * Reference
- */
-const REFERENCE = {
-  Technology: "DotNet",
-  Module: "C# 10.0",
-  Topic: "Inheritance",
-  SubTopic: "Syntax of Variable & Field Declarations",
-  QuestionDescription: "How do you declare a variable of type int in C#?",
-  OptionA: "a. int variableName;",
-  OptionB: "b. variableName int;",
-  OptionC: "c. str Hello = new string;",
-  OptionD: "d. integer variableName;",
-  CorrectAnswer: "a. int variableName;",
-  Explanation: "",
-  DifficultyLevel: 0,
-};
-
-function ExcelImport() {
-  async function convertToJson(contents) {
-    const keyArr = Object.keys(REFERENCE);
-    const contentsArr = contents.split("\n");
-
-    const updatedContentsArr = contentsArr.map((element) =>
-      element.split(",")
-    )[0];
-    console.log(updatedContentsArr);
-    const result = {};
-
-    for (let i = 0; i < updatedContentsArr.length; i++) {
-      result[keyArr[i]] = updatedContentsArr[i];
-    }
-
-    console.log("res", result);
-    try {
-      await axios.post("https://www.nareshit.net/insertQuestionData", {
-        data: JSON.stringify(result),
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  const onDrop = (acceptedFiles) => {
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        const contents = reader.result;
-        convertToJson(contents);
-      };
-
-      reader.readAsText(file);
-    });
-  };
-
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: ".txt",
-  });
-
-  return (
-    <div {...getRootProps()} className="flex items-center space-x-2">
-      <input {...getInputProps()} />
-      <button className="font-medium cursor-pointer">Import .txt</button>
-    </div>
-  );
-}
-
-export default ExcelImport;
-
-/**
- * 
 const REFERENCE = {
   Technology: "DotNet",
   Module: "C# 10.0",
@@ -105,13 +32,17 @@ function ExcelImport() {
       });
       return data;
     });
-    let res;
+
     try {
-      res = await axios.post("https://www.nareshit.net/insertQuestionData", {
-        data: resultArr,
-      });
+      const res = await axios.post(
+        "https://www.nareshit.net/insertQuestionData",
+        {
+          data: resultArr,
+        }
+      );
+      console.log("Data uploaded successfully", res);
     } catch (err) {
-      console.error(err);
+      console.error("Error during POST request:", err);
     }
     console.log(resultArr);
   }
@@ -129,19 +60,49 @@ function ExcelImport() {
     });
   };
 
+  const downloadTxtFile = async () => {
+    const response = await fetch(TopicTxt);
+    const contents = await response.text();
+
+    const element = document.createElement("a");
+    const file = new Blob([contents], { type: "text/plain" });
+
+    element.href = URL.createObjectURL(file);
+    element.download = "TopicTxt.txt";
+
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: ".txt",
   });
 
   return (
-    <div {...getRootProps()} className="flex items-center space-x-2">
-      <input {...getInputProps()} />
-      <button className="font-medium cursor-pointer">Import .txt</button>
-    </div>
+    <main className="flex items-center justify-center min-h-screen">
+      <section className="bg-gray-100 p-8 rounded-md shadow-md">
+        <div
+          {...getRootProps()}
+          className="flex items-center hover:bg-gray-300 border-b-2 border-gray-300 pb-[3px] space-x-2 mb-4 cursor-pointer"
+        >
+          <input {...getInputProps()} />
+          <button className="btn-primary text-xl font-bold">
+            Import .txt File
+          </button>
+        </div>
+        <div className="flex items-center hover:bg-gray-300 border-t-2  border-gray-300 space-x-2 cursor-pointer">
+          <button
+            className="btn-secondary text-xl font-bold"
+            onClick={downloadTxtFile}
+          >
+            Download .txt File
+          </button>
+        </div>
+      </section>
+    </main>
   );
 }
 
 export default ExcelImport;
-
- */

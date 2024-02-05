@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form } from "react-router-dom";
+import { Form, Navigate, redirect, useNavigate } from "react-router-dom";
 
 import { SelectTechnologyService } from "../services/technologyService";
 import AssessmentService, { MCQService } from "../services/assessmentsService";
@@ -72,7 +72,9 @@ function Assessments() {
       >
         <h1>
           Selected Technology Name:
-          {SelectTechnologyService.programmingLanguage}
+          <span className="ps-3">
+            {SelectTechnologyService.programmingLanguage}
+          </span>
         </h1>
         <Form method="POST" className="p-5">
           <fieldset className="">
@@ -88,7 +90,17 @@ function Assessments() {
               />
             </div>
           </fieldset>
-          <Button disabled={linkDisabled} link="/categories/questionview" />
+          <div className="w-full flex mt-14">
+            <button
+              disabled={linkDisabled}
+              className={`${
+                linkDisabled && "disabled"
+              } inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
+            >
+              Submit
+            </button>
+          </div>
+          {/* <Button disabled={linkDisabled} link="/categories/questionview" /> */}
         </Form>
       </motion.main>
     </AnimatePresence>
@@ -97,14 +109,22 @@ function Assessments() {
 
 export default Assessments;
 
-export async function action({ request }) {
-  const formData = await request.formData();
+export async function action({}, navigate) {
+  const requestData = {};
+  requestData["requestDataBody"] = LocalStorage.data;
+  requestData["TestID"] = 123;
+  requestData["TestDetailsID"] = 0;
+  requestData["QuestionTypeID"] = 1;
+  requestData["NumOfEasy"] =
+    LocalStorage.data.assessmentData.MCQ.difficulty.easy;
+  requestData["NumOfMedium"] =
+    LocalStorage.data.assessmentData.MCQ.difficulty.medium;
+  requestData["NumOfHard"] =
+    LocalStorage.data.assessmentData.MCQ.difficulty.hard;
+  requestData["CreatedBy"] = "Admin";
+  requestData["ModifiedBy"] = "Admin";
 
-  const requestValue = {};
+  console.log(requestData);
 
-  formData.forEach((value, key) => {
-    requestValue[key] = value;
-  });
-
-  return 1;
+  return redirect("/categories/questionview");
 }

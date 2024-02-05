@@ -329,6 +329,7 @@ function SubTopicName({ setSelectedTechnology, data }) {
     if (selectedModule.moduleId && selectedModule.moduleId !== -1) {
       setPopup(topicData);
     }
+    if (selectedModule) console.log(selectedModule);
     LocalStorage.subTopicData = selectedModule;
     BuilderService.questionService.selectedTechnology.subTopic = selectedModule;
   }, [setSelectedTechnology, selectedModule]);
@@ -356,24 +357,26 @@ function SubTopicName({ setSelectedTechnology, data }) {
             <h1>hi</h1>
           </section>
         )}
-        <label htmlFor="subtopicName">
-          Sub Topic Name:
-          <select
-            id="subtopicName"
-            name="subtopicName"
-            value={selectedModule.subTopicName}
-            onChange={handleModuleChange}
-          >
-            {subTopicNames.map((element, index) => (
-              <option
-                key={element.moduleId + index}
-                value={element?.subTopicName || ""}
-              >
-                {element.subTopicName || "Selecte A SubTopic"}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div htmlFor="subtopicName">
+          <p>Sub Topic Name:</p>
+          <div>
+            <select
+              id="subtopicName"
+              name="subtopicName"
+              value={selectedModule.subTopicName}
+              onChange={handleModuleChange}
+            >
+              {subTopicNames.map((element, index) => (
+                <option
+                  key={element.moduleId + index}
+                  value={element?.subTopicName || ""}
+                >
+                  {element.subTopicName || "Selecte A SubTopic"}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
       </Form>
     </>
   );

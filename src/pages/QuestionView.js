@@ -51,7 +51,7 @@ function QuestionView() {
   const MCQDifficulty = BuilderService.getDifficultyByTitle(Titles[0]);
 
   const selectTechnology = TechnologyService.technology?.programmingLanguage;
-
+  console.log(LocalStorage.questionView);
   return (
     <AnimatePresence>
       <IncludesContextProvider>
@@ -80,8 +80,11 @@ function QuestionView() {
               </div>
             </div>
           </section> */}
+          <h1 className="ms-[20px] pt-5 text-lg font-semibold">
+            Selected Technology: {selectTechnology}
+          </h1>
           <div>
-            <section className="flex m-[40px]">
+            <section className="flex m-[20px]">
               <QusetionViewTechnlogy
                 questionView={questionView}
                 setQuestionView={setQuestionView}
@@ -93,12 +96,13 @@ function QuestionView() {
                 setSelectedSubTopic={setSelectedSubTopic}
               />
             </section>
-            <section className="flex p-5 bg-slate-200">
-              <h2 className="max-w-[20%]">
+            <section className="flex justify-center p-5">
+              {/* <h2 className="max-w-[20%]">
                 <span>{selectTechnology}</span>
-              </h2>
+              </h2> */}
               <AsssessmentQuestionBoxHandler
                 setStale={setStale}
+                selectTechnology={selectTechnology}
                 stale={stale}
                 questionView={questionView}
                 setQuestionView={setQuestionView}

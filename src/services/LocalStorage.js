@@ -86,6 +86,17 @@ class LocalStorageClass {
     if (newData) localStorage.setItem("exclude", data);
   }
 
+  get questionView() {
+    let result = this.parse("questionView");
+    if (!result) result = [];
+    return result;
+  }
+
+  set questionView(newData) {
+    const data = JSON.stringify(newData);
+    if (newData) localStorage.setItem("questionView", data);
+  }
+
   parse(key) {
     const response = localStorage.getItem(key);
     let result;

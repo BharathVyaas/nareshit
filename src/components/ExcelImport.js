@@ -2,6 +2,7 @@ import React from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import TopicTxt from "../assets/TopicTxt.txt";
+import { useNavigate } from "react-router";
 
 const REFERENCE = {
   Technology: "DotNet",
@@ -19,6 +20,8 @@ const REFERENCE = {
 };
 
 function ExcelImport() {
+  const navigate = useNavigate();
+
   async function convertToJson(contents) {
     const keyArr = Object.keys(REFERENCE);
     const contentsArr = contents.split("\n");
@@ -41,6 +44,9 @@ function ExcelImport() {
         }
       );
       console.log("Data uploaded successfully", res);
+      if (res.status === 200) {
+        navigate("/categories/assessmentlist");
+      }
     } catch (err) {
       console.error("Error during POST request:", err);
     }

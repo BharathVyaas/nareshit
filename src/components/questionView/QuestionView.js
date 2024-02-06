@@ -13,6 +13,7 @@ import TopicsContext, {
   TopicsContextProvider,
 } from "../../context/topicsContext";
 import QuestionViewHandler from "../../ui/QuestionViewHandler";
+import axios from "axios";
 
 function QusetionViewTechnlogy({
   selectedModule,
@@ -215,7 +216,6 @@ function TopicName({ setSelectedTechnology, data }) {
     setSelectedTechnology((prev) => {
       return { ...prev, topic: selectedModule };
     });
-    // Open Modal or Not
     setShouldLoad(true);
     LocalStorage.topicData = selectedModule;
     BuilderService.questionService.selectedTechnology.topic = selectedModule;
@@ -258,55 +258,56 @@ function TopicName({ setSelectedTechnology, data }) {
 function SubTopicDataLoader({
   setSelectedSubTopic,
   selectedTopic,
+  stale,
   questionView,
   setQuestionView,
 }) {
   /* console.log("SubTopicDataLoader:rerender"); */
-  const { data } = useQuery({
-    queryKey: ["QuestionView", "SubTopicNames"],
-    queryFn: getSubTopicNames,
-  });
-  let placeHolder = {};
-  if (data) {
-    placeHolder = data[0];
-    if (!placeHolder) placeHolder = {};
-  }
-  placeHolder.subTopicName = "Select A Topic";
-  placeHolder.subTopicId = -1;
+  const [data, setData] = useState([
+    { subTopicName: "Select A Topic", subTopicId: -1 },
+  ]);
 
-  let updatedData;
+  const { shouldLoad, setShouldLoad } = useContext(TopicsContext);
 
-  if (data && data.length) updatedData = [placeHolder, ...data];
-  if (!data) updatedData = [placeHolder];
+  if (LocalStorage._getTopicDataById && (!data || shouldLoad))
+    axios
+      .get(
+        `https://www.nareshit.net/FetchSubTopics/${LocalStorage._getTopicDataById()}`
+      )
+      .then((res) => {
+        //console.log(res);
+        setShouldLoad(false);
+        setData([
+          { subTopicName: "Select SubTopic", subTopicId: -1 },
+          ...res.data,
+        ]);
+      });
 
   useEffect(() => {
     /* console.log("selectedTopic:update", selectedTopic); */
   }, [selectedTopic]);
 
-  if (updatedData && typeof updatedData === "object") {
-    return (
-      <>
-        {data && data[0].subTopicId === -1 ? (
-          <SubTopicName
-            data={data}
-            setSelectedTechnology={setSelectedSubTopic}
-            questionView={setQuestionView}
-            setQuestionView={setQuestionView}
-          />
-        ) : (
-          <div className="max-w-[30%] overflow-hidden flex flex-col">
-            <span>
-              <label htmlFor="subtopicName">Sub Topic Name:</label>
-            </span>
-            <select id="subtopicName" name="subtopicName" className="">
-              <option value="selectsubtopic">Select A Subtopic</option>
-            </select>
-          </div>
-        )}
-      </>
-    );
-  }
-  return <h1>loading</h1>;
+  return (
+    <>
+      {data && data[0].subTopicId === -1 ? (
+        <SubTopicName
+          data={data}
+          setSelectedTechnology={setSelectedSubTopic}
+          questionView={setQuestionView}
+          setQuestionView={setQuestionView}
+        />
+      ) : (
+        <div className="max-w-[30%] overflow-hidden flex flex-col">
+          <span>
+            <label htmlFor="subtopicName">Sub Topic Name:</label>
+          </span>
+          <select id="subtopicName" name="subtopicName" className="">
+            <option value="selectsubtopic">Select A Subtopic</option>
+          </select>
+        </div>
+      )}
+    </>
+  );
 }
 
 function SubTopicName({
@@ -349,9 +350,7 @@ function SubTopicName({
     setSelectedTechnology((prev) => {
       return { ...prev, subTopic: selectedModule };
     });
-    if (selectedModule.moduleId && selectedModule.moduleId !== -1) {
-      setPopup(topicData);
-    }
+
     /* if (selectedModule) console.log(selectedModule); */
     LocalStorage.subTopicData = selectedModule;
     BuilderService.questionService.selectedTechnology.subTopic = selectedModule;
@@ -362,6 +361,8 @@ function SubTopicName({
     const selectedModule = subTopicNames.find(
       (module) => module?.subTopicName === selectedModuleName
     );
+
+    setPopup(selectedModule);
 
     setSelectedModule(selectedModule);
   };

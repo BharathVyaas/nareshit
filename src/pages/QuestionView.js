@@ -25,6 +25,7 @@ import QuestionModelHandler from "../ui/QuestionModelHandler";
 import ExcelImport from "../components/ExcelImport";
 import TechnologyService from "../services/technologyService";
 import AsssessmentQuestionBoxHandler from "../components/questionView/AsssessmentQuestionBoxHandler";
+import { QuestionViewProvider } from "../context/questionView";
 
 const Titles = ["MCQ"];
 
@@ -51,7 +52,7 @@ function QuestionView() {
   const MCQDifficulty = BuilderService.getDifficultyByTitle(Titles[0]);
 
   const selectTechnology = TechnologyService.technology?.programmingLanguage;
-  console.log(LocalStorage.questionView);
+  /* console.log(LocalStorage.questionView); */
   return (
     <AnimatePresence>
       <IncludesContextProvider>
@@ -100,13 +101,15 @@ function QuestionView() {
               {/* <h2 className="max-w-[20%]">
                 <span>{selectTechnology}</span>
               </h2> */}
-              <AsssessmentQuestionBoxHandler
-                setStale={setStale}
-                selectTechnology={selectTechnology}
-                stale={stale}
-                questionView={questionView}
-                setQuestionView={setQuestionView}
-              />
+              <QuestionViewProvider>
+                <AsssessmentQuestionBoxHandler
+                  setStale={setStale}
+                  selectTechnology={selectTechnology}
+                  stale={stale}
+                  questionView={questionView}
+                  setQuestionView={setQuestionView}
+                />
+              </QuestionViewProvider>
             </section>
           </div>
           <section className="flex my-4 justify-between items-center">
@@ -159,7 +162,7 @@ function Questions({ questions }) {
         case "all": {
           /* setQuestionArr(questions); */
           const res = await getQuestions();
-          console.log(res);
+          /* console.log(res); */
           break;
         }
         default: {

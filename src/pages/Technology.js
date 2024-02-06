@@ -140,7 +140,12 @@ export async function action() {
   requestData["CreatedBy"] = "Admin";
   requestData["ModifiedBy"] = "Admin";
 
+  let redirectVar = "/categories/assessments";
+
+  if (requestData.Topic.natureOfAssessment === "fixed")
+    redirectVar = "/questiondb/uploadTopic";
+
   console.log(requestData);
 
-  return redirect("/categories/assessments");
+  return redirect(redirectVar);
 }

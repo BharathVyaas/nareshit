@@ -94,6 +94,7 @@ class LocalStorageClass {
 
   set questionView(newData) {
     const data = JSON.stringify(newData);
+    console.log("newData", newData);
     if (newData) localStorage.setItem("questionView", data);
   }
 

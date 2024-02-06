@@ -276,7 +276,7 @@ function SubTopicDataLoader({
 
   let updatedData;
 
-  if (data) updatedData = [placeHolder, ...data];
+  if (data && data.length) updatedData = [placeHolder, ...data];
   if (!data) updatedData = [placeHolder];
 
   useEffect(() => {
@@ -285,12 +285,25 @@ function SubTopicDataLoader({
 
   if (updatedData && typeof updatedData === "object") {
     return (
-      <SubTopicName
-        data={updatedData}
-        setSelectedTechnology={setSelectedSubTopic}
-        questionView={questionView}
-        setQuestionView={setQuestionView}
-      />
+      <>
+        {data && data[0].subTopicId === -1 ? (
+          <SubTopicName
+            data={data}
+            setSelectedTechnology={setSelectedSubTopic}
+            questionView={setQuestionView}
+            setQuestionView={setQuestionView}
+          />
+        ) : (
+          <div className="max-w-[30%] overflow-hidden flex flex-col">
+            <span>
+              <label htmlFor="subtopicName">Sub Topic Name:</label>
+            </span>
+            <select id="subtopicName" name="subtopicName" className="">
+              <option value="selectsubtopic">Select A Subtopic</option>
+            </select>
+          </div>
+        )}
+      </>
     );
   }
   return <h1>loading</h1>;

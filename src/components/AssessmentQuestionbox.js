@@ -50,7 +50,7 @@ function AssessmentQuestionBox({
   }, [setStale, title, hard]);
 
   return (
-    <article className="text-center max-w-[20%] m-5 border-[1.5px] rounded border-black">
+    <article className="text-center max-w-[300px] m-5 border-[1.5px] rounded border-black">
       <h2>
         {title}
         <span>{easy + medium + hard}</span>

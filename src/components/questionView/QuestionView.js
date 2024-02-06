@@ -278,7 +278,7 @@ function SubTopicDataLoader({
 
   if (data) updatedData = [placeHolder, ...data];
   if (!data) updatedData = [placeHolder];
-  console.log();
+
   useEffect(() => {
     /* console.log("selectedTopic:update", selectedTopic); */
   }, [selectedTopic]);
@@ -364,12 +364,13 @@ function SubTopicName({
 
   return (
     <>
-      {/* {popup && (
+      {popup && (
         <QuestionViewHandler
           topicData={topicData}
+          setPopup={setPopup}
           handler={handler}
         />
-      )} */}
+      )}
       <Form className="max-w-[30%] overflow-hidden relative">
         <div htmlFor="subtopicName">
           <p>Sub Topic Name:</p>

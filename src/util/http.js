@@ -47,14 +47,18 @@ export const getTopicNames = async () => {
 };
 
 export const getSubTopicNames = async () => {
+  console.log("_getTopicDataById", LocalStorage._getTopicDataById());
   try {
-    const res = await axios.get(
-      `https://www.nareshit.net/FetchSubTopics/${LocalStorage._getTopicDataById()}`
-    );
+    if (LocalStorage._getTopicDataById()) {
+      const res = await axios.get(
+        `https://www.nareshit.net/FetchSubTopics/${LocalStorage._getTopicDataById()}`
+      );
 
-    const data = res.data;
+      const data = res.data;
 
-    return data;
+      return data;
+    }
+    return 1;
   } catch (err) {
     console.log("getModuleNames", err);
   }

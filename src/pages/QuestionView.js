@@ -24,11 +24,14 @@ import Modal from "../ui/Modal";
 import QuestionModelHandler from "../ui/QuestionModelHandler";
 import ExcelImport from "../components/ExcelImport";
 import TechnologyService from "../services/technologyService";
+import AsssessmentQuestionBoxHandler from "../components/questionView/AsssessmentQuestionBoxHandler";
 
 const Titles = ["MCQ"];
 
 function QuestionView() {
   const questions = useLoaderData();
+
+  const [questionView, setQuestionView] = useState([]);
 
   // Make Sure to destroy previous subescriptions.
   DifficultySubescribeService.source();
@@ -80,6 +83,8 @@ function QuestionView() {
           <div>
             <section className="flex m-[40px]">
               <QusetionViewTechnlogy
+                questionView={questionView}
+                setQuestionView={setQuestionView}
                 selectedModule={selectedModule}
                 setSelectedModule={setSelectedModule}
                 selectedTopic={selectedTopic}
@@ -92,12 +97,11 @@ function QuestionView() {
               <h2 className="max-w-[20%]">
                 <span>{selectTechnology}</span>
               </h2>
-              <AssessmentQuestionBox
-                title={Titles[0]}
+              <AsssessmentQuestionBoxHandler
                 setStale={setStale}
-                easy={MCQDifficulty.easy}
-                medium={MCQDifficulty.medium}
-                hard={MCQDifficulty.hard}
+                stale={stale}
+                questionView={questionView}
+                setQuestionView={setQuestionView}
               />
             </section>
           </div>

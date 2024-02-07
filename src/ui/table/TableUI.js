@@ -22,7 +22,7 @@ export function TableHead({ titles }) {
  * @param {Object} props.element - An assessment data object.
  * @returns {JSX.Element} The TableBodyRenderer component.
  */
-export function TableBodyRenderer({ element, index }) {
+export function TableBodyRenderer({ element, index, handler }) {
   const {
     TestName,
     IsActive,
@@ -86,11 +86,7 @@ export function TableBodyRenderer({ element, index }) {
   if (endMinute) fullEndTime += endMinute;
 
   return (
-    <tr
-      onClick={() => console.log(element)}
-      key={element.id}
-      className={styles}
-    >
+    <tr onClick={() => handler(element)} key={element.id} className={styles}>
       <Tbody data={TestName} />
       <Tbody data={IsActive ? 1 : 0} />
       <Tbody data={fullStartDate} />

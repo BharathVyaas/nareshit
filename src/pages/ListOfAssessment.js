@@ -1,9 +1,10 @@
 import DataHandler from "../util/fetchHandler";
-import { NavLink, useLoaderData } from "react-router-dom";
+import { NavLink, useLoaderData, useSubmit } from "react-router-dom";
 import { getAllAssessments, queryClient } from "../util/http";
 import AssessmentTable from "../components/AssessmentTable";
 
 import { AnimatePresence, motion } from "framer-motion";
+import BuilderService from "../services/builder";
 
 /**
  * Component for displaying a list of assessments created by other users.
@@ -16,6 +17,13 @@ function ListOfAssessment() {
 
   // Fetch assessments using react-query's useLoaderData
   const { assessments } = useLoaderData();
+
+  const submit = useSubmit();
+
+  function handler(data) {
+    BuilderService.setId("listOfAssessment", data.TestID);
+    console.log(BuilderService.id);
+  }
 
   return (
     <AnimatePresence>
@@ -38,7 +46,11 @@ function ListOfAssessment() {
           </NavLink>
 
           {/* Render the AssessmentTable component */}
-          <AssessmentTable titles={titles} assessments={assessments} />
+          <AssessmentTable
+            titles={titles}
+            assessments={assessments}
+            handler={handler}
+          />
         </section>
       </motion.main>
     </AnimatePresence>

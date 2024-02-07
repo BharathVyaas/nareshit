@@ -18,14 +18,13 @@ function AsssessmentQuestionBoxHandler({
   const [stale, setStale] = useState(parentStale);
 
   const { data } = useContext(QuestionView);
-  console.log("ddd", data);
 
   useEffect(() => {
     setStale(parentStale);
   }, [parentStale]);
 
   const MCQDifficulty = BuilderService.getDifficultyByTitle(Titles[0]);
-  console.log("rerender");
+
   if (
     JSON.stringify(questionView) !== JSON.stringify(LocalStorage.questionView)
   ) {
@@ -35,20 +34,13 @@ function AsssessmentQuestionBoxHandler({
       );
 
       if (!isNewItem) {
-        console.log(
-          `Skipping item with ID ${item.id} because it already exists in LocalStorage`
-        );
       }
 
       return isNewItem;
     });
 
-    console.log("New data to be inserted:", newData);
-
     LocalStorage.questionView = [...LocalStorage.questionView, ...newData];
   }
-
-  console.log(LocalStorage.questionView);
 
   /******
    * Constent
@@ -73,8 +65,6 @@ function AsssessmentQuestionBoxHandler({
     (element) => (hardTotalSibling += element.hard)
   );
 
-  console.log(easyTotalSibling, mediumTotalSibling, hardTotalSibling);
-
   const easy = easyTotalSibling;
   const medium = mediumTotalSibling;
   const hard = hardTotalSibling;
@@ -87,8 +77,6 @@ function AsssessmentQuestionBoxHandler({
     { title: `Medium: ${medium} / ${MCQDifficulty.medium}`, id: 5 },
     { title: `Hard:  ${hard} / ${MCQDifficulty.hard}`, id: 6 },
   ];
-
-  console.log("sdfa", TableAttributeTitles);
 
   /*******
    *
@@ -105,8 +93,6 @@ function AsssessmentQuestionBoxHandler({
       id: element?.id,
     };
   });
-
-  console.log("tableBody", tableBody);
 
   return (
     <section className="overflow-auto container">
@@ -246,7 +232,6 @@ export function Tbody({ data, tag, id, setStale, ...props }) {
   const [value, setValue] = useState(data);
 
   function handler(_data, setter, _total, id, siblings) {
-    console.log("stale");
     setStale((prev) => true);
     let data = Number(_data);
     let evaluate;

@@ -112,8 +112,7 @@ export default Assessments;
 
 export async function action({}, navigate) {
   const requestData = {};
-  requestData["requestDataBody"] = LocalStorage.data;
-  requestData["TestID"] = 123;
+  requestData["TestID"] = 0;
   requestData["TestDetailsID"] = 0;
   requestData["QuestionTypeID"] = 1;
   requestData["NumOfEasy"] =
@@ -126,11 +125,14 @@ export async function action({}, navigate) {
   requestData["ModifiedBy"] = "Admin";
 
   console.log(requestData);
-  /*   const res = await axios.post("https://www.nareshit.net/createTestAssement", {
-    data: requestData,
-  });
+  const res = await axios.post(
+    "https://www.nareshit.net/createTestAssessment",
+    {
+      data: requestData,
+    }
+  );
 
-  console.log("res", res); */
+  console.log("res", res);
 
   return redirect("/categories/questionview");
 }

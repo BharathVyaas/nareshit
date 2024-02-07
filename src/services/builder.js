@@ -12,10 +12,18 @@ class Builder {
     return this.instance;
   }
   constructor() {
+    this.id = {
+      listOfAssessment: 0,
+    };
+    this.requestData = { assessments: {} };
     this.assessmentService = AssessmentService;
     this.technologyService = TechnologyService;
     this.questionService = QuestionViewService;
     this.scheduleTimeService = ScheduleTimeService;
+  }
+
+  setId(key, value) {
+    this.id[key] = value;
   }
 
   getServices() {

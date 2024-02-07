@@ -1,6 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { LocalStorage } from "../services/LocalStorage";
+import BuilderService from "../services/builder";
 
 function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
+  useEffect(() => {
+    const data = programmingLanguages.find(
+      (element) => element.TechnologyName === proglang
+    );
+
+    BuilderService.requestData.assessments.technology = data;
+    LocalStorage.technology = data;
+  }, [proglang]);
+
   return (
     <div className="flex flex-col mb-5">
       <div className=" mx-4">

@@ -127,25 +127,77 @@ export async function loader() {
 }
 
 export async function action() {
-  const requestData = {};
-  requestData["requestDataBody"] = LocalStorage.data;
-  requestData["TestID"] = 0;
-  requestData["TestDetailsID"] = 0;
-  requestData["QuestionTypeID"] = 1;
-  requestData["Technology"] =
-    LocalStorage.data.technologyData._technology.programmingLanguage;
-  requestData["SubTopic"] = LocalStorage.data.technologyData._technology;
-  requestData["Module"] = LocalStorage.data.technologyData._technology;
-  requestData["Topic"] = LocalStorage.data.technologyData._technology;
-  requestData["CreatedBy"] = "Admin";
-  requestData["ModifiedBy"] = "Admin";
+  let natureId;
 
+  // NatureID
+  if (
+    BuilderService.technologyService._technology.natureOfAssessment ===
+    "dynamic"
+  ) {
+    natureId = 1;
+  } else if (
+    BuilderService.technologyService._technology.natureOfAssessment === "fixed"
+  ) {
+    natureId = 2;
+  } else {
+    natureId = 3;
+  }
+
+  // RandomID
+  let randomId;
+
+  if (
+    BuilderService.technologyService._technology.assessmentNature ===
+    "completeTest"
+  ) {
+    randomId = 1;
+  }
+  if (
+    BuilderService.technologyService._technology.assessmentNature ===
+    "moduleWiseRandom"
+  ) {
+    randomId = 2;
+  }
+  if (
+    BuilderService.technologyService._technology.assessmentNature ===
+    "topicWiseRandom"
+  ) {
+    randomId = 3;
+  }
+  if (
+    BuilderService.technologyService._technology.assessmentNature === "noRandom"
+  ) {
+    randomId = 4;
+  }
+
+  let data = {};
+  data["TestID"] = BuilderService.id.listOfAssessment;
+  data["TechnologyID"] =
+    BuilderService.requestData.assessments.technology.TechnologyID;
+  data["NatureID"] = natureId;
+  data["RandomID"] = randomId;
+  data["CreatedBy"] = "Admin";
+  data["ModifiedBy"] = "Admin";
+
+  data = {
+    TechnologyID: 2,
+    TestID: 0,
+    AssessmentID: 1,
+    NatureID: 2,
+    RandomID: 2,
+    CreatedBy: "Admin",
+    ModifiedBy: "Admin",
+  };
   let redirectVar = "/categories/assessments";
 
-  if (requestData.Topic.natureOfAssessment === "fastTrack")
-    redirectVar = "/questiondb/uploadTopic";
+  if (data["NatureID"] === "fastTrack") redirectVar = "/questiondb/uploadTopic";
 
-  console.log(requestData);
+  const res = await axios.post("https://www.nareshit.net/createEditTest", {
+    data,
+  });
+  //
+  console.log(data);
+  console.log(res);
 
-  return redirect(redirectVar);
+  return redirect("/categories/assessments");
 }

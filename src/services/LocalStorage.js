@@ -94,8 +94,18 @@ class LocalStorageClass {
 
   set questionView(newData) {
     const data = JSON.stringify(newData);
-    console.log("newData", newData);
     if (newData) localStorage.setItem("questionView", data);
+  }
+
+  get technology() {
+    let result = this.parse("technology");
+    if (!result) result = [];
+    return result;
+  }
+
+  set technology(newData) {
+    const data = JSON.stringify(newData);
+    if (newData) localStorage.setItem("technology", data);
   }
 
   parse(key) {

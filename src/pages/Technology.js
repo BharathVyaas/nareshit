@@ -176,18 +176,10 @@ export async function action() {
     BuilderService.requestData.assessments.technology.TechnologyID;
   data["NatureID"] = natureId;
   data["RandomID"] = randomId;
+  data["AssessmentID"] = 0;
   data["CreatedBy"] = "Admin";
   data["ModifiedBy"] = "Admin";
 
-  data = {
-    TechnologyID: 2,
-    TestID: 0,
-    AssessmentID: 1,
-    NatureID: 2,
-    RandomID: 2,
-    CreatedBy: "Admin",
-    ModifiedBy: "Admin",
-  };
   let redirectVar = "/categories/assessments";
 
   if (data["NatureID"] === "fastTrack") redirectVar = "/questiondb/uploadTopic";
@@ -195,9 +187,10 @@ export async function action() {
   const res = await axios.post("https://www.nareshit.net/createEditTest", {
     data,
   });
-  //
-  console.log(data);
+
   console.log(res);
+  BuilderService.id.technology = res.data.data[0].TestID;
+  console.log(BuilderService.id);
 
   return redirect("/categories/assessments");
 }

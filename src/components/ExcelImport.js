@@ -1,4 +1,4 @@
-import React from "react";
+/* import React from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import TopicTxt from "../assets/TopicTxt.txt";
@@ -109,6 +109,15 @@ function ExcelImport() {
       </section>
     </main>
   );
+}
+
+export default ExcelImport;
+ */
+
+import React from "react";
+
+function ExcelImport() {
+  return <div>ExcelImport</div>;
 }
 
 export default ExcelImport;

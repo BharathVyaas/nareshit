@@ -17,7 +17,6 @@ function AssessmentTable({ titles, assessments, handler }) {
       </thead>
       <tbody>
         {assessments.map((element) => {
-          console.log(element);
           return (
             <TableBodyRenderer
               handler={handler}

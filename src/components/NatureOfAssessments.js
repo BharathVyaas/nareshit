@@ -25,6 +25,16 @@ function NatureOfAssessments({ nature, setNature }) {
           />
           <span className="p-2">Fixed</span>
         </label>
+        <label>
+          <input
+            type="radio"
+            name="assessmentNature"
+            checked={nature === "fastTrack"}
+            value="fastTrack"
+            onChange={(e) => setNature(e.target.value)}
+          />
+          <span className="p-2">Fast Track</span>
+        </label>
       </div>
     </fieldset>
   );

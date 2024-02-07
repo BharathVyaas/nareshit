@@ -6,11 +6,11 @@ import BuilderService from "../services/builder";
 export const queryClient = new QueryClient();
 
 export const getAllAssessments = async () => {
-  const res = await axios.get(
-    "http://localhost:4000/assessment/view-assessments"
-  );
+  const res = await axios.get("https://www.nareshit.net/getAllTests");
 
-  return await res.data;
+  console.log("res", res.data);
+
+  return await { assessments: res.data };
 };
 
 export const getProgLangs = async () => {

@@ -129,7 +129,7 @@ export async function loader() {
 export async function action() {
   const requestData = {};
   requestData["requestDataBody"] = LocalStorage.data;
-  requestData["TestID"] = 123;
+  requestData["TestID"] = 0;
   requestData["TestDetailsID"] = 0;
   requestData["QuestionTypeID"] = 1;
   requestData["Technology"] =
@@ -142,7 +142,7 @@ export async function action() {
 
   let redirectVar = "/categories/assessments";
 
-  if (requestData.Topic.natureOfAssessment === "fixed")
+  if (requestData.Topic.natureOfAssessment === "fastTrack")
     redirectVar = "/questiondb/uploadTopic";
 
   console.log(requestData);

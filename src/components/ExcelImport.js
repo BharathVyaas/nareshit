@@ -38,7 +38,7 @@ function ExcelImport() {
 
     try {
       const res = await axios.post(
-        "https://www.nareshit.net/insertQuestionData",
+        "https://www.nareshit.net/FastTrackCreateTest",
         {
           data: resultArr,
         }

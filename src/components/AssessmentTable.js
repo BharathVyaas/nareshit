@@ -10,7 +10,7 @@ import { TableBodyRenderer, TableHead } from "../ui/table/TableUI";
  */
 function AssessmentTable({ titles, assessments }) {
   return (
-    <table className="mt-3 border-[2px] border-slate-400">
+    <table className="mt-3 border-[2px] mx-auto border-slate-400">
       <caption className="sr-only">Assessment Details</caption>
       <thead>
         <TableHead titles={titles} />
@@ -18,7 +18,13 @@ function AssessmentTable({ titles, assessments }) {
       <tbody>
         {assessments.map((element) => {
           console.log(element);
-          return <TableBodyRenderer key={element.id} element={element} />;
+          return (
+            <TableBodyRenderer
+              key={element.TestID}
+              index={element.TestID}
+              element={element}
+            />
+          );
         })}
       </tbody>
     </table>

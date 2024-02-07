@@ -9,6 +9,7 @@ import Button from "../ui/Button";
 import { AnimatePresence, motion } from "framer-motion";
 import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
+import axios from "axios";
 
 function Assessments() {
   const [totalQuestions, setTotalQuestions] = useState(
@@ -125,6 +126,11 @@ export async function action({}, navigate) {
   requestData["ModifiedBy"] = "Admin";
 
   console.log(requestData);
+  /*   const res = await axios.post("https://www.nareshit.net/createTestAssement", {
+    data: requestData,
+  });
+
+  console.log("res", res); */
 
   return redirect("/categories/questionview");
 }

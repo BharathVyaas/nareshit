@@ -24,21 +24,21 @@ function AdminHomePage() {
         </nav>
       </header>
       <main>
-        <section className="w-[70%] h-60 mx-auto grid place-content-center text-center mt-20 shadow-2xl">
+        <section className="w-[85%] h-60 mx-auto grid place-content-center text-center mt-20 shadow-2xl">
           <h1 className="text-2xl font-medium p-3">Welcome to Admin Webpage</h1>
           <p className="">This is the Admin to Create for a Test Page</p>
           <aside className="w-[90%] mx-auto">
             <nav>
-              <ul className="flex justify-evenly mt-4">
-                <li className="text-white bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
+              <ul className="flex w-full justify-evenly mt-4">
+                <li className="text-white  mx-2 bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
                   <Link to="/categories/assessmentlist">
                     Test Creation Page
                   </Link>
                 </li>
-                <li className="text-white bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
+                <li className="text-white mx-2 bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
                   <Link to="questiondb/uploadTopic">Question's DB</Link>
                 </li>
-                <li className="text-white bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
+                <li className="text-white mx-2 bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
                   <Link>Enroll Student</Link>
                 </li>
               </ul>

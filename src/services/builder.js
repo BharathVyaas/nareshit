@@ -15,6 +15,7 @@ class Builder {
     this.id = {
       listOfAssessment: 0,
       technology: 0,
+      technologyId: 0,
     };
     this.requestData = { assessments: {} };
     this.assessmentService = AssessmentService;

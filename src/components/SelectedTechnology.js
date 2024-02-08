@@ -10,6 +10,7 @@ function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
 
     BuilderService.requestData.assessments.technology = data;
     LocalStorage.technology = data;
+    BuilderService.id.technologyId = data.TechnologyID;
   }, [proglang]);
 
   return (
@@ -19,7 +20,7 @@ function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
         <select
           id="proglang"
           name="proglang"
-          className="mx-6 w-[100px]"
+          className="mx-6 w-[200px]"
           value={proglang}
           onChange={(e) => setProgLang(e.target.value)}
         >

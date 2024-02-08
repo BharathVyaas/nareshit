@@ -29,6 +29,7 @@ function ListOfAssessment() {
   const submit = useSubmit();
 
   function handler(data) {
+    console.log(data);
     BuilderService.setId("listOfAssessment", data.TestID);
     console.log(BuilderService.id);
   }
@@ -73,12 +74,7 @@ export default ListOfAssessment;
  */
 export async function loader() {
   // Fetch assessments with specific stale time and garbage collection time
-  const result = await queryClient.fetchQuery({
-    queryKey: ["assessment", "getAllAssessments"],
-    queryFn: getAllAssessments,
-    staleTime: 0, // 30 seconds
-    gcTime: 0, // 1 minute
-    onSuccess: () => console.log("h8i"),
-  });
+  const result = await getAllAssessments();
+
   return result;
 }

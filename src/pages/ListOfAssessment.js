@@ -6,17 +6,24 @@ import AssessmentTable from "../components/AssessmentTable";
 import { AnimatePresence, motion } from "framer-motion";
 import BuilderService from "../services/builder";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 /**
  * Component for displaying a list of assessments created by other users.
  * @returns {JSX.Element} The ListOfAssessment component.
  */
 function ListOfAssessment() {
+  const [titleData, setTitleData] = useState([]);
   const { data } = useQuery({
     queryKey: ["listofAssessment"],
     queryFn: getAllAssessments,
     refetchOnMount: true,
   });
+
+  useEffect(() => {
+    setTitleData(data);
+  }, [data]);
 
   console.log("rerender");
 
@@ -25,14 +32,20 @@ function ListOfAssessment() {
 
   // Fetch assessments using react-query's useLoaderData
   const { assessments } = useLoaderData();
+  let updatedData = assessments;
 
   const submit = useSubmit();
 
-  function handler(data) {
-    console.log(data);
-    BuilderService.setId("listOfAssessment", data.TestID);
-    console.log(BuilderService.id);
+  async function handler(data) {
+    const res = await axios.get("https://www.nareshit.net/getAllTests");
+
+    if (res) setTitleData({ assessments: res.data });
+    console.log(res.data);
   }
+
+  useEffect(() => {
+    setTitleData(updatedData);
+  }, [titleData]);
 
   return (
     <AnimatePresence>
@@ -53,11 +66,16 @@ function ListOfAssessment() {
           >
             Create New
           </NavLink>
-
+          <button
+            className="inline-block ms-20 mx-auto mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
+            onClick={handler}
+          >
+            Show
+          </button>
           {/* Render the AssessmentTable component */}
           <AssessmentTable
             titles={titles}
-            assessments={assessments}
+            assessments={updatedData}
             handler={handler}
           />
         </section>

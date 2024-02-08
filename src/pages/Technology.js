@@ -244,17 +244,17 @@ export async function action() {
 
   let redirectVar = "/categories/assessments";
 
-  if (data["NatureID"] === "fastTrack") redirectVar = "/questiondb/uploadTopic";
+  if (data["NatureID"] === 3) redirectVar = "/questiondb/uploadTopic";
 
   console.log(data);
+  console.log(data);
 
-  const res = await axios.post("https://www.nareshit.net/createEditTest", {
+  /* const res = await axios.post("https://www.nareshit.net/createEditTest", {
     data: data,
   });
 
-  console.log(res);
-  BuilderService.id.technology = res.data.data[0].TestID;
-  console.log(BuilderService.id);
+  console.log(res) BuilderService.id.technology = res.data.data[0].TestID;
+  console.log(BuilderService.id); */
 
-  return redirect("/categories/assessments");
+  return redirect(redirectVar);
 }

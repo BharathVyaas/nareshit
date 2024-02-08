@@ -128,14 +128,15 @@ export async function action({}, navigate) {
   console.log(requestData);
 
   console.log(requestData);
-  const res = await axios.post(
+
+  /* const res = await axios.post(
     "https://www.nareshit.net/createTestAssessment",
     {
       data: requestData,
     }
   );
 
-  console.log("res", res);
+  console.log("res", res); */
 
   return redirect("/categories/questionview");
 }

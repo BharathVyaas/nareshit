@@ -40,36 +40,38 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
     const finelHard = result.hard + hard;
 
     console.log(finelEasy, finelMedium, finelHard);
-    console.log(BuilderService.assessmentService._difficulty);
 
     if (
-      finelEasy <= BuilderService.assessmentService._difficulty.easy &&
-      finelMedium <= BuilderService.assessmentService._difficulty.medium &&
-      finelHard <= BuilderService.assessmentService._difficulty.hard
+      finelEasy <= LocalStorage.data.assessmentData.MCQ.difficulty.easy &&
+      finelMedium <= LocalStorage.data.assessmentData.MCQ.difficulty.medium &&
+      finelHard <= LocalStorage.data.assessmentData.MCQ.difficulty.hard
     ) {
       go = true;
       handler(result);
       setter(false);
     }
+    console.log(LocalStorage.data.assessmentData.MCQ.difficulty.easy);
     if (!go) {
-      if (finelEasy > BuilderService.assessmentService._difficulty.easy) {
+      if (finelEasy > LocalStorage.data.assessmentData.MCQ.difficulty.easy) {
         easyRef.current.style.border = "2px solid red";
       } else if (
-        finelEasy <= BuilderService.assessmentService._difficulty.easy
+        finelEasy <= LocalStorage.data.assessmentData.MCQ.difficulty.easy
       ) {
         easyRef.current.style.border = "1px solid gray";
       }
-      if (finelMedium > BuilderService.assessmentService._difficulty.medium) {
+      if (
+        finelMedium > LocalStorage.data.assessmentData.MCQ.difficulty.medium
+      ) {
         mediumRef.current.style.border = "2px solid red";
       } else if (
-        finelMedium <= BuilderService.assessmentService._difficulty.medium
+        finelMedium <= LocalStorage.data.assessmentData.MCQ.difficulty.medium
       ) {
         mediumRef.current.style.border = "1px solid gray";
       }
-      if (finelHard > BuilderService.assessmentService._difficulty.hard) {
+      if (finelHard > LocalStorage.data.assessmentData.MCQ.difficulty.medium) {
         hardRef.current.style.border = "2px solid red";
       } else if (
-        finelHard <= BuilderService.assessmentService._difficulty.hard
+        finelHard <= LocalStorage.data.assessmentData.MCQ.difficulty.medium
       ) {
         hardRef.current.style.border = "1px solid gray";
       } else {

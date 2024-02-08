@@ -17,6 +17,14 @@ class Builder {
       technology: 0,
       technologyId: 0,
     };
+    this.questionCount = {
+      easy: 0,
+      medium: 0,
+      hard: 0,
+      include: 0,
+      exclude: 0,
+      total: 0,
+    };
     this.requestData = { assessments: {} };
     this.assessmentService = AssessmentService;
     this.technologyService = TechnologyService;

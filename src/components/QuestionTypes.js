@@ -1,4 +1,7 @@
 import React, { useEffect, useRef } from "react";
+import AssessmentService from "../services/assessmentsService";
+import { LocalStorage } from "../services/LocalStorage";
+import BuilderService from "../services/builder";
 
 function QuestionTypes({
   questionType,
@@ -20,7 +23,9 @@ function QuestionTypes({
           value={data}
           checked
           disabled
-          onChange={() => setData((prev) => !prev)}
+          onChange={() => {
+            setData((prev) => !prev);
+          }}
         />
         {questionType}
       </label>
@@ -68,8 +73,6 @@ function DifficultyLevel({
   setDataDifficulty,
   dataQuestions,
 }) {
-  const ref = useRef();
-
   return (
     <label htmlFor="dataEasy">
       {difficultyLevel}:
@@ -78,29 +81,24 @@ function DifficultyLevel({
         type="number"
         id="dataEasy"
         name="dataEasy"
-        ref={ref}
-        value={dataDifficulty[difficultyLevel]}
+        defaultValue={
+          LocalStorage.data?.assessmentData?.MCQ?.difficulty[difficultyLevel] ||
+          0
+        }
         onChange={(e) =>
           setDataDifficulty((prev) => {
-            let total =
-              dataDifficulty.easy +
-              dataDifficulty.medium +
-              dataDifficulty.hard -
-              dataDifficulty[difficultyLevel] +
-              Number(e.target.value);
-            let newData;
-            if (total <= dataQuestions) {
-              ref.current.style.outline = "";
-              newData = {
-                ...dataDifficulty,
-                [difficultyLevel]: Number(e.target.value),
-              };
-            } else {
-              ref.current.style.outline = "2px solid red";
-              newData = prev;
-            }
+            const obj = { ...prev };
 
-            return newData;
+            BuilderService.assessmentService =
+              AssessmentService.updateDifficulty({
+                ...AssessmentService.getDifficulty(),
+                [difficultyLevel]: Number(e.target.value),
+              });
+
+            LocalStorage.data.assessmentData.MCQ.difficulty[difficultyLevel] =
+              Number(e.target.value);
+            obj[difficultyLevel] = Number(e.target.value);
+            return obj;
           })
         }
       />
@@ -116,7 +114,9 @@ export function NumberOfQuestions({ dataQuestions, setDataQuestions }) {
         className="bg-white mb-4 ms-2 w-16 scrollHide border-[1px] border-gray-400 rounded"
         type="number"
         name="No.Q-secondary"
-        value={dataQuestions}
+        defaultValue={
+          LocalStorage.data?.assessmentData?.MCQ?.totalQuestions || 0
+        }
         onChange={(e) => setDataQuestions(Number(e.target.value))}
       />
     </label>

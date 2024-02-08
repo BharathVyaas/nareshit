@@ -98,16 +98,25 @@ function AsssessmentQuestionBoxHandler({
   });
 
   async function handler(data) {
-    console.log(
-      data,
-      `https://www.nareshit.net/fetchDynamicQuestions/?McqAll=${LocalStorage.exclude.length}&Hardcount=${data.element.endDate}&MediumCount=${data.element.startTime}&EasyCount=${data.endTime}&SubTopicID=${data.element.endTime}&SubTopicID=${data.element.subTopicId}`
-    );
-    const res = await axios.get(
-      `https://www.nareshit.net/fetchDynamicQuestions/?McqAll=${LocalStorage.exclude.length}&Hardcount=${data.element.endDate}&MediumCount=${data.element.startTime}&EasyCount=${data.element.endTime}&SubTopicID=${data.element.subTopicId}`
-    );
+    // Ensure data properties are properly formatted
+    const endDate = Number(data.element.endDate) || 0;
+    const startTime = Number(data.element.startTime) || 0;
+    const endTime = Number(data.element.endTime) || 0;
+    const subTopicId = Number(data.subTopicId) || 0;
 
-    setQuestionData(res.data);
-    console.log(res);
+    // Construct the URL with validated parameters
+    const url = `https://www.nareshit.net/fetchDynamicQuestions?Hardcount=${endDate}&MediumCount=${startTime}&EasyCount=${endTime}&SubTopicID=${subTopicId}`;
+
+    console.log(data, url);
+
+    try {
+      // Fetch data from the constructed URL
+      const res = await axios.get(url);
+      setQuestionData(res.data);
+      console.log(res);
+    } catch (error) {
+      console.error("Error fetching dynamic questions:", error);
+    }
   }
 
   return (
@@ -263,7 +272,7 @@ export function Tbody({ data, tag, id, setStale, ...props }) {
       throw new Error("AssessmentQuestionBoxHandler:Tbody:handler");
 
     const max_value = _total.assessmentData.MCQ.difficulty[evaluate];
-    const current_value = 3;
+    const current_value = 0;
     const siblings_eval_array = [];
     let siblings_evaluate = 0;
 

@@ -13,9 +13,6 @@ import AssessmentQuestionBox from "../components/AssessmentQuestionbox";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { LocalStorage } from "../services/LocalStorage";
-import IncludesContext, {
-  IncludesContextProvider,
-} from "../context/includesContext";
 import UpdateQuestions from "../context/updateQuestions";
 import { useLoaderData } from "react-router";
 import { DifficultySubescribeService } from "../services/difficultySubescribe";
@@ -36,9 +33,28 @@ function QuestionView() {
   const [questions, setQuestions] = useState();
   useEffect(() => {
     setQuestions(data);
-  }, [data]);
 
-  console.log("questions", data);
+    let easy = 0;
+    let medium = 0;
+    let hard = 0;
+
+    if (data)
+      data.forEach((element) => {
+        if (element.DifficultyLevelID === 1) {
+          easy = easy + 1;
+        } else if (element.DifficultyLevelID === 2) {
+          medium += 1;
+        } else if (element.DifficultyLevelID === 3) {
+          hard += 1;
+        }
+      });
+
+    BuilderService.questionCount.easy = easy;
+    BuilderService.questionCount.medium = medium;
+    BuilderService.questionCount.hard = hard;
+
+    BuilderService.questionCount.total = easy + medium + hard;
+  }, [data]);
 
   const [questionView, setQuestionView] = useState([]);
 
@@ -59,14 +75,13 @@ function QuestionView() {
   /* console.log(LocalStorage.questionView); */
   return (
     <AnimatePresence>
-      <IncludesContextProvider>
-        <motion.main
-          initial={{ x: "100%", transition: { duration: 0.3 } }}
-          animate={{ x: 0, transition: { duration: 0.3 } }}
-          exit={{ x: "100%", transition: { duration: 0.3 } }}
-          className="bg-gray-50 min-h-[70vh]"
-        >
-          {/* <section className=" pt-3">
+      <motion.main
+        initial={{ x: "100%", transition: { duration: 0.3 } }}
+        animate={{ x: 0, transition: { duration: 0.3 } }}
+        exit={{ x: "100%", transition: { duration: 0.3 } }}
+        className="bg-gray-50 min-h-[70vh]"
+      >
+        {/* <section className=" pt-3">
             <div className="ms-[58%] flex">
               <div>
                 <input
@@ -85,23 +100,27 @@ function QuestionView() {
               </div>
             </div>
           </section> */}
-          <h1 className="ms-[20px] pt-5 text-lg font-semibold">
-            Selected Technology: {selectTechnology}
-          </h1>
-          <div>
-            <section className="flex m-[20px]">
-              <QusetionViewTechnlogy
-                questionView={questionView}
-                setQuestionView={setQuestionView}
-                selectedModule={selectedModule}
-                setSelectedModule={setSelectedModule}
-                selectedTopic={selectedTopic}
-                setSelectedTopic={setSelectedTopic}
-                selectedSubTopic={selectedSubTopic}
-                setSelectedSubTopic={setSelectedSubTopic}
-              />
-            </section>
-            <section className="flex justify-center p-5">
+        <h1 className="ms-[20px] pt-5 text-lg font-semibold">
+          Selected Technology: {selectTechnology}
+        </h1>
+        <div>
+          <section className="flex m-[20px]">
+            <QusetionViewTechnlogy
+              questionView={questionView}
+              setQuestionView={setQuestionView}
+              selectedModule={selectedModule}
+              setSelectedModule={setSelectedModule}
+              selectedTopic={selectedTopic}
+              setSelectedTopic={setSelectedTopic}
+              selectedSubTopic={selectedSubTopic}
+              setSelectedSubTopic={setSelectedSubTopic}
+            />
+          </section>
+          <div className="p-5">
+            <div className="text-lg font-semibold mb-4">
+              <h2 className="">Please select a row from the table below:</h2>
+            </div>
+            <section className="flex justify-center">
               {/* <h2 className="max-w-[20%]">
                 <span>{selectTechnology}</span>
               </h2> */}
@@ -118,20 +137,20 @@ function QuestionView() {
               </QuestionViewProvider>
             </section>
           </div>
-          <section className="flex my-4 justify-between items-center">
-            <FetchData setStale={setStale} />
+        </div>
+        <section className="flex my-4 justify-between items-center">
+          <FetchData setStale={setStale} />
+        </section>
+        {/** grid grid-cols-2 */}
+
+        {questions && (
+          <section className="">
+            <Questions questions={questions} />
           </section>
-          {/** grid grid-cols-2 */}
+        )}
 
-          {questions && (
-            <section className="">
-              <Questions questions={questions} />
-            </section>
-          )}
-
-          <Button link="/categories/scheduletime" />
-        </motion.main>
-      </IncludesContextProvider>
+        <Button link="/categories/scheduletime" />
+      </motion.main>
     </AnimatePresence>
   );
 }
@@ -139,8 +158,11 @@ function QuestionView() {
 export default QuestionView;
 
 function Questions({ questions }) {
-  console.log("------------------------------", questions);
   const [questionArr, setQuestionArr] = useState(questions);
+
+  useEffect(() => {
+    setQuestionArr(questions);
+  }, [questions]);
 
   const questionHandler = useCallback(async (difficultyId, count) => {
     try {
@@ -172,8 +194,7 @@ function Questions({ questions }) {
         }
         case "all": {
           /* setQuestionArr(questions); */
-          const res = await getQuestions();
-          /* console.log(res); */
+          setQuestionArr(questions);
           break;
         }
         default: {
@@ -223,12 +244,14 @@ function Questions({ questions }) {
 
   const [includes, setIncludes] = useState([]);
 
+  useEffect(() => console.log(includes), [includes]);
+
   return (
     <>
       {questionArr &&
         questionArr.map((question, index) => (
           <Question
-            key={question.QuestionID + index}
+            key={question.QuestionID}
             difficultyId={question?.DifficultyLevelID}
             questions={questionArr}
             questionId={question.QuestionID}
@@ -255,26 +278,13 @@ function Question({
     return arr.filter((item) => item !== value);
   }
 
-  const { setIncludes: setIncludesCtxFn } = useContext(IncludesContext);
-
   useEffect(() => {
     if (questions) {
       setIncludes(questions.map((question) => question.QuestionID));
-
-      setIncludesCtxFn((prev) => {
-        return { ...prev, includes: questions.length };
-      });
     }
-  }, [questions, setIncludesCtxFn]);
+  }, [questions]);
 
   useEffect(() => {
-    setIncludesCtxFn(() => {
-      return {
-        includes:
-          Number(BuilderService.getTotal()) - LocalStorage.exclude?.length || 0,
-        excludes: LocalStorage.exclude?.length || 0,
-      };
-    });
     setIncludes((prev) =>
       prev.filter((element) => !LocalStorage.exclude?.includes(element))
     );
@@ -289,22 +299,10 @@ function Question({
           arr.push(questionId);
           return arr;
         });
-      setIncludesCtxFn((prev) => {
-        const includes = prev.includes + 1;
-        const excludes = prev.excludes - 1;
-
-        return { includes, excludes };
-      });
     } else {
       LocalStorage.pushExclude(questionId);
       if (includes && includes.includes(questionId))
         setIncludes((prev) => removeElement([...prev], questionId));
-      setIncludesCtxFn((prev) => {
-        const includes = prev.includes - 1;
-        const excludes = prev.excludes + 1;
-
-        return { includes, excludes };
-      });
     }
   }
 
@@ -392,15 +390,16 @@ function FetchData({ setStale }) {
     .reduce((data, acc) => Number(data) + acc, 0);
   const total = easy + medium + hard;
 
+  let updatedEasy = BuilderService.questionCount.easy;
+
   const [fetchCount, setFetchCount] = useState(0);
-  const { includes } = useContext(IncludesContext);
 
   return (
     <>
       <div className="flex">
         <aside className="mx-4">
           <h2>
-            Easy Count:<span>{easy}</span>
+            Easy Count:<span>{BuilderService.questionCount.easy}</span>
           </h2>
 
           <button
@@ -417,7 +416,7 @@ function FetchData({ setStale }) {
 
         <aside className="mx-4">
           <h2>
-            Medium Count:<span>{medium}</span>
+            Medium Count:<span>{BuilderService.questionCount.medium}</span>
           </h2>
 
           <button
@@ -433,7 +432,7 @@ function FetchData({ setStale }) {
         </aside>
         <aside className="mx-4">
           <h2>
-            Hard Count: <span>{hard}</span>
+            Hard Count: <span>{BuilderService.questionCount.hard}</span>
           </h2>
 
           <button
@@ -449,7 +448,7 @@ function FetchData({ setStale }) {
         </aside>
         <aside className="mx-4">
           <h2>
-            Fetched Questions:<span>{fetchCount}</span>
+            Fetched Questions:<span>{BuilderService.questionCount.total}</span>
           </h2>
           <button
             className="bg-sky-400 border-2 border-sky-800 px-6 py-[.8px] rounded"
@@ -465,27 +464,13 @@ function FetchData({ setStale }) {
       <div>
         <aside className="flex me-10 text-white">
           <button className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded">
-            Include:
-            <input
-              className="w-7 ms-2 rounded text-black bg-white"
-              type="number"
-              value={includes.includes}
-              onChange={() => {}}
-              disabled
-            />
+            Include
           </button>
           <button
             className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded"
             onClick={() => DifficultySubescribeService.notify("exclude")}
           >
-            Exclude:
-            <input
-              className="w-7 ms-2 rounded text-black bg-white"
-              value={includes.excludes}
-              type="number"
-              onChange={() => {}}
-              disabled
-            />
+            Exclude
           </button>
         </aside>
       </div>

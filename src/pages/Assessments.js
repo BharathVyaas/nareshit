@@ -12,19 +12,23 @@ import BuilderService from "../services/builder";
 import axios from "axios";
 
 function Assessments() {
+  BuilderService.assessmentService = AssessmentService;
   const [totalQuestions, setTotalQuestions] = useState(
-    BuilderService.assessmentService.options.MCQ.totalQuestions
+    BuilderService?.assessmentService?.options?.MCQ?.totalQuestions || 0
   );
   const [MCQ, setMCQ] = useState(
-    BuilderService.assessmentService.options.MCQ.flag
+    BuilderService?.assessmentService?.options?.MCQ?.flag || false
   );
   const [MCQQuestions, setMCQQuestions] = useState(
-    BuilderService.assessmentService.options.MCQ.totalQuestions
+    BuilderService?.assessmentService?.options?.MCQ?.totalQuestions || 0
   );
   const [MCQDifficulty, setMCQDifficulty] = useState({
-    easy: BuilderService.assessmentService.options.MCQ.difficulty.easy,
-    medium: BuilderService.assessmentService.options.MCQ.difficulty.medium,
-    hard: BuilderService.assessmentService.options.MCQ.difficulty.hard,
+    easy:
+      BuilderService?.assessmentService?.options?.MCQ?.difficulty?.easy || 0,
+    medium:
+      BuilderService?.assessmentService?.options?.MCQ?.difficulty?.medium || 0,
+    hard:
+      BuilderService?.assessmentService?.options?.MCQ?.difficulty?.hard || 0,
   });
 
   useEffect(() => {
@@ -59,9 +63,24 @@ function Assessments() {
     LocalStorage.data = BuilderService.getData();
   }, [MCQDifficulty]);
 
-  const linkDisabled =
+  const [linkDisabled, setLinkDisabled] = useState(
     MCQQuestions !==
-    Object.values(MCQDifficulty).reduce((item, acc) => item + acc, 0);
+      Object.values(MCQDifficulty).reduce((item, acc) => item + acc, 0)
+  );
+
+  function handler(e) {
+    let total = 0;
+
+    for (const key in MCQDifficulty) {
+      total += MCQDifficulty[key];
+    }
+
+    if (total !== MCQQuestions) {
+      e.preventDefault();
+      setLinkDisabled(true);
+      console.log(total, MCQQuestions);
+    }
+  }
 
   return (
     <AnimatePresence>
@@ -91,15 +110,23 @@ function Assessments() {
               />
             </div>
           </fieldset>
-          <div className="w-full flex mt-14">
-            <button
-              disabled={linkDisabled}
-              className={`${
-                linkDisabled && "disabled"
-              } inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
-            >
-              Submit
-            </button>
+          <div className="h-20 relative">
+            {linkDisabled && (
+              <p className="text-red-900 font-bold text-center -top-8 px-14  absolute w-full">
+                Must be Val
+              </p>
+            )}
+
+            <div className="w-full flex mt-14">
+              <button
+                onClick={handler}
+                className={`${
+                  !linkDisabled && "disabled"
+                } inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
+              >
+                Submit
+              </button>
+            </div>
           </div>
           {/* <Button disabled={linkDisabled} link="/categories/questionview" /> */}
         </Form>
@@ -112,20 +139,17 @@ export default Assessments;
 
 export async function action({}, navigate) {
   const requestData = {};
-  console.log(BuilderService);
   requestData["TestID"] = BuilderService.id.technology;
   requestData["TestDetailsID"] = 0;
   requestData["QuestionTypeID"] = 1;
   requestData["NumOfEasy"] =
-    LocalStorage.data.assessmentData.MCQ.difficulty.easy;
+    LocalStorage?.data?.assessmentData?.MCQ?.difficulty?.easy;
   requestData["NumOfMedium"] =
-    LocalStorage.data.assessmentData.MCQ.difficulty.medium;
+    LocalStorage?.data?.assessmentData?.MCQ.difficulty.medium;
   requestData["NumOfHard"] =
-    LocalStorage.data.assessmentData.MCQ.difficulty.hard;
+    LocalStorage?.data?.assessmentData?.MCQ?.difficulty?.hard;
   requestData["CreatedBy"] = "Admin";
   requestData["ModifiedBy"] = "Admin";
-
-  console.log(requestData);
 
   console.log(requestData);
 

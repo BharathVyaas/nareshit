@@ -66,13 +66,13 @@ class AssessmentClass extends Composite {
   constructor() {
     super();
     this._flag = false;
-    this._totalQuestionCount = 10;
-    this._difficulty = { easy: 4, medium: 3, hard: 3 };
+    this._totalQuestionCount = 0;
+    this._difficulty = { easy: 0, medium: 0, hard: 0 };
     this.options = {
       MCQ: {
         flag: true,
-        totalQuestions: 10,
-        difficulty: { easy: 4, medium: 3, hard: 3 },
+        totalQuestions: 0,
+        difficulty: { easy: 0, medium: 0, hard: 0 },
       },
     };
   }

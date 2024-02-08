@@ -20,7 +20,9 @@ import axios from "axios";
 const formNames = ["proglangs", "catogaryType", "assessmentNature", "random"];
 
 function Technology() {
+  const [checked, setChecked] = useState(false);
   const { programmingLanguages, fetchedData } = useLoaderData();
+  const [linkDisabled, setLinkDisabled] = useState(true);
 
   const updatedProgrammingLanguages = [
     {
@@ -84,6 +86,18 @@ function Technology() {
     LocalStorage.data = BuilderService.getData();
   }, [random]);
 
+  function handler(e) {
+    if (LocalStorage.technology.TechnologyID === -1) {
+      e.preventDefault();
+      setLinkDisabled(true);
+      setChecked(true);
+    } else {
+      setChecked(false);
+      setLinkDisabled(false);
+    }
+    console.log(LocalStorage.technology.TechnologyID);
+  }
+
   return (
     <AnimatePresence>
       <motion.main
@@ -100,14 +114,21 @@ function Technology() {
           />
           <NatureOfAssessments nature={nature} setNature={setNature} />
           <Randoms random={random} setRandom={setRandom} />
-
-          {/* <Button link="/categories/assessments" /> */}
-          <div className="w-full flex mt-14">
-            <button
-              className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
-            >
-              Submit
-            </button>
+          <div className=" h-20 relative">
+            {linkDisabled && checked && (
+              <p className="text-red-900 font-bold text-center -top-8 px-14  absolute w-full">
+                Must be Val
+              </p>
+            )}
+            {/* <Button link="/categories/assessments" /> */}
+            <div className="w-full flex mt-14">
+              <button
+                onClick={handler}
+                className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
+              >
+                Submit
+              </button>
+            </div>
           </div>
         </Form>
       </motion.main>

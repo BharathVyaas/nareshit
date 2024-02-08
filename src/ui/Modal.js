@@ -1,6 +1,7 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import QuestionModal from "./QuestionModal";
+import { QuestionViewProvider } from "../context/questionView";
 
 function Modal({ data, setter, ModalParam, handler }) {
   return createPortal(

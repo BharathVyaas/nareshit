@@ -111,6 +111,8 @@ function QuestionView() {
               selectedModule={selectedModule}
               setSelectedModule={setSelectedModule}
               selectedTopic={selectedTopic}
+              data={data}
+              setData={setData}
               setSelectedTopic={setSelectedTopic}
               selectedSubTopic={selectedSubTopic}
               setSelectedSubTopic={setSelectedSubTopic}
@@ -118,7 +120,9 @@ function QuestionView() {
           </section>
           <div className="p-5">
             <div className="text-lg font-semibold mb-4">
-              <h2 className="">Please select a row from the table below:</h2>
+              <h2 className="">
+                Please select a row from the table below to fetch Questions:
+              </h2>
             </div>
             <section className="flex justify-center">
               {/* <h2 className="max-w-[20%]">
@@ -466,12 +470,12 @@ function FetchData({ setStale }) {
           <button className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded">
             Include
           </button>
-          <button
+          {/* <button
             className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded"
             onClick={() => DifficultySubescribeService.notify("exclude")}
           >
             Exclude
-          </button>
+          </button> */}
         </aside>
       </div>
     </>

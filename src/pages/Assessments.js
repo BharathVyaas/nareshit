@@ -113,16 +113,15 @@ function Assessments() {
           <div className="h-20 relative">
             {linkDisabled && (
               <p className="text-red-900 font-bold text-center -top-8 px-14  absolute w-full">
-                Must be Val
+                Sum(Easy+Medium+Hard) must match Number of Questions.
               </p>
             )}
 
             <div className="w-full flex mt-14">
               <button
                 onClick={handler}
-                className={`${
-                  !linkDisabled && "disabled"
-                } inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
+                className={`
+                inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
               >
                 Submit
               </button>
@@ -138,9 +137,10 @@ function Assessments() {
 export default Assessments;
 
 export async function action({}, navigate) {
+  console.log(BuilderService.id.technology);
   const requestData = {};
-  requestData["TestID"] = BuilderService.id.technology;
-  requestData["TestDetailsID"] = 0;
+  requestData["TestID"] = 15786;
+  requestData["TestDetailsID"] = 15731;
   requestData["QuestionTypeID"] = 1;
   requestData["NumOfEasy"] =
     LocalStorage?.data?.assessmentData?.MCQ?.difficulty?.easy;
@@ -153,14 +153,14 @@ export async function action({}, navigate) {
 
   console.log(requestData);
 
-  /* const res = await axios.post(
+  const res = await axios.post(
     "https://www.nareshit.net/createTestAssessment",
     {
       data: requestData,
     }
   );
 
-  console.log("res", res); */
+  console.log("res", res);
 
   return redirect("/categories/questionview");
 }

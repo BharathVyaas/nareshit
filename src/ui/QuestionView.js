@@ -1,12 +1,16 @@
-import React, { useId, useRef } from "react";
+import React, { useContext, useId, useRef, useState } from "react";
 import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
+import QuestionViewCtx from "../context/questionView";
 
 function QuestionView({ question, setModalData, data, handler, setter }) {
   const easyRef = useRef();
   const mediumRef = useRef();
   const hardRef = useRef();
   const id = useId();
+  const [isValid, setIsValid] = useState(true);
+  const { data: questionCtxData, setData: setCtxData } =
+    useContext(QuestionViewCtx);
 
   let result = {
     name: "My Name",
@@ -21,6 +25,7 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
 
   function submiteHandler() {
     let go = false;
+
     console.log(LocalStorage.questionView);
 
     let easy = 0;
@@ -39,7 +44,18 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
     const finelMedium = result.medium + medium;
     const finelHard = result.hard + hard;
 
-    console.log(finelEasy, finelMedium, finelHard);
+    console.log(
+      "questionCtx",
+      questionCtxData,
+      LocalStorage.moduleData.moduleId,
+      LocalStorage.topicData.topicId,
+      LocalStorage.subTopicData.subTopicId,
+      result.easy,
+      result.medium,
+      result.hard
+    );
+
+    setCtxData([]);
 
     if (
       finelEasy <= LocalStorage.data.assessmentData.MCQ.difficulty.easy &&
@@ -49,9 +65,11 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
       go = true;
       handler(result);
       setter(false);
+      setIsValid(true);
     }
     console.log(LocalStorage.data.assessmentData.MCQ.difficulty.easy);
     if (!go) {
+      setIsValid(false);
       if (finelEasy > LocalStorage.data.assessmentData.MCQ.difficulty.easy) {
         easyRef.current.style.border = "2px solid red";
       } else if (
@@ -129,7 +147,12 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
             />
           </label>
         </div>
-        <div className="grid place-content-center">
+        <div className="grid place-content-center mt-2">
+          {!isValid && (
+            <p className="text-red-800 font-semibold absloute">
+              Try Entering Smaller Value!
+            </p>
+          )}
           <button
             onClick={submiteHandler}
             className={`text-white font-semibold inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}

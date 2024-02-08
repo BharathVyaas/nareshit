@@ -10,6 +10,8 @@ const QuestionViewCtx = createContext({
 export function QuestionViewProvider({ children }) {
   const [data, setData] = useState();
 
+  console.log(data);
+
   return (
     <QuestionViewCtx.Provider value={{ data, setData }}>
       {children}

@@ -1,5 +1,10 @@
 import DataHandler from "../util/fetchHandler";
-import { NavLink, useLoaderData, useSubmit } from "react-router-dom";
+import {
+  NavLink,
+  useLoaderData,
+  useNavigate,
+  useSubmit,
+} from "react-router-dom";
 import { getAllAssessments, queryClient } from "../util/http";
 import AssessmentTable from "../components/AssessmentTable";
 
@@ -36,8 +41,12 @@ function ListOfAssessment() {
 
   const submit = useSubmit();
 
+  const navigate = useNavigate();
+
   async function handler(data) {
     const res = await axios.get("https://www.nareshit.net/getAllTests");
+
+    navigate("/categories/technology");
 
     if (res) setTitleData({ assessments: res.data });
     console.log(res.data);
@@ -60,14 +69,15 @@ function ListOfAssessment() {
           <h1 className="absolute left-[-9999px]">Assessments</h1>
 
           {/* NavLink for creating a new assessment */}
-          <NavLink
+          <button
+            disabled
             className="inline-block ms-20 mx-auto mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
             to="/categories/technology"
           >
             Create New
-          </NavLink>
+          </button>
           <button
-            className="inline-block ms-20 mx-auto mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
+            className="hidden ms-20 mx-auto mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
             onClick={handler}
           >
             Show

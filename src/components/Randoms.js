@@ -17,6 +17,7 @@ function Randoms({ random, setRandom }) {
         </label>
         <label className="p-5">
           <input
+            disabled
             type="radio"
             name="random"
             value="moduleWiseRandom"
@@ -27,6 +28,7 @@ function Randoms({ random, setRandom }) {
         </label>
         <label className="p-5">
           <input
+            disabled
             type="radio"
             name="random"
             value="topicWiseRandom"
@@ -37,6 +39,7 @@ function Randoms({ random, setRandom }) {
         </label>
         <label className="p-5">
           <input
+            disabled
             type="radio"
             name="random"
             value="noRandom"

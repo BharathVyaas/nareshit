@@ -17,6 +17,7 @@ function NatureOfAssessments({ nature, setNature }) {
         </label>
         <label>
           <input
+            disabled
             type="radio"
             name="assessmentNature"
             checked={nature === "fixed"}
@@ -27,6 +28,7 @@ function NatureOfAssessments({ nature, setNature }) {
         </label>
         <label>
           <input
+            disabled
             type="radio"
             name="assessmentNature"
             checked={nature === "fastTrack"}

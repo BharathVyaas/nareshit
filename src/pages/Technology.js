@@ -117,7 +117,7 @@ function Technology() {
           <div className=" h-20 relative">
             {linkDisabled && checked && (
               <p className="text-red-900 font-bold text-center -top-8 px-14  absolute w-full">
-                Must be Val
+                Must select a Technology
               </p>
             )}
             {/* <Button link="/categories/assessments" /> */}
@@ -255,11 +255,11 @@ export async function action() {
   }
 
   let data = {};
-  data["TestID"] = BuilderService.id.listOfAssessment;
+  data["TestID"] = 15786;
   data["TechnologyID"] = BuilderService.id.technologyId;
   data["NatureID"] = natureId;
   data["RandomID"] = randomId;
-  data["AssessmentID"] = 0;
+  data["AssessmentID"] = 1;
   data["CreatedBy"] = "Admin";
   data["ModifiedBy"] = "Admin";
 
@@ -270,11 +270,13 @@ export async function action() {
   console.log(data);
   console.log(data);
 
-  /* const res = await axios.post("https://www.nareshit.net/createEditTest", {
+  const res = await axios.post("https://www.nareshit.net/createEditTest", {
     data: data,
   });
-
-  console.log(res) BuilderService.id.technology = res.data.data[0].TestID;
+  //testDetailId :15731
+  //testId: 15786
+  console.log(res);
+  /* BuilderService.id.technology = res.data.data[0].TestID;
   console.log(BuilderService.id); */
 
   return redirect(redirectVar);

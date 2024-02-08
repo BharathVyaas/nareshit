@@ -1,3 +1,6 @@
+import { Navigate } from "react-router";
+import { NavLink } from "react-router-dom";
+
 /**
  * Component for rendering the table head.
  * @param {Object} props - The component props.
@@ -96,6 +99,15 @@ export function TableBodyRenderer({ element, index, handler }) {
     </tr>
   );
 }
+
+/*  <tr onClick={() => handler(element)} key={element.id} className={styles}>
+      <Tbody data={TestName} />
+      <Tbody data={IsActive ? 1 : 0} />
+      <Tbody data={fullStartDate} />
+      <Tbody data={fullEndDate} />
+      <Tbody data={fullStartTime} />
+      <Tbody data={fullEndTime} />
+    </tr> */
 
 /**
  * Component for rendering table body cells.

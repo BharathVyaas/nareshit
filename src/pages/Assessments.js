@@ -112,7 +112,8 @@ export default Assessments;
 
 export async function action({}, navigate) {
   const requestData = {};
-  requestData["TestID"] = 0;
+  console.log(BuilderService);
+  requestData["TestID"] = BuilderService.id.technology;
   requestData["TestDetailsID"] = 0;
   requestData["QuestionTypeID"] = 1;
   requestData["NumOfEasy"] =
@@ -123,6 +124,8 @@ export async function action({}, navigate) {
     LocalStorage.data.assessmentData.MCQ.difficulty.hard;
   requestData["CreatedBy"] = "Admin";
   requestData["ModifiedBy"] = "Admin";
+
+  console.log(requestData);
 
   console.log(requestData);
   const res = await axios.post(

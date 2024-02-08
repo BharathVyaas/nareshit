@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import ScheduleTimeService from "../services/scheduleTimeService";
 import BuilderService from "../services/builder";
 import { LocalStorage } from "../services/LocalStorage";
+import axios from "axios";
 
 function ScheduleTime() {
   const testNameRef = useRef();
@@ -25,6 +26,14 @@ function ScheduleTime() {
   const [isDateValid, setIsDateValid] = useState(false);
   const [isTimeValid, setIsTimeValid] = useState(false);
   const [isTestValid, setIsTestValid] = useState(false);
+
+  BuilderService.scheduleTimeService.scheduleTimeData.testName = testName;
+  BuilderService.scheduleTimeService.scheduleTimeData.testDescription =
+    testDescription;
+  BuilderService.scheduleTimeService.scheduleTimeData.startDate = startDate;
+  BuilderService.scheduleTimeService.scheduleTimeData.endDate = endDate;
+  BuilderService.scheduleTimeService.scheduleTimeData.startTime = startTime;
+  BuilderService.scheduleTimeService.scheduleTimeData.endTime = endTime;
 
   useEffect(() => {
     if (startDate && endDate) {
@@ -131,7 +140,7 @@ function ScheduleTime() {
           />
           <button
             disabled={!isValid}
-            onClick={() => console.log("enable")}
+            onClick={() => console.log(BuilderService)}
             className="px-8 py-2 mx-auto mt-4 bg-green-300 hover:bg-green-400"
           >
             Test Prepared
@@ -144,6 +153,32 @@ function ScheduleTime() {
 
 export default ScheduleTime;
 
-export function action() {
+export async function action() {
+  const data = {};
+
+  const startDate = new Date(
+    BuilderService.scheduleTimeService.scheduleTimeData.startDate
+  ).toString();
+
+  const endDate = new Date(
+    BuilderService.scheduleTimeService.scheduleTimeData.startDate
+  ).toString();
+
+  data["TestID"] = 15723;
+  data["TestName"] =
+    BuilderService.scheduleTimeService.scheduleTimeData.testName;
+  data["TestStartDate"] =
+    BuilderService.scheduleTimeService.scheduleTimeData.testDescription;
+  data["TestEndDate"] = startDate;
+  data["TestStartTime"] = endDate;
+  data["TestEndTime"] =
+    BuilderService.scheduleTimeService.scheduleTimeData.startTime + ":00";
+  data["TestDescription"] =
+    BuilderService.scheduleTimeService.scheduleTimeData.endTime + ":00";
+
+  const res = await axios.post("https://www.nareshit.net/updateTest", { data });
+
+  console.log(res);
+
   return 1;
 }

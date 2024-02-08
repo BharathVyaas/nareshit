@@ -20,7 +20,7 @@ import axios from "axios";
 const formNames = ["proglangs", "catogaryType", "assessmentNature", "random"];
 
 function Technology() {
-  const { programmingLanguages } = useLoaderData();
+  const { programmingLanguages, fetchedData } = useLoaderData();
 
   const updatedProgrammingLanguages = [
     {
@@ -118,12 +118,75 @@ function Technology() {
 export default Technology;
 
 export async function loader() {
-  const result = await queryClient.fetchQuery({
-    queryKey: ["technology", "programmingLanguages"],
-    queryFn: getProgLangs,
-  });
+  let natureId;
 
-  return result;
+  // NatureID
+  if (
+    BuilderService.technologyService._technology.natureOfAssessment ===
+    "dynamic"
+  ) {
+    natureId = 1;
+  } else if (
+    BuilderService.technologyService._technology.natureOfAssessment === "fixed"
+  ) {
+    natureId = 2;
+  } else {
+    natureId = 3;
+  }
+
+  // RandomID
+  let randomId;
+
+  if (
+    BuilderService.technologyService._technology.assessmentNature ===
+    "completeTest"
+  ) {
+    randomId = 1;
+  }
+  if (
+    BuilderService.technologyService._technology.assessmentNature ===
+    "moduleWiseRandom"
+  ) {
+    randomId = 2;
+  }
+  if (
+    BuilderService.technologyService._technology.assessmentNature ===
+    "topicWiseRandom"
+  ) {
+    randomId = 3;
+  }
+  if (
+    BuilderService.technologyService._technology.assessmentNature === "noRandom"
+  ) {
+    randomId = 4;
+  }
+
+  let resultData = await getProgLangs();
+  const result = { programmingLanguages: resultData };
+
+  /* let dataData = { fetchedData: {} };
+  const data = { fetchedData: dataData };
+
+  if (BuilderService.id.listOfAssessment) {
+    data.fetchedData["TestID"] = BuilderService.id.listOfAssessment;
+    data.fetchedData["TechnologyID"] = BuilderService.id.technologyId;
+    data.fetchedData["NatureID"] = natureId;
+    data.fetchedData["RandomID"] = randomId;
+    data.fetchedData["AssessmentID"] = 0;
+    data.fetchedData["CreatedBy"] = "Admin";
+    data.fetchedData["ModifiedBy"] = "Admin";
+  }
+
+  console.log("fetch", data.fetchedData);
+
+  const res = await axios.post("https://www.nareshit.net/createEditTest", {
+    data,
+  });
+  console.log("fetch", res);
+
+  return { result, data }; */
+
+  return result.programmingLanguages;
 }
 
 export async function action() {
@@ -172,32 +235,26 @@ export async function action() {
 
   let data = {};
   data["TestID"] = BuilderService.id.listOfAssessment;
-  data["TechnologyID"] =
-    BuilderService.requestData.assessments.technology.TechnologyID;
+  data["TechnologyID"] = BuilderService.id.technologyId;
   data["NatureID"] = natureId;
   data["RandomID"] = randomId;
+  data["AssessmentID"] = 0;
   data["CreatedBy"] = "Admin";
   data["ModifiedBy"] = "Admin";
 
-  data = {
-    TechnologyID: 2,
-    TestID: 0,
-    AssessmentID: 1,
-    NatureID: 2,
-    RandomID: 2,
-    CreatedBy: "Admin",
-    ModifiedBy: "Admin",
-  };
   let redirectVar = "/categories/assessments";
 
   if (data["NatureID"] === "fastTrack") redirectVar = "/questiondb/uploadTopic";
 
-  const res = await axios.post("https://www.nareshit.net/createEditTest", {
-    data,
-  });
-  //
   console.log(data);
+
+  const res = await axios.post("https://www.nareshit.net/createEditTest", {
+    data: data,
+  });
+
   console.log(res);
+  BuilderService.id.technology = res.data.data[0].TestID;
+  console.log(BuilderService.id);
 
   return redirect("/categories/assessments");
 }

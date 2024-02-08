@@ -5,15 +5,23 @@ import AssessmentTable from "../components/AssessmentTable";
 
 import { AnimatePresence, motion } from "framer-motion";
 import BuilderService from "../services/builder";
+import { useQuery } from "@tanstack/react-query";
 
 /**
  * Component for displaying a list of assessments created by other users.
  * @returns {JSX.Element} The ListOfAssessment component.
  */
 function ListOfAssessment() {
+  const { data } = useQuery({
+    queryKey: ["listofAssessment"],
+    queryFn: getAllAssessments,
+    refetchOnMount: true,
+  });
+
+  console.log("rerender");
+
   // Get table titles from DataHandler
   const titles = DataHandler.getTitles();
-  console.log(titles);
 
   // Fetch assessments using react-query's useLoaderData
   const { assessments } = useLoaderData();
@@ -21,6 +29,7 @@ function ListOfAssessment() {
   const submit = useSubmit();
 
   function handler(data) {
+    console.log(data);
     BuilderService.setId("listOfAssessment", data.TestID);
     console.log(BuilderService.id);
   }
@@ -65,11 +74,7 @@ export default ListOfAssessment;
  */
 export async function loader() {
   // Fetch assessments with specific stale time and garbage collection time
-  const result = await queryClient.fetchQuery({
-    queryKey: ["assessment", "getAllAssessments"],
-    queryFn: getAllAssessments,
-    staleTime: 30000, // 30 seconds
-    gcTime: 60000, // 1 minute
-  });
+  const result = await getAllAssessments();
+
   return result;
 }

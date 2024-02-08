@@ -5,6 +5,7 @@ import TopicsContext from "../../context/topicsContext";
 import QuestionViewTopic from "./QuestionViewTopic";
 import { LocalStorage } from "../../services/LocalStorage";
 import QuestionView from "../../context/questionView";
+import axios from "axios";
 
 const Titles = ["MCQ", "MCQ"];
 
@@ -14,6 +15,8 @@ function AsssessmentQuestionBoxHandler({
   questionView,
   setQuestionView,
   selectTechnology,
+  data: questionData,
+  setData: setQuestionData,
 }) {
   const [stale, setStale] = useState(parentStale);
 
@@ -94,6 +97,19 @@ function AsssessmentQuestionBoxHandler({
     };
   });
 
+  async function handler(data) {
+    console.log(
+      data,
+      `https://www.nareshit.net/fetchDynamicQuestions/?McqAll=${LocalStorage.exclude.length}&Hardcount=${data.element.endDate}&MediumCount=${data.element.startTime}&EasyCount=${data.endTime}&SubTopicID=${data.element.endTime}&SubTopicID=${data.element.subTopicId}`
+    );
+    const res = await axios.get(
+      `https://www.nareshit.net/fetchDynamicQuestions/?McqAll=${LocalStorage.exclude.length}&Hardcount=${data.element.endDate}&MediumCount=${data.element.startTime}&EasyCount=${data.element.endTime}&SubTopicID=${data.element.subTopicId}`
+    );
+
+    setQuestionData(res.data);
+    console.log(res);
+  }
+
   return (
     <section className="overflow-auto container">
       <AssessmentQuestionBox
@@ -118,6 +134,7 @@ function AsssessmentQuestionBoxHandler({
                   key={element.id + index}
                   index={index}
                   element={element}
+                  handler={handler}
                   setStale={setStale}
                 />
               ))}
@@ -174,7 +191,7 @@ export function TableHead({ titles }) {
  * @param {Object} props.element - An assessment data object.
  * @returns {JSX.Element} The TableBodyRenderer component.
  */
-export function TableBodyRenderer({ element, index, setStale }) {
+export function TableBodyRenderer({ handler, element, index, setStale }) {
   const { testName, isActive, startDate, endDate, startTime, endTime } =
     element;
 
@@ -185,7 +202,9 @@ export function TableBodyRenderer({ element, index, setStale }) {
 
   return (
     <tr
-      onClick={() => console.log(element)}
+      onClick={() =>
+        handler({ element, subTopicId: LocalStorage.subTopicData.subTopicId })
+      }
       key={element.id}
       className={styles}
     >

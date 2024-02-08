@@ -26,24 +26,28 @@ import ExcelImport from "../components/ExcelImport";
 import TechnologyService from "../services/technologyService";
 import AsssessmentQuestionBoxHandler from "../components/questionView/AsssessmentQuestionBoxHandler";
 import { QuestionViewProvider } from "../context/questionView";
+import QuestionViewCtx from "../context/questionView";
 
 const Titles = ["MCQ"];
 
 function QuestionView() {
-  const questions = useLoaderData();
+  const { data, setData } = useContext(QuestionViewCtx);
+  const [stale, setStale] = useState(false);
+  const [questions, setQuestions] = useState();
+  useEffect(() => {
+    setQuestions(data);
+  }, [data]);
+
+  console.log("questions", data);
 
   const [questionView, setQuestionView] = useState([]);
 
   // Make Sure to destroy previous subescriptions.
   DifficultySubescribeService.source();
 
-  const [fetchQuestionType, setFetchQuestionType] = useState(["", ""]);
-
   const [selectedModule, setSelectedModule] = useState({});
   const [selectedTopic, setSelectedTopic] = useState({});
   const [selectedSubTopic, setSelectedSubTopic] = useState({});
-
-  const [stale, setStale] = useState(false);
 
   const searchRef = useRef();
 
@@ -104,6 +108,8 @@ function QuestionView() {
               <QuestionViewProvider>
                 <AsssessmentQuestionBoxHandler
                   setStale={setStale}
+                  data={data}
+                  setData={setData}
                   selectTechnology={selectTechnology}
                   stale={stale}
                   questionView={questionView}
@@ -116,9 +122,13 @@ function QuestionView() {
             <FetchData setStale={setStale} />
           </section>
           {/** grid grid-cols-2 */}
-          <section className="">
-            <Questions questions={questions} />
-          </section>
+
+          {questions && (
+            <section className="">
+              <Questions questions={questions} />
+            </section>
+          )}
+
           <Button link="/categories/scheduletime" />
         </motion.main>
       </IncludesContextProvider>
@@ -129,6 +139,7 @@ function QuestionView() {
 export default QuestionView;
 
 function Questions({ questions }) {
+  console.log("------------------------------", questions);
   const [questionArr, setQuestionArr] = useState(questions);
 
   const questionHandler = useCallback(async (difficultyId, count) => {
@@ -198,15 +209,8 @@ function Questions({ questions }) {
           if (!easy) easy = 0;
           if (!medium) medium = 0;
           if (!hard) hard = 0;
-
-          const res = await axios.get(
-            `https://www.nareshit.net/fetchDynamicQuestions/?McqAll=${
-              easy + hard + medium
-            }&Hardcount=${hard}&MediumCount=${medium}&EasyCount=${easy}`
-          );
           LocalStorage.exclude = [];
 
-          setQuestionArr([...includedQuestions, ...res.data]);
           break;
         }
       }
@@ -490,11 +494,5 @@ function FetchData({ setStale }) {
 }
 
 export async function loader() {
-  const result = await getQuestions(
-    BuilderService.getDifficulty()[0].easy,
-    BuilderService.getDifficulty()[0].medium,
-    BuilderService.getDifficulty()[0].hard
-  );
-
-  return result;
+  return 1;
 }

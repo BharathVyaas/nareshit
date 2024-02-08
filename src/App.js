@@ -21,6 +21,7 @@ import { queryClient } from "./util/http";
 import BuilderService from "./services/builder";
 import UploadTopic from "./pages/UploadTopic";
 import Questiondb from "./pages/Questiondb";
+import { QuestionViewProvider } from "./context/questionView";
 
 /**
  * Initializes the Builder service.
@@ -70,8 +71,11 @@ function App() {
         },
         {
           path: "questionview",
-          element: <QuestionView />,
-          loader: QuestionLoader,
+          element: (
+            <QuestionViewProvider>
+              <QuestionView />
+            </QuestionViewProvider>
+          ),
         },
         {
           path: "scheduletime",

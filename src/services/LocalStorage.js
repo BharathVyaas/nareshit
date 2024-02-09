@@ -21,6 +21,15 @@ class LocalStorageClass {
     localStorage.setItem("programmingLanguageFirstVisit", flag);
   }
 
+  get questionViewSelectedData() {
+    const result = localStorage.getItem("questionViewSelectedData");
+    return result;
+  }
+
+  set questionViewSelectedData(newData) {
+    localStorage.setItem("questionViewSelectedData", newData);
+  }
+
   get data() {
     const result = this.parse("data");
 
@@ -94,6 +103,7 @@ class LocalStorageClass {
 
   set questionView(newData) {
     const data = JSON.stringify(newData);
+
     if (newData) localStorage.setItem("questionView", data);
   }
 

@@ -70,14 +70,13 @@ function ListOfAssessment() {
 
           {/* NavLink for creating a new assessment */}
           <button
-            disabled
             className="inline-block ms-20 mx-auto mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
             to="/categories/technology"
           >
             Create New
           </button>
           <button
-            className="hidden ms-20 mx-auto mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
+            className="ms-20 mx-auto mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
             onClick={handler}
           >
             Show

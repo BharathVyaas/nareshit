@@ -26,7 +26,7 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
   function submiteHandler() {
     let go = false;
 
-    console.log(LocalStorage.questionView);
+    console.log("d", LocalStorage.questionView);
 
     let easy = 0;
     let medium = 0;
@@ -44,17 +44,6 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
     const finelMedium = result.medium + medium;
     const finelHard = result.hard + hard;
 
-    console.log(
-      "questionCtx",
-      questionCtxData,
-      LocalStorage.moduleData.moduleId,
-      LocalStorage.topicData.topicId,
-      LocalStorage.subTopicData.subTopicId,
-      result.easy,
-      result.medium,
-      result.hard
-    );
-
     setCtxData([]);
 
     if (
@@ -66,8 +55,11 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
       handler(result);
       setter(false);
       setIsValid(true);
+      LocalStorage.questionView = LocalStorage.questionView;
+
+      // ..
     }
-    console.log(LocalStorage.data.assessmentData.MCQ.difficulty.easy);
+
     if (!go) {
       setIsValid(false);
       if (finelEasy > LocalStorage.data.assessmentData.MCQ.difficulty.easy) {

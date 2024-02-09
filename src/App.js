@@ -22,6 +22,8 @@ import BuilderService from "./services/builder";
 import UploadTopic from "./pages/UploadTopic";
 import Questiondb from "./pages/Questiondb";
 import { QuestionViewProvider } from "./context/questionView";
+import QuestionViewFixed from "./pages/QuestionViewFixed";
+import QuestionViewFixedEasy from "./pages/QuestionViewFixedEasy";
 
 /**
  * Initializes the Builder service.
@@ -76,6 +78,11 @@ function App() {
               <QuestionView />
             </QuestionViewProvider>
           ),
+        },
+        {
+          path: "questionviewfixed",
+          element: <QuestionViewFixed />,
+          children: [{ index: true, element: <QuestionViewFixedEasy /> }],
         },
         {
           path: "scheduletime",

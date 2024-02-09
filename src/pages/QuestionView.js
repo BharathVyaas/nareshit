@@ -28,12 +28,14 @@ import QuestionViewCtx from "../context/questionView";
 const Titles = ["MCQ"];
 
 function QuestionView() {
+  const linkToNext =
+    BuilderService.technologyService._technology.natureOfAssessment === "fixed";
+
   const { data, setData } = useContext(QuestionViewCtx);
   const [stale, setStale] = useState(false);
   const [questions, setQuestions] = useState();
   useEffect(() => {
     setQuestions(data);
-
     let easy = 0;
     let medium = 0;
     let hard = 0;
@@ -70,6 +72,17 @@ function QuestionView() {
   LocalStorage.data = BuilderService.getData();
 
   const MCQDifficulty = BuilderService.getDifficultyByTitle(Titles[0]);
+
+  let totalEasy = 0;
+  let totalMedium = 0;
+  let totalHard = 0;
+
+  LocalStorage.questionView.forEach((element) => (totalEasy += element.easy));
+  LocalStorage.questionView.forEach(
+    (element) => (totalMedium += element.medium)
+  );
+  LocalStorage.questionView.forEach((element) => (totalHard += element.hard));
+  let subTopicId = LocalStorage.subTopicData.subTopicId;
 
   const selectTechnology = TechnologyService.technology?.programmingLanguage;
   /* console.log(LocalStorage.questionView); */
@@ -153,7 +166,13 @@ function QuestionView() {
           </section>
         )}
 
-        <Button link="/categories/scheduletime" />
+        <Button
+          link={
+            linkToNext
+              ? `/categories/questionviewfixed?easy=${totalEasy}&medium=${totalMedium}&hard=${totalHard}&subTopicID=${subTopicId}`
+              : "/categories/scheduletime"
+          }
+        />
       </motion.main>
     </AnimatePresence>
   );
@@ -161,7 +180,7 @@ function QuestionView() {
 
 export default QuestionView;
 
-function Questions({ questions }) {
+export function Questions({ questions }) {
   const [questionArr, setQuestionArr] = useState(questions);
 
   useEffect(() => {
@@ -247,8 +266,6 @@ function Questions({ questions }) {
   DifficultySubescribeService.insert(questionHandler);
 
   const [includes, setIncludes] = useState([]);
-
-  useEffect(() => console.log(includes), [includes]);
 
   return (
     <>
@@ -470,12 +487,12 @@ function FetchData({ setStale }) {
           <button className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded">
             Include
           </button>
-          {/* <button
+          <button
             className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded"
             onClick={() => DifficultySubescribeService.notify("exclude")}
           >
             Exclude
-          </button> */}
+          </button>
         </aside>
       </div>
     </>

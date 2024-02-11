@@ -141,6 +141,7 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
             value={selectedModule?.moduleName}
             onChange={handleModuleChange}
           >
+            <option value={"Select A Module"}>Select A Module</option>
             {moduleNames.map((element, index) => (
               <option key={element.moduleId + index} value={element.moduleName}>
                 {element.moduleName}
@@ -172,7 +173,7 @@ function TopicDataLoader({ selectedTopic, setSelectedTopic, selectedModule }) {
     placeHolder.TopicName = "Select A Topic";
     placeHolder.TopicID = -1;
 
-    updatedData = [placeHolder, ...data];
+    updatedData = [...data];
   }
   useEffect(() => {
     queryClient.invalidateQueries({
@@ -241,6 +242,7 @@ function TopicName({ setSelectedTechnology, data }) {
         value={selectedModule?.topicName}
         onChange={handleModuleChange}
       >
+        <option value={"Select A Topic"}>Select A Topic</option>
         {topicNames.map((element, index) => (
           <option
             className=""
@@ -288,25 +290,12 @@ function SubTopicDataLoader({
   }, [selectedTopic]);
 
   return (
-    <>
-      {data && data[0].subTopicId === -1 ? (
-        <SubTopicName
-          data={data}
-          setSelectedTechnology={setSelectedSubTopic}
-          questionView={setQuestionView}
-          setQuestionView={setQuestionView}
-        />
-      ) : (
-        <div className="max-w-[30%] overflow-hidden flex flex-col">
-          <span>
-            <label htmlFor="subtopicName">Sub Topic Name:</label>
-          </span>
-          <select id="subtopicName" name="subtopicName" className="">
-            <option value="selectsubtopic">Select A Subtopic</option>
-          </select>
-        </div>
-      )}
-    </>
+    <SubTopicName
+      data={data}
+      setSelectedTechnology={setSelectedSubTopic}
+      questionView={setQuestionView}
+      setQuestionView={setQuestionView}
+    />
   );
 }
 
@@ -317,7 +306,7 @@ function SubTopicName({
   setQuestionView,
 }) {
   const subTopicNames = data.map((element) => ({
-    subTopicName: element.SubTopicName,
+    subTopicName: element?.SubTopicName,
     moduleId: element.ModuleID,
     subTopicId: element.SubTopicID,
     parentTopicId: element.ParentTopicID,
@@ -392,7 +381,7 @@ function SubTopicName({
             <select
               id="subtopicName"
               name="subtopicName"
-              value={selectedModule.subTopicName}
+              value={selectedModule?.subTopicName}
               onChange={handleModuleChange}
             >
               {subTopicNames.map((element, index) => (

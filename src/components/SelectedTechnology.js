@@ -10,7 +10,7 @@ function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
 
     BuilderService.requestData.assessments.technology = data;
     LocalStorage.technology = data;
-    BuilderService.id.technologyId = data.TechnologyID;
+    BuilderService.id.technologyId = data?.TechnologyID;
   }, [proglang]);
 
   return (
@@ -24,6 +24,7 @@ function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
           value={proglang}
           onChange={(e) => setProgLang(e.target.value)}
         >
+          <option value={"Select A Technology"}>Select A Technology</option>
           {programmingLanguages.map(({ TechnologyID, TechnologyName }) => (
             <option key={TechnologyID} value={TechnologyName}>
               {TechnologyName}

@@ -16,23 +16,23 @@ import TechnologyService from "../services/technologyService";
 function reducer(state, action) {
   switch (action.type) {
     case "easy":
-      console.log("reducer", { ...state, easy: state.easy + 1 });
+      /* console.log("reducer", { ...state, easy: state.easy + 1 }); */
       return { ...state, easy: state.easy + 1 };
     case "medium":
-      console.log("reducer", { ...state, easy: state.medium + 1 });
+      /* console.log("reducer", { ...state, easy: state.medium + 1 }); */
       return { ...state, medium: state.medium + 1 };
     case "hard":
-      console.log("reducer", { ...state, hard: state.hard + 1 });
+      /* console.log("reducer", { ...state, hard: state.hard + 1 }); */
       return { ...state, hard: state.hard + 1 };
     default:
-      console.log("reducer", state);
+      /* console.log("reducer", state); */
       return state;
   }
 }
 
 // subTopicID for Questions 173
 function QuestionViewFixed() {
-  console.log("rerender");
+  /*  console.log("rerender"); */
 
   const [state, dispatcher] = useReducer(reducer, {
     easy: 0,
@@ -40,9 +40,9 @@ function QuestionViewFixed() {
     hard: 0,
   });
 
-  console.log("state", state);
+  /* console.log("state", state); */
   useEffect(() => {
-    console.log("di");
+    /* console.log("di"); */
   }, [state]);
 
   //
@@ -73,6 +73,7 @@ function QuestionViewFixed() {
         `https://www.nareshit.net/fetchDynamicQuestions?Hardcount=${totalHard}&MediumCount=${totalMedium}&EasyCount=${totalEasy}&SubTopicID=${173}`
       );
       setQuestions(res.data);
+      /* console.log(res.data); */
     }
     fetch();
   }, []);
@@ -92,7 +93,7 @@ function QuestionViewFixed() {
   // when pagination changes on any page
   function onPaginationChange(difficultyLevel, currentPagination) {
     dispatcher({ type: difficultyLevel });
-    console.log(difficultyLevel, currentPagination);
+    /* console.log(difficultyLevel, currentPagination); */
   }
 
   // responsible for storing the component return question data jsx

@@ -23,7 +23,8 @@ function ListOfAssessment() {
   const { data } = useQuery({
     queryKey: ["listofAssessment"],
     queryFn: getAllAssessments,
-    refetchOnMount: true,
+    staleTime: Infinity,
+    gcTime: Infinity,
   });
 
   useEffect(() => {
@@ -44,7 +45,9 @@ function ListOfAssessment() {
   const navigate = useNavigate();
 
   async function handler(data) {
-    const res = await axios.get("https://www.nareshit.net/getAllTests");
+    const res = await axios.post("https://www.nareshit.net/createEditTest", {
+      data: { TestID: data.TestID },
+    });
 
     navigate("/categories/technology");
 
@@ -69,12 +72,12 @@ function ListOfAssessment() {
           <h1 className="absolute left-[-9999px]">Assessments</h1>
 
           {/* NavLink for creating a new assessment */}
-          <button
+          <NavLink
             className="inline-block ms-20 mx-auto mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
             to="/categories/technology"
           >
             Create New
-          </button>
+          </NavLink>
           <button
             className="ms-20 mx-auto mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
             onClick={handler}

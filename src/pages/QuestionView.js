@@ -82,7 +82,7 @@ function QuestionView() {
     (element) => (totalMedium += element.medium)
   );
   LocalStorage.questionView.forEach((element) => (totalHard += element.hard));
-  let subTopicId = LocalStorage.subTopicData.subTopicId;
+  let subTopicId = LocalStorage.subTopicData?.subTopicId;
 
   const selectTechnology = TechnologyService.technology?.programmingLanguage;
   /* console.log(LocalStorage.questionView); */
@@ -299,19 +299,29 @@ function Question({
     return arr.filter((item) => item !== value);
   }
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (questions) {
       setIncludes(questions.map((question) => question.QuestionID));
     }
-  }, [questions]);
+  }, [questions]); */
 
   useEffect(() => {
-    setIncludes((prev) =>
-      prev.filter((element) => !LocalStorage.exclude?.includes(element))
-    );
+    setIncludes(LocalStorage.includes);
   }, []);
 
   function handler(flag) {
+    // Includes
+    if (flag) {
+      if (!LocalStorage.includes.includes(questionId)) {
+        LocalStorage.includes = [...LocalStorage.includes, questionId];
+      }
+    }
+    if (!flag) {
+      if (LocalStorage.includes.includes(questionId)) {
+        LocalStorage.pullIncludes(questionId);
+      }
+    }
+    // Exclude
     if (flag) {
       LocalStorage.pullExclude(questionId);
       if (includes && !includes.includes(questionId))

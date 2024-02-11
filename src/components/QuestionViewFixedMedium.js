@@ -12,7 +12,7 @@ function QuestionViewFixedMedium({ questions, setCurrentPage }) {
           onClick={() => setCurrentPage("hard")}
           className="bg-green-300 px-5 py-2"
         >
-          Continue
+          Continue 
         </button>
       </div>
     </main>

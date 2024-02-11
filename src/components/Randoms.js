@@ -1,4 +1,5 @@
 import React from "react";
+import BuilderService from "../services/builder";
 
 function Randoms({ random, setRandom }) {
   return (
@@ -37,6 +38,10 @@ function Randoms({ random, setRandom }) {
         </label>
         <label className="p-5">
           <input
+            disabled={
+              BuilderService.technologyService._technology
+                .natureOfAssessment === "fixed"
+            }
             type="radio"
             name="random"
             value="noRandom"

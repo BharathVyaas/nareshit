@@ -118,6 +118,19 @@ class LocalStorageClass {
     if (newData) localStorage.setItem("technology", data);
   }
 
+  get includes() {
+    let result = localStorage.getItem("include");
+    if (result) result = JSON.parse(result);
+    if (!result) result = [];
+    return result;
+  }
+
+  set includes(newData) {
+    console.log("newData", newData);
+    const data = JSON.stringify(newData);
+    if (newData) localStorage.setItem("include", data);
+  }
+
   parse(key) {
     const response = localStorage.getItem(key);
     let result;
@@ -133,6 +146,15 @@ class LocalStorageClass {
     if (arr) result = arr.filter((element) => element !== x);
 
     this.exclude = result;
+  }
+
+  pullIncludes(x) {
+    const arr = this.includes;
+
+    let result;
+    if (arr) result = arr.filter((element) => element !== x);
+
+    this.includes = result;
   }
 
   pushExclude(x) {

@@ -20,18 +20,12 @@ import axios from "axios";
 const formNames = ["proglangs", "catogaryType", "assessmentNature", "random"];
 
 function Technology() {
+  console.log(BuilderService);
   const [checked, setChecked] = useState(false);
   const { programmingLanguages, fetchedData } = useLoaderData();
   const [linkDisabled, setLinkDisabled] = useState(true);
 
-  const updatedProgrammingLanguages = [
-    {
-      TechnologyID: -1,
-      TechnologyName:
-        BuilderService.technologyService._technology?.programmingLanguage,
-    },
-    ...programmingLanguages,
-  ];
+  const updatedProgrammingLanguages = [...programmingLanguages];
 
   const [proglang, setProgLang] = useState(
     BuilderService.technologyService._technology?.programmingLanguage
@@ -87,7 +81,11 @@ function Technology() {
   }, [random]);
 
   function handler(e) {
-    if (LocalStorage.technology.TechnologyID === -1) {
+    if (
+      LocalStorage.technology.TechnologyID === -1 ||
+      LocalStorage.data.technologyData._technology.programmingLanguage ===
+        "Select A Technology"
+    ) {
       e.preventDefault();
       setLinkDisabled(true);
       setChecked(true);
@@ -259,7 +257,6 @@ export async function action() {
   data["TechnologyID"] = BuilderService.id.technologyId;
   data["NatureID"] = natureId;
   data["RandomID"] = randomId;
-  data["AssessmentID"] = 1;
   data["CreatedBy"] = "Admin";
   data["ModifiedBy"] = "Admin";
 

@@ -118,7 +118,7 @@ export function TableBodyRenderer({ element, index, handler }) {
 export function Tbody({ data, ...props }) {
   return (
     <td
-      className="md:px-5 text-center max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px]"
+      className="pencil md:px-5 text-center max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px]"
       {...props}
     >
       {data}

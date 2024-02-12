@@ -31,8 +31,6 @@ function ListOfAssessment() {
     setTitleData(data);
   }, [data]);
 
-  console.log("rerender");
-
   // Get table titles from DataHandler
   const titles = DataHandler.getTitles();
 
@@ -45,11 +43,14 @@ function ListOfAssessment() {
   const navigate = useNavigate();
 
   async function handler(data) {
-    const res = await axios.post("https://www.nareshit.net/createEditTest", {
+    console.log("data", data);
+    const res = await axios.post("https://www.nareshit.net/getBasicTestInfo", {
       data: { TestID: data.TestID },
     });
 
-    navigate("/categories/technology");
+    navigate(
+      `/categories/technology?randomId=${res.data.data[0].RandomID}&natureId=${res.data.data[0].NatureID}&technologyId=${res.data.data[0].TechnologyID}`
+    );
 
     if (res) setTitleData({ assessments: res.data });
     console.log(res.data);
@@ -78,12 +79,6 @@ function ListOfAssessment() {
           >
             Create New
           </NavLink>
-          <button
-            className="ms-20 mx-auto mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
-            onClick={handler}
-          >
-            Show
-          </button>
           {/* Render the AssessmentTable component */}
           <AssessmentTable
             titles={titles}

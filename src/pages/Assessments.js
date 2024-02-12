@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Form, Navigate, redirect, useNavigate } from "react-router-dom";
+import {
+  Form,
+  Navigate,
+  redirect,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
 import { SelectTechnologyService } from "../services/technologyService";
 import AssessmentService, { MCQService } from "../services/assessmentsService";
@@ -12,6 +18,13 @@ import BuilderService from "../services/builder";
 import axios from "axios";
 
 function Assessments() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const queryEasy = queryParams.get("easy");
+  const queryMedium = queryParams.get("medium");
+  const queryHard = queryParams.get("hard");
+  const queryTotal = queryEasy + queryMedium + queryHard;
+
   BuilderService.assessmentService = AssessmentService;
   const [totalQuestions, setTotalQuestions] = useState(
     BuilderService?.assessmentService?.options?.MCQ?.totalQuestions || 0
@@ -30,6 +43,10 @@ function Assessments() {
     hard:
       BuilderService?.assessmentService?.options?.MCQ?.difficulty?.hard || 0,
   });
+
+  useEffect(() => {
+    console.log("testid", BuilderService.id.testId);
+  }, []);
 
   useEffect(() => {
     AssessmentService.updateTotalQuestionCount(totalQuestions);
@@ -100,6 +117,10 @@ function Assessments() {
           <fieldset className="">
             <div className="p-5">
               <QuestionTypes
+                queryEasy={queryEasy}
+                queryMedium={queryMedium}
+                queryHard={queryHard}
+                queryTotal={queryTotal}
                 questionType="mcq"
                 data={MCQ}
                 setData={setMCQ}
@@ -139,8 +160,9 @@ export default Assessments;
 export async function action({}, navigate) {
   console.log(BuilderService.id.technology);
   const requestData = {};
-  requestData["TestID"] = 15786;
-  requestData["TestDetailsID"] = 15731;
+  requestData["TestID"] = BuilderService.id.testId || 0;
+  requestData["TestDetailsID"] = BuilderService.id.testDetailsId || 0;
+  // Question Id static 1
   requestData["QuestionTypeID"] = 1;
   requestData["NumOfEasy"] =
     LocalStorage?.data?.assessmentData?.MCQ?.difficulty?.easy;
@@ -151,7 +173,7 @@ export async function action({}, navigate) {
   requestData["CreatedBy"] = "Admin";
   requestData["ModifiedBy"] = "Admin";
 
-  console.log(requestData);
+  console.log("data", requestData);
 
   const res = await axios.post(
     "https://www.nareshit.net/createTestAssessment",
@@ -159,6 +181,9 @@ export async function action({}, navigate) {
       data: requestData,
     }
   );
+
+  BuilderService.id.testId = res.data.data[0].TestID;
+  BuilderService.id.testDetailsId = res.data.data[0].TestDetailsID;
 
   console.log("res", res);
 

@@ -30,7 +30,7 @@ function AdminHomePage() {
           <aside className="w-[90%] mx-auto">
             <nav>
               <ul className="flex justify-evenly mt-4">
-                <li className="text-white bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
+                <li className="text-white bg-sky-400 mx-10 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
                   <Link to="/categories/assessmentlist">
                     Test Creation Page
                   </Link>

@@ -73,12 +73,12 @@ function AsssessmentQuestionBoxHandler({
   const hard = hardTotalSibling;
 
   const TableAttributeTitles = [
-    { title: "Module Name", id: 1 },
-    { title: "Topic Name", id: 2 },
-    { title: "Sub Topic Name", id: 3 },
-    { title: `Easy: ${easy} / ${MCQDifficulty.easy}`, id: 4 },
-    { title: `Medium: ${medium} / ${MCQDifficulty.medium}`, id: 5 },
-    { title: `Hard:  ${hard} / ${MCQDifficulty.hard}`, id: 6 },
+    { title: "Module Name", id: "sds" },
+    { title: "Topic Name", id: "wer" },
+    { title: "Sub Topic Name", id: "wes" },
+    { title: `Easy: ${easy} / ${MCQDifficulty.easy}`, id: "fgh" },
+    { title: `Medium: ${medium} / ${MCQDifficulty.medium}`, id: "ntr" },
+    { title: `Hard:  ${hard} / ${MCQDifficulty.hard}`, id: "zcd" },
   ];
 
   /*******
@@ -98,16 +98,14 @@ function AsssessmentQuestionBoxHandler({
   });
 
   async function handler(data) {
-    // Ensure data properties are properly formatted
-    const endDate = Number(data.element.endDate) || 0;
-    const startTime = Number(data.element.startTime) || 0;
-    const endTime = Number(data.element.endTime) || 0;
-    const subTopicId = Number(data.subTopicId) || 0;
+    /*  // Ensure data properties are properly formatted
+    const endDate = data.element.endDate;
+    const startTime = data.element.startTime;
+    const endTime = data.element.endTime;
+    const subTopicId = data.subTopicId;
 
     // Construct the URL with validated parameters
     const url = `https://www.nareshit.net/fetchDynamicQuestions?Hardcount=${endDate}&MediumCount=${startTime}&EasyCount=${endTime}&SubTopicID=${subTopicId}`;
-
-    console.log(data, url);
 
     try {
       // Fetch data from the constructed URL
@@ -116,7 +114,7 @@ function AsssessmentQuestionBoxHandler({
       console.log(res);
     } catch (error) {
       console.error("Error fetching dynamic questions:", error);
-    }
+    } */
   }
 
   return (
@@ -138,15 +136,17 @@ function AsssessmentQuestionBoxHandler({
           <tbody>
             {LocalStorage.questionView &&
               LocalStorage.questionView[0]?.name &&
-              tableBody.map((element, index) => (
-                <TableBodyRenderer
-                  key={element.id + index}
-                  index={index}
-                  element={element}
-                  handler={handler}
-                  setStale={setStale}
-                />
-              ))}
+              tableBody.map((element, index) => {
+                return (
+                  <TableBodyRenderer
+                    key={element.id}
+                    index={index}
+                    element={element}
+                    handler={handler}
+                    setStale={setStale}
+                  />
+                );
+              })}
           </tbody>
         </table>
 
@@ -203,11 +203,11 @@ export function TableHead({ titles }) {
 export function TableBodyRenderer({ handler, element, index, setStale }) {
   const { testName, isActive, startDate, endDate, startTime, endTime } =
     element;
-
+  console.log(index);
   const styles =
     index % 2 === 0
-      ? "bg-gray-100 hover:cursor-pointer hover:bg-gray-200"
-      : "bg-white hover:cursor-pointer hover:bg-gray-300";
+      ? "bg-gray-100 hover:bg-gray-200"
+      : "bg-white  hover:bg-gray-300";
 
   return (
     <tr
@@ -294,7 +294,7 @@ export function Tbody({ data, tag, id, setStale, ...props }) {
       LocalStorage.questionView = [_in, ..._out];
       setDataCtx([_in, ..._out]);
 
-      setValue(data);
+      setValue(_data);
     }
   }
 
@@ -302,12 +302,12 @@ export function Tbody({ data, tag, id, setStale, ...props }) {
     content = (
       <td
         onClick={(e) => e.stopPropagation()}
-        className="md:px-5 text-center py-1 border-[1.2px]"
+        className="text-center border-[1.2px]"
         {...props}
       >
         <input
           type="number"
-          className="w-10"
+          className="w-full h-full cursor-crosshair bg-transparent border-0 outline-none "
           id={id}
           value={value}
           onChange={(e) => {

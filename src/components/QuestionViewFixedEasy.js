@@ -3,21 +3,33 @@ import QuestionViewFixedCtx from "../context/questionViewFixed";
 import { Questions } from "../pages/QuestionView";
 import { NavLink } from "react-router-dom";
 import Pagination from "./Pagination";
-
-const TOTALPAGINATIONS = 5;
+import { LocalStorage } from "../services/LocalStorage";
 
 function QuestionViewFixedEasy({
   questions,
   setCurrentPage,
   onPaginationChange,
+  state,
+  dispatcher,
 }) {
   const [currentPagination, setCurrentPagination] = useState(1);
 
+  function currentQuestionViewHandler(flag) {
+    if (flag) {
+      if (state.currentQuestionView < LocalStorage.questionView.length - 1)
+        dispatcher({ type: "questionViewInc" });
+    } else {
+      if (state.currentQuestionView > 0)
+        dispatcher({ type: "questionViewDec" });
+    }
+  }
+
   function onPageChange(flag) {
-    if (currentPagination < TOTALPAGINATIONS && flag) {
+    if (currentPagination < LocalStorage?.questionView?.length && flag) {
       setCurrentPagination((prev) => prev + 1);
-    } else if (currentPagination > 1 && !flag)
+    } else if (currentPagination > 1 && !flag) {
       setCurrentPagination((prev) => prev - 1);
+    }
   }
 
   useEffect(() => {
@@ -28,16 +40,32 @@ function QuestionViewFixedEasy({
 
   return (
     <main>
-      <div>
-        <div className="border-b-4 border-gray-200">
-          <Questions questions={questions} />
+      <section>
+        <div>
+          <div className="border-b-4 border-gray-200">
+            <Questions questions={questions} />
+          </div>
+          <Pagination
+            currentPage={currentPagination}
+            totalPages={LocalStorage?.questionView?.length}
+            onPageChange={onPageChange}
+          />
         </div>
-        <Pagination
-          currentPage={currentPagination}
-          totalPages={TOTALPAGINATIONS}
-          onPageChange={onPageChange}
-        />
-      </div>
+      </section>
+      <section className="flex justify-center mt-4">
+        <button
+          onClick={() => currentQuestionViewHandler(false)}
+          className="w-40 h-10 mx-2 bg-gray-300"
+        >
+          previous
+        </button>
+        <button
+          onClick={() => currentQuestionViewHandler(true)}
+          className="w-40 h-10 mx-2 bg-gray-300"
+        >
+          next
+        </button>
+      </section>
       <div className=" grid p-5 place-content-center">
         <button
           onClick={() => setCurrentPage("medium")}

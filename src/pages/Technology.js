@@ -1,6 +1,6 @@
 import { Form } from "react-router-dom";
 import { getProgLangs, queryClient } from "../util/http";
-import { redirect, useLoaderData } from "react-router";
+import { redirect, useLoaderData, useLocation } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import TechnologyService, {
   NatureOfAssessmentService,
@@ -20,10 +20,15 @@ import axios from "axios";
 const formNames = ["proglangs", "catogaryType", "assessmentNature", "random"];
 
 function Technology() {
-  console.log(BuilderService);
   const [checked, setChecked] = useState(false);
   const { programmingLanguages, fetchedData } = useLoaderData();
   const [linkDisabled, setLinkDisabled] = useState(true);
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const randomId = queryParams.get("randomId");
+  const natureId = queryParams.get("natureId");
+  const technologyId = queryParams.get("technologyId");
 
   const updatedProgrammingLanguages = [...programmingLanguages];
 
@@ -93,7 +98,6 @@ function Technology() {
       setChecked(false);
       setLinkDisabled(false);
     }
-    console.log(LocalStorage.technology.TechnologyID);
   }
 
   return (
@@ -108,10 +112,19 @@ function Technology() {
           <SelectedTechnology
             proglang={proglang}
             setProgLang={setProgLang}
+            editTechnologyId={technologyId}
             programmingLanguages={updatedProgrammingLanguages}
           />
-          <NatureOfAssessments nature={nature} setNature={setNature} />
-          <Randoms random={random} setRandom={setRandom} />
+          <NatureOfAssessments
+            nature={nature}
+            setNature={setNature}
+            editNatureId={natureId}
+          />
+          <Randoms
+            random={random}
+            setRandom={setRandom}
+            editRandomId={randomId}
+          />
           <div className=" h-20 relative">
             {linkDisabled && checked && (
               <p className="text-red-900 font-bold text-center -top-8 px-14  absolute w-full">
@@ -253,8 +266,11 @@ export async function action() {
   }
 
   let data = {};
-  data["TestID"] = 15786;
-  data["TechnologyID"] = BuilderService.id.technologyId;
+  data["TestID"] = BuilderService.id.testId || 0;
+  data["TechnologyID"] =
+    BuilderService.id.technologyId || LocalStorage.technology.TechnologyID;
+
+  data["AssessmentID"] = 1;
   data["NatureID"] = natureId;
   data["RandomID"] = randomId;
   data["CreatedBy"] = "Admin";
@@ -265,16 +281,35 @@ export async function action() {
   if (data["NatureID"] === 3) redirectVar = "/questiondb/uploadTopic";
 
   console.log(data);
-  console.log(data);
 
   const res = await axios.post("https://www.nareshit.net/createEditTest", {
     data: data,
   });
   //testDetailId :15731
   //testId: 15786
-  console.log(res);
+  console.log("res", res);
+  BuilderService.id.testId = res.data.data[0].TestID;
   /* BuilderService.id.technology = res.data.data[0].TestID;
   console.log(BuilderService.id); */
+
+  const assessmentRes = await axios.post(
+    "https://www.nareshit.net/getBasicTestDetailsInfo",
+    {
+      data: { TestID: BuilderService.id.testId },
+    }
+  );
+
+  console.log(assessmentRes);
+
+  if (assessmentRes.data && assessmentRes.data.data) {
+    const assessmentObj = assessmentRes.data.data[0];
+    const easy = assessmentObj?.NumOfEasy;
+    const medium = assessmentObj?.NumOfMedium;
+    const hard = assessmentObj?.NumOfHard;
+
+    if (easy || medium || hard)
+      redirectVar += `?easy=${easy}&medium=${medium}&hard=${hard}`;
+  }
 
   return redirect(redirectVar);
 }

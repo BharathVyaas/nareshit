@@ -26,8 +26,6 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
   function submiteHandler() {
     let go = false;
 
-    console.log("d", LocalStorage.questionView);
-
     let easy = 0;
     let medium = 0;
     let hard = 0;
@@ -97,18 +95,30 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
       className="z-20"
     >
       <section className="bg-white p-6 rounded-md shadow-md">
-        <h1 className="text-2xl font-bold mb-4">Qusetion View</h1>
+        <div className="flex justify-between">
+          <span className="text-2xl font-bold mb-4">Qusetion View</span>
+          <span
+            className="cursor-pointer font-bold text-pretty"
+            onClick={() => setter(false)}
+          >
+            X
+          </span>
+        </div>
         <div className="mb-4">
           <h2 className="text-lg font-semibold">Module Name</h2>
           <p className="text-gray-600">{data.selectedModule.moduleName}</p>
         </div>
         <div className="mb-4">
           <h2 className="text-lg font-semibold">Topic Name</h2>
-          <p className="text-gray-600">{data.selectedTopic.topicName}</p>
+          <p className="text-gray-600">
+            {data.selectedTopic?.topicName || "None Selected"}
+          </p>
         </div>
         <div className="mb-4">
           <h2 className="text-lg font-semibold">SubTopic Name</h2>
-          <p className="text-gray-600">{data.selectedSubTopic.subTopicName}</p>
+          <p className="text-gray-600">
+            {data.selectedSubTopic?.subTopicName || "None Selected"}
+          </p>
         </div>
         <div className="flex space-x-4">
           <label className="flex items-center" htmlFor="topiceasy">

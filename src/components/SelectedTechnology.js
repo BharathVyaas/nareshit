@@ -2,7 +2,12 @@ import React, { useEffect } from "react";
 import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
 
-function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
+function SelectedTechnology({
+  proglang,
+  setProgLang,
+  programmingLanguages,
+  editTechnologyId,
+}) {
   useEffect(() => {
     const data = programmingLanguages.find(
       (element) => element.TechnologyName === proglang
@@ -21,7 +26,7 @@ function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
           id="proglang"
           name="proglang"
           className="mx-6 w-[200px]"
-          value={proglang}
+          value={editTechnologyId || proglang}
           onChange={(e) => setProgLang(e.target.value)}
         >
           <option value={"Select A Technology"}>Select A Technology</option>

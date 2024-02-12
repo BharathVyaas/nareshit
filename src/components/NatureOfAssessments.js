@@ -1,6 +1,6 @@
 import React from "react";
 
-function NatureOfAssessments({ nature, setNature }) {
+function NatureOfAssessments({ nature, setNature, editNatureId }) {
   return (
     <fieldset className="mx-4">
       <legend>Nature of Assessment:</legend>
@@ -19,7 +19,7 @@ function NatureOfAssessments({ nature, setNature }) {
           <input
             type="radio"
             name="assessmentNature"
-            checked={nature === "fixed"}
+            checked={nature === "fixed" || editNatureId === "fixed"}
             value="fixed"
             onChange={(e) => setNature(e.target.value)}
           />
@@ -29,7 +29,7 @@ function NatureOfAssessments({ nature, setNature }) {
           <input
             type="radio"
             name="assessmentNature"
-            checked={nature === "fastTrack"}
+            checked={nature === "fastTrack" || editNatureId === "fastTrack"}
             value="fastTrack"
             onChange={(e) => setNature(e.target.value)}
           />

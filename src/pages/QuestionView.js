@@ -24,6 +24,7 @@ import TechnologyService from "../services/technologyService";
 import AsssessmentQuestionBoxHandler from "../components/questionView/AsssessmentQuestionBoxHandler";
 import { QuestionViewProvider } from "../context/questionView";
 import QuestionViewCtx from "../context/questionView";
+import QuestionViewHandler from "../ui/QuestionViewHandler";
 
 const Titles = ["MCQ"];
 
@@ -58,6 +59,21 @@ function QuestionView() {
     BuilderService.questionCount.total = easy + medium + hard;
   }, [data]);
 
+  function handler(data) {
+    const prevs = [];
+
+    setQuestionView((prev) => {
+      if (!prev || prev.length === 0) return [data];
+      return [...prev, data];
+    });
+  }
+
+  let topicData = {
+    selectedSubTopic: LocalStorage?.subTopicData,
+    selectedTopic: LocalStorage?.topicData,
+    selectedModule: LocalStorage?.moduleData,
+  };
+
   const [questionView, setQuestionView] = useState([]);
 
   // Make Sure to destroy previous subescriptions.
@@ -70,6 +86,8 @@ function QuestionView() {
   const searchRef = useRef();
 
   LocalStorage.data = BuilderService.getData();
+
+  const [popup, setPopup] = useState(false);
 
   const MCQDifficulty = BuilderService.getDifficultyByTitle(Titles[0]);
 
@@ -113,9 +131,21 @@ function QuestionView() {
               </div>
             </div>
           </section> */}
-        <h1 className="ms-[20px] pt-5 text-lg font-semibold">
-          Selected Technology: {selectTechnology}
-        </h1>
+        <div className="flex justify-between">
+          <h1 className="ms-[20px] pt-5 text-lg font-semibold">
+            Selected Technology: {selectTechnology}
+          </h1>
+          <button className="mr-6" onClick={() => setPopup(true)}>
+            Set Data
+          </button>
+          {popup && (
+            <QuestionViewHandler
+              topicData={topicData}
+              setPopup={setPopup}
+              handler={handler}
+            />
+          )}
+        </div>
         <div>
           <section className="flex m-[20px]">
             <QusetionViewTechnlogy
@@ -155,16 +185,10 @@ function QuestionView() {
             </section>
           </div>
         </div>
-        <section className="flex my-4 justify-between items-center">
+        {/* <section className="flex my-4 justify-between items-center">
           <FetchData setStale={setStale} />
-        </section>
+        </section> */}
         {/** grid grid-cols-2 */}
-
-        {questions && (
-          <section className="">
-            <Questions questions={questions} />
-          </section>
-        )}
 
         <Button
           link={
@@ -272,7 +296,7 @@ export function Questions({ questions }) {
       {questionArr &&
         questionArr.map((question, index) => (
           <Question
-            key={question.QuestionID}
+            key={question.QuestionID + index}
             difficultyId={question?.DifficultyLevelID}
             questions={questionArr}
             questionId={question.QuestionID}

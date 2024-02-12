@@ -36,41 +36,43 @@ function QusetionViewTechnlogy({
   }, [selectedSubTopic]);
 
   return (
-    <section className="flex justify-between w-full">
-      <TopicsContextProvider>
-        <ModuleDataLoader
-          selectedModule={selectedModule}
-          setSelectedModule={setSelectedModule}
-        />
-        {selectedModule && (
-          <TopicDataLoader
+    <>
+      <section className="flex justify-between w-full">
+        <TopicsContextProvider>
+          <ModuleDataLoader
             selectedModule={selectedModule}
-            selectedTopic={selectedTopic}
-            setSelectedTopic={setSelectedTopic}
+            setSelectedModule={setSelectedModule}
           />
-        )}
-        {selectedTopic &&
-        LocalStorage.topicData &&
-        LocalStorage._getTopicDataById() ? (
-          <SubTopicDataLoader
-            selectedTopic={setSelectedTopic}
-            selectedSubTopic={selectedSubTopic}
-            setSelectedSubTopic={setSelectedSubTopic}
-            questionView={questionView}
-            setQuestionView={setQuestionView}
-          />
-        ) : (
-          <div className="max-w-[30%] overflow-hidden flex flex-col">
-            <span>
-              <label htmlFor="subtopicName">Sub Topic Name:</label>
-            </span>
-            <select id="subtopicName" name="subtopicName" className="">
-              <option value="selectsubtopic">Select A Subtopic</option>
-            </select>
-          </div>
-        )}
-      </TopicsContextProvider>
-    </section>
+          {selectedModule && (
+            <TopicDataLoader
+              selectedModule={selectedModule}
+              selectedTopic={selectedTopic}
+              setSelectedTopic={setSelectedTopic}
+            />
+          )}
+          {selectedTopic &&
+          LocalStorage.topicData &&
+          LocalStorage._getTopicDataById() ? (
+            <SubTopicDataLoader
+              selectedTopic={setSelectedTopic}
+              selectedSubTopic={selectedSubTopic}
+              setSelectedSubTopic={setSelectedSubTopic}
+              questionView={questionView}
+              setQuestionView={setQuestionView}
+            />
+          ) : (
+            <div className="max-w-[30%] overflow-hidden flex flex-col">
+              <span>
+                <label htmlFor="subtopicName">Sub Topic Name:</label>
+              </span>
+              <select id="subtopicName" name="subtopicName" className="">
+                <option value="selectsubtopic">Select A Subtopic</option>
+              </select>
+            </div>
+          )}
+        </TopicsContextProvider>
+      </section>
+    </>
   );
 }
 
@@ -143,7 +145,10 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
           >
             <option value={"Select A Module"}>Select A Module</option>
             {moduleNames.map((element, index) => (
-              <option key={element.moduleId + index} value={element.moduleName}>
+              <option
+                key={(element.moduleId, index)}
+                value={element.moduleName}
+              >
                 {element.moduleName}
               </option>
             ))}
@@ -327,14 +332,6 @@ function SubTopicName({
       subTopicNames[0]
   );
 
-  let topicData = {
-    selectedSubTopic: LocalStorage.subTopicData,
-    selectedTopic: LocalStorage.topicData,
-    selectedModule: LocalStorage.moduleData,
-  };
-
-  const [popup, setPopup] = useState(false);
-
   useEffect(() => {
     setSelectedTechnology((prev) => {
       return { ...prev, subTopic: selectedModule };
@@ -351,29 +348,11 @@ function SubTopicName({
       (module) => module?.subTopicName === selectedModuleName
     );
 
-    setPopup(selectedModule);
-
     setSelectedModule(selectedModule);
   };
 
-  function handler(data) {
-    const prevs = [];
-
-    setQuestionView((prev) => {
-      if (!prev || prev.length === 0) return [data];
-      return [...prev, data];
-    });
-  }
-
   return (
     <>
-      {popup && (
-        <QuestionViewHandler
-          topicData={topicData}
-          setPopup={setPopup}
-          handler={handler}
-        />
-      )}
       <Form className="max-w-[30%] overflow-hidden relative">
         <div htmlFor="subtopicName">
           <p>Sub Topic Name:</p>

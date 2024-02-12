@@ -11,6 +11,10 @@ function QuestionTypes({
   setDataQuestions,
   dataDifficulty,
   setDataDifficulty,
+  queryEasy,
+  queryMedium,
+  queryHard,
+  queryTotal,
 }) {
   return (
     <>
@@ -35,6 +39,7 @@ function QuestionTypes({
           <NumberOfQuestions
             dataQuestions={dataQuestions}
             setDataQuestions={setDataQuestions}
+            queryTotal={queryTotal}
           />
           <fieldset>
             <legend>Difficulty Levels:</legend>
@@ -44,18 +49,21 @@ function QuestionTypes({
                 dataDifficulty={dataDifficulty}
                 dataQuestions={dataQuestions}
                 setDataDifficulty={setDataDifficulty}
+                queryData={queryEasy}
               />
               <DifficultyLevel
                 difficultyLevel="medium"
                 dataDifficulty={dataDifficulty}
                 dataQuestions={dataQuestions}
                 setDataDifficulty={setDataDifficulty}
+                queryData={queryMedium}
               />
               <DifficultyLevel
                 difficultyLevel="hard"
                 dataDifficulty={dataDifficulty}
                 dataQuestions={dataQuestions}
                 setDataDifficulty={setDataDifficulty}
+                queryData={queryHard}
               />
             </div>
           </fieldset>
@@ -72,6 +80,7 @@ function DifficultyLevel({
   dataDifficulty,
   setDataDifficulty,
   dataQuestions,
+  queryData,
 }) {
   return (
     <label htmlFor="dataEasy">
@@ -82,6 +91,7 @@ function DifficultyLevel({
         id="dataEasy"
         name="dataEasy"
         defaultValue={
+          queryData ||
           LocalStorage.data?.assessmentData?.MCQ?.difficulty[difficultyLevel] ||
           0
         }

@@ -26,16 +26,7 @@ function Randoms({ random, setRandom }) {
           />
           <span className="ps-2">Module Wise Random</span>
         </label>
-        <label className="p-5">
-          <input
-            type="radio"
-            name="random"
-            value="topicWiseRandom"
-            checked={random === "topicWiseRandom"}
-            onChange={(e) => setRandom(e.target.value)}
-          />
-          <span className="ps-2">Topic Wise Random</span>
-        </label>
+
         <label className="p-5">
           <input
             disabled={

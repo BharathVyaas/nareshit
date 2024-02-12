@@ -1,7 +1,7 @@
 import React from "react";
 import { Questions } from "../pages/QuestionView";
 
-function QuestionViewFixedMedium({ questions, setCurrentPage }) {
+function QuestionViewFixedShowAll({ questions, setCurrentPage }) {
   if (questions.length === 0) return <h1>Loading...</h1>;
 
   return (
@@ -19,4 +19,4 @@ function QuestionViewFixedMedium({ questions, setCurrentPage }) {
   );
 }
 
-export default QuestionViewFixedMedium;
+export default QuestionViewFixedShowAll;

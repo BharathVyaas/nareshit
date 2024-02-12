@@ -13,9 +13,9 @@ class Builder {
   }
   constructor() {
     this.id = {
-      listOfAssessment: 0,
-      technology: 0,
+      testId: 0,
       technologyId: 0,
+      testDetailsId: 0,
     };
     this.questionCount = {
       easy: 0,

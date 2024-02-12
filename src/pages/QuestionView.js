@@ -135,7 +135,12 @@ function QuestionView() {
           <h1 className="ms-[20px] pt-5 text-lg font-semibold">
             Selected Technology: {selectTechnology}
           </h1>
-          <button className="mr-6" onClick={() => setPopup(true)}>
+          <button
+            className="mr-6"
+            onClick={() => {
+              setPopup(true);
+            }}
+          >
             Set Data
           </button>
           {popup && (
@@ -376,7 +381,7 @@ function Question({
         />
       )}
       <section
-        className={` ${bgColor} scroll min-h-[6rem] flex items-center border-2 border-white overflow-auto justify-between`}
+        className={` ${bgColor} scroll cursor-pointer min-h-[6rem] flex items-center border-2 border-white overflow-auto justify-between`}
       >
         <input
           type="checkbox"
@@ -395,12 +400,15 @@ function Question({
         </article>
          */}
         <div
-          className="flex container items-center"
+          className="flex ms-2 container items-center"
           onClick={() => {
             setModalData(question);
           }}
         >
-          <article className="max-w-[35%] min-w-[35%] overflow-hidden ">
+          <article className="max-w-[95%] min-w-[95%] overflow-hidden ">
+            <h3>{question.Question}</h3>
+          </article>
+          {/* <article className="max-w-[35%] min-w-[35%] overflow-hidden ">
             <h3>{question.Question}</h3>
           </article>
           <Option option="Option1" question={question} questionKey="OptionA" />
@@ -409,7 +417,7 @@ function Question({
           <Option option="Option4" question={question} questionKey="OptionD" />
           <aside className="max-w-[30%] min-w-[30%] overflow-hidden ">
             <h3>{question.CorrectAnswer}</h3>
-          </aside>
+          </aside> */}
         </div>
       </section>
     </>

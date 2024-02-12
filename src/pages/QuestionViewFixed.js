@@ -80,7 +80,9 @@ function QuestionViewFixed() {
   useEffect(() => {
     async function fetch() {
       // subtopicid is stored in localstorage
-
+      console.log(
+        `https://www.nareshit.net/fetchDynamicQuestions?Hardcount=${totalHard}&MediumCount=${totalMedium}&EasyCount=${totalEasy}&SubTopicID=${173}`
+      );
       const res = await axios.get(
         `https://www.nareshit.net/fetchDynamicQuestions?Hardcount=${totalHard}&MediumCount=${totalMedium}&EasyCount=${totalEasy}&SubTopicID=${173}`
       );

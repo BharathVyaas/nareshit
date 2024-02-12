@@ -6,6 +6,8 @@ import QuestionViewTopic from "./QuestionViewTopic";
 import { LocalStorage } from "../../services/LocalStorage";
 import QuestionView from "../../context/questionView";
 import axios from "axios";
+import Modal from "../../ui/Modal";
+import QuestionViewFixedModal from "../../ui/QuestionViewFixedModal.js";
 
 const Titles = ["MCQ", "MCQ"];
 
@@ -94,8 +96,11 @@ function AsssessmentQuestionBoxHandler({
       startTime: element?.medium,
       endTime: element?.hard,
       id: element?.id,
+      element: element,
     };
   });
+
+  const [popup, setPopup] = useState(false);
 
   async function handler(data) {
     /*  // Ensure data properties are properly formatted
@@ -117,8 +122,21 @@ function AsssessmentQuestionBoxHandler({
     } */
   }
 
+  function handler(data) {
+    /* console.log("handling", data); */
+  }
+
   return (
     <section className="overflow-auto container">
+      {popup && (
+        <Modal
+          styles={"bg-white rounded-lg shadow-lg w-3/4 md:w-1/2 lg:w-2/3 z-50"}
+          data={popup}
+          setter={setPopup}
+          handler={handler}
+          ModalParam={QuestionViewFixedModal}
+        />
+      )}
       <AssessmentQuestionBox
         title={Titles[0]}
         setStale={setStale}
@@ -136,17 +154,16 @@ function AsssessmentQuestionBoxHandler({
           <tbody>
             {LocalStorage.questionView &&
               LocalStorage.questionView[0]?.name &&
-              tableBody.map((element, index) => {
-                return (
-                  <TableBodyRenderer
-                    key={element.id}
-                    index={index}
-                    element={element}
-                    handler={handler}
-                    setStale={setStale}
-                  />
-                );
-              })}
+              tableBody.map((element, index) => (
+                <TableBodyRenderer
+                  setPopup={setPopup}
+                  key={element.id + index}
+                  index={index}
+                  element={element}
+                  handler={handler}
+                  setStale={setStale}
+                />
+              ))}
           </tbody>
         </table>
 
@@ -200,10 +217,16 @@ export function TableHead({ titles }) {
  * @param {Object} props.element - An assessment data object.
  * @returns {JSX.Element} The TableBodyRenderer component.
  */
-export function TableBodyRenderer({ handler, element, index, setStale }) {
+export function TableBodyRenderer({
+  setPopup,
+  handler,
+  element,
+  index,
+  setStale,
+}) {
   const { testName, isActive, startDate, endDate, startTime, endTime } =
     element;
-  console.log(index);
+
   const styles =
     index % 2 === 0
       ? "bg-gray-100 hover:bg-gray-200"
@@ -217,26 +240,56 @@ export function TableBodyRenderer({ handler, element, index, setStale }) {
       key={element.id}
       className={styles}
     >
-      <Tbody data={testName} id={element.id} setStale={setStale} />
-      <Tbody data={isActive} id={element.id} setStale={setStale} />
-      <Tbody data={startDate} id={element.id} setStale={setStale} />
       <Tbody
+        setPopup={setPopup}
+        data={testName}
+        id={element.id}
+        setStale={setStale}
+        type="moduleName"
+        element={element}
+      />
+      <Tbody
+        setPopup={setPopup}
+        data={isActive}
+        id={element.id}
+        setStale={setStale}
+        type="topicName"
+        element={element}
+      />
+      <Tbody
+        setPopup={setPopup}
+        data={startDate}
+        id={element.id}
+        setStale={setStale}
+        type="subTopicName"
+        element={element}
+      />
+      <Tbody
+        setPopup={setPopup}
         data={endDate}
         tag="input"
+        type="easy"
         id={element.id + " easy"}
         setStale={setStale}
+        element={element}
       />
       <Tbody
+        setPopup={setPopup}
         data={startTime}
         tag="input"
+        type="medium"
         id={element.id + " medium"}
         setStale={setStale}
+        element={element}
       />
       <Tbody
+        setPopup={setPopup}
         data={endTime}
         tag="input"
+        type="hard"
         id={element.id + " hard"}
         setStale={setStale}
+        element={element}
       />
     </tr>
   );
@@ -248,7 +301,23 @@ export function TableBodyRenderer({ handler, element, index, setStale }) {
  * @param {string} props.data - The data to be displayed in the cell.
  * @returns {JSX.Element} The Tbody component.
  */
-export function Tbody({ data, tag, id, setStale, ...props }) {
+/**
+ * Component for rendering table body cells.
+ * @param {Object} props - The component props.
+ * @param {string} props.data - The data to be displayed in the cell.
+ * @returns {JSX.Element} The Tbody component.
+ */
+export function Tbody({
+  data,
+  tag,
+  id,
+  setPopup,
+  setStale,
+  type,
+  element,
+  ...props
+}) {
+  /* console.log(data, tag, id, setPopup, setStale); */
   const { data: dataCtx, setData: setDataCtx } = useContext(QuestionView);
 
   let content = (
@@ -259,7 +328,7 @@ export function Tbody({ data, tag, id, setStale, ...props }) {
 
   const [value, setValue] = useState(data);
 
-  function handler(_data, setter, _total, id, siblings) {
+  function handler(_data, flag, setter, _total, id, siblings) {
     setStale((prev) => true);
     let data = Number(_data);
     let evaluate;
@@ -272,7 +341,7 @@ export function Tbody({ data, tag, id, setStale, ...props }) {
       throw new Error("AssessmentQuestionBoxHandler:Tbody:handler");
 
     const max_value = _total.assessmentData.MCQ.difficulty[evaluate];
-    const current_value = 0;
+    let current_value = 0;
     const siblings_eval_array = [];
     let siblings_evaluate = 0;
 
@@ -280,19 +349,28 @@ export function Tbody({ data, tag, id, setStale, ...props }) {
 
     siblings_evaluate = siblings_eval_array.reduce((e, a) => e + a, 0);
 
-    if (siblings_evaluate + data > max_value) return;
-    else {
-      const _in = LocalStorage.questionView.find((element) => {
-        return element.id + " " + evaluate === id;
+    let sibData = siblings_evaluate;
+    sibData += flag ? 1 : -1;
+
+    if (sibData > max_value) {
+      console.log("big");
+      return;
+    } else {
+      let localStorageData = LocalStorage.questionView;
+      localStorageData = localStorageData.map((element) => {
+        if (element.id + " " + evaluate === id) {
+          current_value = element[evaluate];
+          element[evaluate] = _data;
+          console.log(element[evaluate]);
+        }
+        return element;
       });
 
-      _in[evaluate] = data;
+      LocalStorage.questionView = localStorageData;
+      //
+      console.log(localStorageData, LocalStorage.questionView, _data);
 
-      const _out = LocalStorage.questionView.filter((element) => {
-        return element.id + " " + evaluate !== id;
-      });
-      LocalStorage.questionView = [_in, ..._out];
-      setDataCtx([_in, ..._out]);
+      setDataCtx(LocalStorage.questionView);
 
       setValue(_data);
     }
@@ -305,22 +383,50 @@ export function Tbody({ data, tag, id, setStale, ...props }) {
         className="text-center border-[1.2px]"
         {...props}
       >
-        <input
-          type="number"
-          className="w-full h-full cursor-crosshair bg-transparent border-0 outline-none "
-          id={id}
-          value={value}
-          onChange={(e) => {
-            setStale((prev) => !prev);
-            handler(
-              e.target.value,
-              setValue,
-              LocalStorage.data,
-              id,
-              LocalStorage.questionView
-            );
-          }}
-        />
+        <div className="flex justify-between items-center">
+          <button
+            className="grid place-content-center w-6 mx-1 rounded bg-gray-300 text-white"
+            onClick={(e) => {
+              setStale((prev) => !prev);
+              handler(
+                data + 1,
+                true,
+                setValue,
+                LocalStorage.data,
+                id,
+                LocalStorage.questionView
+              );
+            }}
+          >
+            +
+          </button>
+
+          <button
+            onClick={() => setPopup({ value, type, element })}
+            className="bg-transparent underline underline-offset-2"
+          >
+            {value}
+          </button>
+
+          <button
+            className="grid place-content-center w-6 mx-1 rounded bg-gray-300 text-white"
+            onClick={(e) => {
+              if (data - 1 >= 0) {
+                setStale((prev) => !prev);
+                handler(
+                  data - 1,
+                  false,
+                  setValue,
+                  LocalStorage.data,
+                  id,
+                  LocalStorage.questionView
+                );
+              }
+            }}
+          >
+            -
+          </button>
+        </div>
       </td>
     );
   return content;

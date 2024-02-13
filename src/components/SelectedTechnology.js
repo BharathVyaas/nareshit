@@ -7,6 +7,7 @@ function SelectedTechnology({
   setProgLang,
   programmingLanguages,
   editTechnologyId,
+  editedSelectProgrammingLanguage,
 }) {
   useEffect(() => {
     const data = programmingLanguages.find(
@@ -26,7 +27,13 @@ function SelectedTechnology({
           id="proglang"
           name="proglang"
           className="mx-6 w-[200px]"
-          value={editTechnologyId || proglang}
+          defaultChecked={
+            editedSelectProgrammingLanguage?.TechnologyName || editTechnologyId
+          }
+          defaultValue={
+            editedSelectProgrammingLanguage?.TechnologyName || editTechnologyId
+          }
+          value={proglang}
           onChange={(e) => setProgLang(e.target.value)}
         >
           <option value={"Select A Technology"}>Select A Technology</option>

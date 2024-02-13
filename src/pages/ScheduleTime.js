@@ -59,7 +59,7 @@ function ScheduleTime() {
   }, [testName, testDescription]);
 
   useEffect(() => {
-    setIsValid(isTimeValid && isTestValid && isDateValid);
+    setIsValid(isTestValid);
   }, [isTimeValid, isDateValid, isTestValid]);
 
   return (

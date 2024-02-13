@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { LocalStorage } from "../services/LocalStorage";
 
 function MainNavigation() {
   return (
@@ -66,7 +67,7 @@ function MainNavigation() {
             }
             end
           >
-            SheduleTime
+            ScheduleTime
           </NavLink>
         </li>
       </ul>

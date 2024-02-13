@@ -14,16 +14,18 @@ function Categories() {
   return (
     <>
       {/*  */}
-      <header className="bg-gray-100">
+      <header className="bg-gray-100 max-w-full overflow-hidden">
         <Logo />
         <MainNavigation />
       </header>
 
       {/* Main Content Outlet */}
-      <Outlet />
+      <div className="max-w-full overflow-hidden">
+        <Outlet />
+      </div>
 
       {/*  */}
-      <footer className="grid place-content-center p-6 w-full">
+      <footer className="grid place-content-center p-6 w-full max-w-full overflow-hidden">
         © 2023 Naresh i Technologies | Software Training - Online | All Rights
         Reserved.
       </footer>

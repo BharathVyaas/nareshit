@@ -43,7 +43,7 @@ function QuestionTypes({
           />
           <fieldset>
             <legend>Difficulty Levels:</legend>
-            <div className="ms-6 mt-2">
+            <div className="ms-6 mt-4">
               <DifficultyLevel
                 difficultyLevel="easy"
                 dataDifficulty={dataDifficulty}

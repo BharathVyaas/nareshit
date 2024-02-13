@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import AssessmentQuestionBox from "../AssessmentQuestionbox";
 import BuilderService from "../../services/builder";
 import TopicsContext from "../../context/topicsContext";
@@ -21,6 +21,9 @@ function AsssessmentQuestionBoxHandler({
   data: questionData,
   setData: setQuestionData,
   nextButtonHandler,
+  setTotal,
+  isValid,
+  setIsValid,
 }) {
   const [stale, setStale] = useState(parentStale);
 
@@ -72,9 +75,27 @@ function AsssessmentQuestionBoxHandler({
     (element) => (hardTotalSibling += element.hard)
   );
 
-  const easy = easyTotalSibling;
-  const medium = mediumTotalSibling;
-  const hard = hardTotalSibling;
+  const easy = useMemo(() => easyTotalSibling, [easyTotalSibling]);
+  const medium = useMemo(() => mediumTotalSibling, [mediumTotalSibling]);
+  const hard = useMemo(() => hardTotalSibling, [hardTotalSibling]);
+
+  useEffect(() => {
+    if (
+      !isValid &&
+      easy + medium + hard >=
+        BuilderService.assessmentService.options.MCQ.totalQuestions
+    ) {
+      setIsValid(true);
+    } else if (
+      isValid &&
+      !(
+        easy + medium + hard >=
+        BuilderService.assessmentService.options.MCQ.totalQuestions
+      )
+    ) {
+      setIsValid(false);
+    }
+  }, [easy, medium, hard]);
 
   const TableAttributeTitles = [
     { title: "Module Name", id: "sds" },
@@ -403,7 +424,7 @@ export function Tbody({
 
   const underline =
     BuilderService.technologyService._technology.natureOfAssessment === "fixed"
-      ? "bg-transparent underline underline-offset-2"
+      ? "bg-transparent underline underline-offset-2 decoration-2 decoration-red-500 "
       : "bg-transparent";
 
   if (tag === "input")
@@ -415,7 +436,7 @@ export function Tbody({
       >
         <div className="flex justify-between items-center">
           <button
-            className="grid place-content-center w-6 mx-1 rounded bg-gray-300 text-white"
+            className="grid place-content-center w-6 mx-1 rounded bg-slate-700 text-white"
             onClick={(e) => {
               setStale((prev) => !prev);
               handler(
@@ -445,7 +466,7 @@ export function Tbody({
           </button>
 
           <button
-            className="grid place-content-center w-6 mx-1 rounded bg-gray-300 text-white"
+            className="grid place-content-center w-6 mx-1 rounded bg-slate-700 text-white"
             onClick={(e) => {
               if (data - 1 >= 0) {
                 setStale((prev) => !prev);

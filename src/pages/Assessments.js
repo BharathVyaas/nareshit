@@ -92,7 +92,7 @@ function Assessments() {
       total += MCQDifficulty[key];
     }
 
-    if (total !== MCQQuestions) {
+    if (total !== MCQQuestions || total === 0) {
       e.preventDefault();
       setLinkDisabled(true);
       console.log(total, MCQQuestions);
@@ -144,7 +144,7 @@ function Assessments() {
                 className={`
                 inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
               >
-                Submit
+                Next
               </button>
             </div>
           </div>

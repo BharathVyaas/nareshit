@@ -17,6 +17,7 @@ import { AssessmentClass } from "../services/assessmentsService";
 import { QueryViewClass } from "../services/questionViewService";
 import { TechnologyClass } from "../services/technologyService";
 import { ScheduleTimeClass } from "../services/scheduleTimeService";
+import { LocalStorage } from "../services/LocalStorage";
 
 /**
  * Component for displaying a list of assessments created by other users.
@@ -46,6 +47,7 @@ function ListOfAssessment() {
 
   function createNewHandler(e) {
     localStorage.clear();
+    LocalStorage.technologyPage = true;
     BuilderService.assessmentService = AssessmentClass.getInstance();
     BuilderService.id = { testId: 0, technologyId: 0, testDetailsId: 0 };
     BuilderService.questionCount = {
@@ -64,17 +66,16 @@ function ListOfAssessment() {
   const navigate = useNavigate();
 
   async function handler(data) {
-    console.log("data", data);
+    LocalStorage.technologyPage = true;
     const res = await axios.post("https://www.nareshit.net/getBasicTestInfo", {
       data: { TestID: data.TestID },
     });
 
     navigate(
-      `/categories/technology?randomId=${res.data.data[0].RandomID}&natureId=${res.data.data[0].NatureID}&technologyId=${res.data.data[0].TechnologyID}`
+      `/categories/technology?randomId=${res.data.data[0]?.RandomID}&natureId=${res.data.data[0]?.NatureID}&technologyId=${res.data.data[0]?.TechnologyID}`
     );
 
     if (res) setTitleData({ assessments: res.data });
-    console.log(res.data);
   }
 
   useEffect(() => {
@@ -87,7 +88,7 @@ function ListOfAssessment() {
         initial={{ x: "100%" }}
         animate={{ x: 0, transition: { duration: 0.3 } }}
         exit={{ x: "100%", transition: { duration: 0.3 } }}
-        className="bg-slate-100 min-h-[70vh] min-w-[80vw] py-[20px] shadow-xl max-w-[80vw] mx-auto my-[20px]"
+        className="bg-slate-100 min-h-[70vh] min-w-[80vw]  overflow-scroll py-[20px] shadow-xl mx-auto my-[20px]"
       >
         <section>
           {/* Hidden heading for accessibility and SEO */}

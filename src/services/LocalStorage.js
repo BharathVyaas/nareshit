@@ -1,3 +1,5 @@
+import BuilderService from "./builder";
+
 class LocalStorageClass {
   static instance;
   static getInstance() {
@@ -8,6 +10,14 @@ class LocalStorageClass {
     this.data = undefined;
     this.moduleData = undefined;
     this.programmingLanguageData = undefined;
+  }
+
+  get technologyPage() {
+    return localStorage.getItem("technologyPage");
+  }
+
+  set technologyPage(newTechnology) {
+    return localStorage.setItem("technologyPage", newTechnology);
   }
 
   get programmingLanguageFirstVisit() {
@@ -126,7 +136,6 @@ class LocalStorageClass {
   }
 
   set includes(newData) {
-    console.log("newData", newData);
     const data = JSON.stringify(newData);
     if (newData) localStorage.setItem("include", data);
   }

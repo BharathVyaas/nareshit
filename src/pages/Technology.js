@@ -32,6 +32,15 @@ function Technology() {
 
   const updatedProgrammingLanguages = [...programmingLanguages];
 
+  let editedSelectProgrammingLanguage;
+  useEffect(() => {
+    if (technologyId) {
+      editedSelectProgrammingLanguage = updatedProgrammingLanguages.find(
+        (ele) => ele.TechnologyID === Number(technologyId)
+      );
+    }
+  }, []);
+
   const [proglang, setProgLang] = useState(
     BuilderService.technologyService._technology?.programmingLanguage
   );
@@ -100,6 +109,10 @@ function Technology() {
     }
   }
 
+  const [fixedDisabled, setFixedDisabled] = useState(
+    BuilderService.technologyService._technology.natureOfAssessment === "fixed"
+  );
+
   return (
     <AnimatePresence>
       <motion.main
@@ -113,14 +126,17 @@ function Technology() {
             proglang={proglang}
             setProgLang={setProgLang}
             editTechnologyId={technologyId}
+            editedSelectProgrammingLanguage={editedSelectProgrammingLanguage}
             programmingLanguages={updatedProgrammingLanguages}
           />
           <NatureOfAssessments
             nature={nature}
             setNature={setNature}
             editNatureId={natureId}
+            setFixedDisabled={setFixedDisabled}
           />
           <Randoms
+            fixedDisabled={fixedDisabled}
             random={random}
             setRandom={setRandom}
             editRandomId={randomId}
@@ -137,7 +153,7 @@ function Technology() {
                 onClick={handler}
                 className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
               >
-                Submit
+                Next
               </button>
             </div>
           </div>

@@ -134,7 +134,7 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
 
   return (
     <>
-      <Form className="max-w-[20%] me-6">
+      <Form className="max-w-[20%] flex flex-col me-6">
         <label htmlFor="moduleName">
           Module Name:
           <select

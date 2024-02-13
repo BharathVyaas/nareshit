@@ -37,8 +37,8 @@ export function TableBodyRenderer({ element, index, handler }) {
 
   const styles =
     index % 2 === 0
-      ? "bg-gray-100 hover:cursor-pointer hover:bg-gray-200"
-      : "bg-white hover:cursor-pointer hover:bg-gray-300";
+      ? "bg-gray-100 hover:cursor-pointer hover:bg-gray-200 max-w-[80vw] overflow-scroll"
+      : "bg-white hover:cursor-pointer hover:bg-gray-300  max-w-[80vw] overflow-scroll";
   const dateStart = new Date(TestStartDate);
   const dateEnd = new Date(TestEndDate);
 

@@ -105,20 +105,18 @@ function QuestionView() {
   const selectTechnology = TechnologyService.technology?.programmingLanguage;
   /* console.log(LocalStorage.questionView); */
 
-  const [total, setTotal] = useState({ easy: 0, medium: 0, hard: 0 });
-
   /*useEffect(() => {
     console.log("i");
     setTotal(totalEasy + totalMedium + totalHard);
   }, [totalEasy, totalMedium, totalHard]); */
 
   function nextButtonHandler(type, data) {
-    setTotal((prev) => {
+    /* setTotal((prev) => {
       return { ...prev, [type]: data };
-    });
+    }); */
   }
 
-  console.log(total, BuilderService.assessmentService._totalQuestionCount);
+  const [isValid, setIsValid] = useState(false);
 
   return (
     <AnimatePresence>
@@ -152,13 +150,14 @@ function QuestionView() {
             Selected Technology: {selectTechnology}
           </h1>
           <button
-            className="mr-6"
+            className="mr-[20px] mt-5 px-6 max-h-8 min-h-8 bg-[gray] text-white font-semibold rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:bg-gray-500 focus:ring-opacity-50"
             onClick={() => {
               setPopup(true);
             }}
           >
             Set Data
           </button>
+
           {popup && (
             <QuestionViewHandler
               topicData={topicData}
@@ -185,7 +184,9 @@ function QuestionView() {
           <div className="p-5">
             <div className="text-lg font-semibold mb-4">
               <h2 className="">
-                Please select a row from the table below to fetch Questions:
+                Please select an{" "}
+                <span className="bg-red-100 rounded">underlined value</span> to
+                fetch questions:
               </h2>
             </div>
             <section className="flex justify-center">
@@ -196,6 +197,8 @@ function QuestionView() {
                 <AsssessmentQuestionBoxHandler
                   nextButtonHandler={nextButtonHandler}
                   setStale={setStale}
+                  setIsValid={setIsValid}
+                  isValid={isValid}
                   data={data}
                   setData={setData}
                   selectTechnology={selectTechnology}
@@ -212,7 +215,7 @@ function QuestionView() {
         </section> */}
         {/** grid grid-cols-2 */}
 
-        <Button link={"/categories/scheduletime"} />
+        <Button disabled={!isValid} link={"/categories/scheduletime"} />
       </motion.main>
     </AnimatePresence>
   );
@@ -220,7 +223,7 @@ function QuestionView() {
 
 export default QuestionView;
 
-export function Questions({ questions }) {
+export function Questions({ questions, modalHandler }) {
   const [questionArr, setQuestionArr] = useState(questions);
 
   useEffect(() => {
@@ -315,6 +318,7 @@ export function Questions({ questions }) {
             key={question.QuestionID + index}
             difficultyId={question?.DifficultyLevelID}
             questions={questionArr}
+            modalHandler={modalHandler}
             questionId={question.QuestionID}
             question={question}
             includes={includes}
@@ -332,6 +336,7 @@ function Question({
   setIncludes,
   questionId,
   difficultyId,
+  modalHandler,
 }) {
   const [modalData, setModalData] = useState(false);
 
@@ -349,7 +354,14 @@ function Question({
     setIncludes(LocalStorage.includes);
   }, []);
 
+  const [includeCount, setIncludeCount] = useState(0);
+
   function handler(flag) {
+    // Check Length
+    if (flag) {
+      setIncludeCount(LocalStorage.includes.length);
+    }
+
     // Includes
     if (flag) {
       if (!LocalStorage.includes.includes(questionId)) {
@@ -373,8 +385,10 @@ function Question({
     } else {
       LocalStorage.pushExclude(questionId);
       if (includes && includes.includes(questionId))
-        setIncludes((prev) => removeElement([...prev], questionId));
+        setIncludes(LocalStorage.includes);
     }
+
+    if (modalHandler) modalHandler(12384797298471239749123874);
   }
 
   let bgColor;
@@ -397,7 +411,10 @@ function Question({
         <input
           type="checkbox"
           checked={includes.includes(questionId)}
-          onChange={(e) => handler(e.target.checked)}
+          onChange={(e) => {
+            console.log("ds");
+            handler(e.target.checked);
+          }}
           className="max-w-[5%] min-w-[5%]"
         />
 

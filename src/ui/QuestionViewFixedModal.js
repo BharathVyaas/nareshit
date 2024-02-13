@@ -6,21 +6,31 @@ import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
 
 let COUNT = 0;
+let CURRENT_COUNT = 0;
 
 function QuestionViewFixedModal({ data, setter, handler }) {
   const [questions, setQuestions] = useState([]);
-
+  console.log("data", data);
+  //
   const total = { easy: 0, medium: 0, hard: 0 };
   const moduleId = data.element.element.selectedModule.moduleId || 0;
   const topicId = data.element.element.selectedTopic.topicId || 0;
   const subTopicId = data.element.element.selectedSubTopic.subTopicId || 0;
 
-  const [includesCount, setIncludesCount] = useState(
-    LocalStorage.includes.length
-  );
+  const [includesCount, setIncludesCount] = useState({
+    current: 0,
+    total: LocalStorage.includes.length,
+  });
 
-  function modalHandler(data) {
-    setIncludesCount(LocalStorage.includes.length);
+  function modalHandler(flag) {
+    console.log(data);
+
+    setIncludesCount((prev) => {
+      let data = prev.current;
+      if (flag) data += 1;
+      else data -= 1;
+      return { current: data, total: LocalStorage.includes.length };
+    });
   }
 
   total[data.type] = data.value;
@@ -44,34 +54,40 @@ function QuestionViewFixedModal({ data, setter, handler }) {
     BuilderService.assessmentService.options.MCQ.totalQuestions;
 
   const [includeContent, setIncludeContent] =
-    useState(`Total Questions Included: ${
-      includesCount > 30 ? 30 : includesCount
-    }/
+    useState(`Total Questions Included: ${includesCount.total}/
     ${totalCount}`);
 
   useEffect(() => {
-    if (includesCount > totalCount) {
-      if (COUNT < includesCount) {
+    if (includesCount.total > totalCount) {
+      if (COUNT < includesCount.total) {
         window.alert(
           `Selected questions should not exceed ${totalCount} remove ${Math.abs(
-            Number(totalCount) - Number(includesCount)
+            Number(totalCount) - Number(includesCount.total)
           )} questions`
         );
       }
-      COUNT = includesCount;
+      COUNT = includesCount.total;
 
       //...
     } else if (
       includeContent !==
-      `Total Questions Included: ${includesCount > 30 ? 30 : includesCount}/
+      `Total Questions Included: ${includesCount.total}/
   ${totalCount}`
     ) {
-      setIncludeContent(`Total Questions Included: ${
-        includesCount > 30 ? 30 : includesCount
-      }/
+      setIncludeContent(`Total Questions Included: ${includesCount.total}/
     ${totalCount}`);
     }
-  }, [includesCount]);
+  }, [includesCount.total]);
+
+  useEffect(() => {
+    if (includesCount.current > data.value) {
+      window.alert(
+        `Selected questions should not exceed ${data.value} remove ${Math.abs(
+          Number(includesCount.current) - Number(data.value)
+        )} questions`
+      );
+    }
+  }, [includesCount.current]);
 
   return (
     <AnimatePresence>
@@ -115,7 +131,10 @@ function QuestionViewFixedModal({ data, setter, handler }) {
         </motion.div>
         <div className="mt-4 text-center flex">
           <p className="py-2">{includeContent}</p>
-          <button className="inline-block px-14 py-2 mx-auto bg-green-300 hover:bg-green-400">
+          <p className="py-2 ms-10">
+            current count: {includesCount.current}/{data.value}
+          </p>
+          <button className="inline-block max-h-10 px-14 py-2 mx-auto bg-green-300 hover:bg-green-400">
             Submit
           </button>
         </div>

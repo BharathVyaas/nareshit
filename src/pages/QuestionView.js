@@ -388,7 +388,7 @@ function Question({
         setIncludes(LocalStorage.includes);
     }
 
-    if (modalHandler) modalHandler(12384797298471239749123874);
+    if (modalHandler) modalHandler(flag);
   }
 
   let bgColor;

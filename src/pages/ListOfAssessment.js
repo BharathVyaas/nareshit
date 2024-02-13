@@ -13,6 +13,10 @@ import BuilderService from "../services/builder";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { AssessmentClass } from "../services/assessmentsService";
+import { QueryViewClass } from "../services/questionViewService";
+import { TechnologyClass } from "../services/technologyService";
+import { ScheduleTimeClass } from "../services/scheduleTimeService";
 
 /**
  * Component for displaying a list of assessments created by other users.
@@ -39,6 +43,23 @@ function ListOfAssessment() {
   let updatedData = assessments;
 
   const submit = useSubmit();
+
+  function createNewHandler(e) {
+    localStorage.clear();
+    BuilderService.assessmentService = AssessmentClass.getInstance();
+    BuilderService.id = { testId: 0, technologyId: 0, testDetailsId: 0 };
+    BuilderService.questionCount = {
+      easy: 0,
+      exclude: 0,
+      hard: 0,
+      include: 0,
+      medium: 0,
+      total: 0,
+    };
+    BuilderService.questionService = QueryViewClass.getInstance();
+    BuilderService.technologyService = TechnologyClass.getInstance();
+    BuilderService.scheduleTimeService = ScheduleTimeClass.getInstance();
+  }
 
   const navigate = useNavigate();
 
@@ -76,6 +97,7 @@ function ListOfAssessment() {
           <NavLink
             className="inline-block ms-20 mx-auto mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
             to="/categories/technology"
+            onClick={createNewHandler}
           >
             Create New
           </NavLink>

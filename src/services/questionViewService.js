@@ -1,4 +1,4 @@
-class QueryViewClass {
+export class QueryViewClass {
   static instance;
   static getInstance() {
     if (!this.instance) this.instance = new QueryViewClass();

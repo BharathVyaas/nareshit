@@ -104,6 +104,22 @@ function QuestionView() {
 
   const selectTechnology = TechnologyService.technology?.programmingLanguage;
   /* console.log(LocalStorage.questionView); */
+
+  const [total, setTotal] = useState({ easy: 0, medium: 0, hard: 0 });
+
+  /*useEffect(() => {
+    console.log("i");
+    setTotal(totalEasy + totalMedium + totalHard);
+  }, [totalEasy, totalMedium, totalHard]); */
+
+  function nextButtonHandler(type, data) {
+    setTotal((prev) => {
+      return { ...prev, [type]: data };
+    });
+  }
+
+  console.log(total, BuilderService.assessmentService._totalQuestionCount);
+
   return (
     <AnimatePresence>
       <motion.main
@@ -178,6 +194,7 @@ function QuestionView() {
               </h2> */}
               <QuestionViewProvider>
                 <AsssessmentQuestionBoxHandler
+                  nextButtonHandler={nextButtonHandler}
                   setStale={setStale}
                   data={data}
                   setData={setData}
@@ -195,13 +212,7 @@ function QuestionView() {
         </section> */}
         {/** grid grid-cols-2 */}
 
-        <Button
-          link={
-            linkToNext
-              ? `/categories/questionviewfixed?easy=${totalEasy}&medium=${totalMedium}&hard=${totalHard}&subTopicID=${subTopicId}`
-              : "/categories/scheduletime"
-          }
-        />
+        <Button link={"/categories/scheduletime"} />
       </motion.main>
     </AnimatePresence>
   );

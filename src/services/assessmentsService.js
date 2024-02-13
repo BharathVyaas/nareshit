@@ -56,7 +56,7 @@ class MCQClass extends Composite {
   }
 }
 
-class AssessmentClass extends Composite {
+export class AssessmentClass extends Composite {
   static instance;
   static getInstance() {
     if (!this.instance) this.instance = new AssessmentClass();

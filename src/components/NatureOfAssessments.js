@@ -1,4 +1,5 @@
 import React from "react";
+import BuilderService from "../services/builder";
 
 function NatureOfAssessments({ nature, setNature, editNatureId }) {
   return (
@@ -21,7 +22,12 @@ function NatureOfAssessments({ nature, setNature, editNatureId }) {
             name="assessmentNature"
             checked={nature === "fixed" || editNatureId === "fixed"}
             value="fixed"
-            onChange={(e) => setNature(e.target.value)}
+            onChange={(e) => {
+              /* console.log(
+                BuilderService.technology._technology.natureOfAssessment
+              ); */
+              setNature(e.target.value);
+            }}
           />
           <span className="p-2">Fixed</span>
         </label>

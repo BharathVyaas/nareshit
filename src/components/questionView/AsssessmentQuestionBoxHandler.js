@@ -8,6 +8,7 @@ import QuestionView from "../../context/questionView";
 import axios from "axios";
 import Modal from "../../ui/Modal";
 import QuestionViewFixedModal from "../../ui/QuestionViewFixedModal.js";
+import TableTotalCtx from "../../context/tableTotalCtx.js";
 
 const Titles = ["MCQ", "MCQ"];
 
@@ -19,6 +20,7 @@ function AsssessmentQuestionBoxHandler({
   selectTechnology,
   data: questionData,
   setData: setQuestionData,
+  nextButtonHandler,
 }) {
   const [stale, setStale] = useState(parentStale);
 
@@ -101,6 +103,22 @@ function AsssessmentQuestionBoxHandler({
   });
 
   const [popup, setPopup] = useState(false);
+  /*const { setTotal } = useContext(TableTotalCtx); */
+
+  /*  useEffect(() => {
+    let easy = 0;
+    let medium = 0;
+    let hard = 0;
+
+    tableBody.forEach((element) => {
+      easy += element.endDate;
+      medium += element.startTime;
+      hard += element.endTime;
+      console.log(element);
+    });
+
+     setTotal({ easy, medium, hard });
+  }, [tableBody]); */
 
   async function handler(data) {
     /*  // Ensure data properties are properly formatted
@@ -156,6 +174,7 @@ function AsssessmentQuestionBoxHandler({
               LocalStorage.questionView[0]?.name &&
               tableBody.map((element, index) => (
                 <TableBodyRenderer
+                  nextButtonHandler={nextButtonHandler}
                   setPopup={setPopup}
                   key={element.id + index}
                   index={index}
@@ -223,6 +242,7 @@ export function TableBodyRenderer({
   element,
   index,
   setStale,
+  nextButtonHandler,
 }) {
   const { testName, isActive, startDate, endDate, startTime, endTime } =
     element;
@@ -241,6 +261,7 @@ export function TableBodyRenderer({
       className={styles}
     >
       <Tbody
+        nextButtonHandler={nextButtonHandler}
         setPopup={setPopup}
         data={testName}
         id={element.id}
@@ -249,6 +270,7 @@ export function TableBodyRenderer({
         element={element}
       />
       <Tbody
+        nextButtonHandler={nextButtonHandler}
         setPopup={setPopup}
         data={isActive}
         id={element.id}
@@ -257,6 +279,7 @@ export function TableBodyRenderer({
         element={element}
       />
       <Tbody
+        nextButtonHandler={nextButtonHandler}
         setPopup={setPopup}
         data={startDate}
         id={element.id}
@@ -265,6 +288,7 @@ export function TableBodyRenderer({
         element={element}
       />
       <Tbody
+        nextButtonHandler={nextButtonHandler}
         setPopup={setPopup}
         data={endDate}
         tag="input"
@@ -274,6 +298,7 @@ export function TableBodyRenderer({
         element={element}
       />
       <Tbody
+        nextButtonHandler={nextButtonHandler}
         setPopup={setPopup}
         data={startTime}
         tag="input"
@@ -283,6 +308,7 @@ export function TableBodyRenderer({
         element={element}
       />
       <Tbody
+        nextButtonHandler={nextButtonHandler}
         setPopup={setPopup}
         data={endTime}
         tag="input"
@@ -315,6 +341,7 @@ export function Tbody({
   setStale,
   type,
   element,
+  nextButtonHandler,
   ...props
 }) {
   /* console.log(data, tag, id, setPopup, setStale); */
@@ -353,7 +380,6 @@ export function Tbody({
     sibData += flag ? 1 : -1;
 
     if (sibData > max_value) {
-      console.log("big");
       return;
     } else {
       let localStorageData = LocalStorage.questionView;
@@ -361,20 +387,24 @@ export function Tbody({
         if (element.id + " " + evaluate === id) {
           current_value = element[evaluate];
           element[evaluate] = _data;
-          console.log(element[evaluate]);
         }
         return element;
       });
 
       LocalStorage.questionView = localStorageData;
       //
-      console.log(localStorageData, LocalStorage.questionView, _data);
 
       setDataCtx(LocalStorage.questionView);
 
       setValue(_data);
+      nextButtonHandler(evaluate, _data);
     }
   }
+
+  const underline =
+    BuilderService.technologyService._technology.natureOfAssessment === "fixed"
+      ? "bg-transparent underline underline-offset-2"
+      : "bg-transparent";
 
   if (tag === "input")
     content = (
@@ -402,8 +432,14 @@ export function Tbody({
           </button>
 
           <button
-            onClick={() => setPopup({ value, type, element })}
-            className="bg-transparent underline underline-offset-2"
+            onClick={() => {
+              if (
+                BuilderService.technologyService._technology
+                  .natureOfAssessment === "fixed"
+              )
+                setPopup({ value, type, element });
+            }}
+            className={underline}
           >
             {value}
           </button>

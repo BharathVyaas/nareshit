@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function Button({ disabled, link }) {
+  console.log(disabled);
   return (
     <div className="w-full flex mt-14">
       <Link

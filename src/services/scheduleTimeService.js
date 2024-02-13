@@ -1,4 +1,4 @@
-class ScheduleTimeClass {
+export class ScheduleTimeClass {
   static instance;
   static getInstance() {
     if (!this.instance) this.instance = new ScheduleTimeClass();

@@ -24,6 +24,7 @@ import Questiondb from "./pages/Questiondb";
 import { QuestionViewProvider } from "./context/questionView";
 import QuestionViewFixed from "./pages/QuestionViewFixed";
 import QuestionViewFixedEasy from "./pages/QuestionViewFixedEasy";
+import { TableTotalCtxProvider } from "./context/tableTotalCtx";
 
 /**
  * Initializes the Builder service.
@@ -75,7 +76,9 @@ function App() {
           path: "questionview",
           element: (
             <QuestionViewProvider>
-              <QuestionView />
+              <TableTotalCtxProvider>
+                <QuestionView />
+              </TableTotalCtxProvider>
             </QuestionViewProvider>
           ),
         },

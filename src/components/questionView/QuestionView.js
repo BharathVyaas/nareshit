@@ -119,6 +119,8 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
     });
     LocalStorage.moduleData = selectedModule;
     BuilderService.questionService.selectedTechnology.module = selectedModule;
+    localStorage.removeItem("technology");
+    localStorage.removeItem("subTopicData");
   }, [setSelectedTechnology, selectedModule]);
 
   const handleModuleChange = (event) => {
@@ -126,7 +128,7 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
     const selectedModule = moduleNames.find(
       (module) => module?.moduleName === selectedModuleName
     );
-
+    console.log("change", selectedModule);
     setSelectedModule(selectedModule);
   };
 
@@ -221,6 +223,8 @@ function TopicName({ setSelectedTechnology, data }) {
     setShouldLoad(true);
     LocalStorage.topicData = selectedModule;
     BuilderService.questionService.selectedTechnology.topic = selectedModule;
+
+    localStorage.removeItem("subTopicData");
   }, [setSelectedTechnology, selectedModule]);
 
   const handleModuleChange = (event) => {

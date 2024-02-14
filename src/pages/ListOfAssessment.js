@@ -61,15 +61,19 @@ function ListOfAssessment() {
     BuilderService.questionService = QueryViewClass.getInstance();
     BuilderService.technologyService = TechnologyClass.getInstance();
     BuilderService.scheduleTimeService = ScheduleTimeClass.getInstance();
+    window.location.href = "http://localhost:3000/categories/technology";
   }
 
   const navigate = useNavigate();
 
   async function handler(data) {
+    console.log("handler");
     LocalStorage.technologyPage = true;
     const res = await axios.post("https://www.nareshit.net/getBasicTestInfo", {
       data: { TestID: data.TestID },
     });
+    console.log(data.TestID);
+    console.log("create", res);
 
     navigate(
       `/categories/technology?randomId=${res.data.data[0]?.RandomID}&natureId=${res.data.data[0]?.NatureID}&technologyId=${res.data.data[0]?.TechnologyID}`
@@ -95,19 +99,21 @@ function ListOfAssessment() {
           <h1 className="absolute left-[-9999px]">Assessments</h1>
 
           {/* NavLink for creating a new assessment */}
-          <NavLink
-            className="inline-block ms-20 mx-auto mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
-            to="/categories/technology"
-            onClick={createNewHandler}
-          >
-            Create New
-          </NavLink>
-          {/* Render the AssessmentTable component */}
-          <AssessmentTable
-            titles={titles}
-            assessments={updatedData}
-            handler={handler}
-          />
+          <div className="flex flex-col">
+            <NavLink
+              className="inline-block ms-[15%] max-w-40 text-center mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
+              to="/categories/technology"
+              onClick={createNewHandler}
+            >
+              Create New
+            </NavLink>
+            {/* Render the AssessmentTable component */}
+            <AssessmentTable
+              titles={titles}
+              assessments={updatedData}
+              handler={handler}
+            />
+          </div>
         </section>
       </motion.main>
     </AnimatePresence>

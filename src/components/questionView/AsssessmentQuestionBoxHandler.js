@@ -422,6 +422,26 @@ export function Tbody({
     }
   }
 
+  function windowPopupHandler(data) {
+    const _id =
+      data.type +
+      data?.element?.element?.selectedModule?.moduleName +
+      data?.element?.element?.selectedTopic?.topicName +
+      data?.element?.element?.selectedSubTopic?.subTopicName;
+
+    if (
+      (LocalStorage.questionViewFixedModal[_id]?.length || 0) + 1 >
+      data.value
+    )
+      window.alert(
+        `Must remove ${Math.abs(
+          (LocalStorage.questionViewFixedModal[_id]?.length || 0) +
+            1 -
+            data.value
+        )} questions from ${data.type}`
+      );
+  }
+
   const underline =
     BuilderService.technologyService._technology.natureOfAssessment === "fixed"
       ? "bg-transparent underline underline-offset-2 decoration-2 decoration-red-500 "
@@ -478,6 +498,7 @@ export function Tbody({
                   id,
                   LocalStorage.questionView
                 );
+                windowPopupHandler({ value, type, element });
               }
             }}
           >

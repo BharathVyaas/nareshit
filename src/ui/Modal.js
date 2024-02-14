@@ -19,7 +19,7 @@ function Modal({ data, setter, ModalParam, handler, styles }) {
         className="fixed top-0 left-0 w-full h-full bg-sky-200 bg-opacity-50 z-10 flex justify-center items-center"
       >
         <div className={style}>
-          <div className="p-8">
+          <div className="p-3">
             <ModalParam data={data} setter={setter} handler={handler} />
           </div>
         </div>

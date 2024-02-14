@@ -315,7 +315,7 @@ export async function action() {
     }
   );
 
-  console.log(assessmentRes);
+  console.log("assessmentRes", assessmentRes);
 
   if (assessmentRes.data && assessmentRes.data.data) {
     const assessmentObj = assessmentRes.data.data[0];

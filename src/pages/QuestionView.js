@@ -35,6 +35,7 @@ function QuestionView() {
   const { data, setData } = useContext(QuestionViewCtx);
   const [stale, setStale] = useState(false);
   const [questions, setQuestions] = useState();
+  const [showPopupWarn, setShowPopupWarn] = useState(false);
   useEffect(() => {
     setQuestions(data);
     let easy = 0;
@@ -149,14 +150,26 @@ function QuestionView() {
           <h1 className="ms-[20px] pt-5 text-lg font-semibold">
             Selected Technology: {selectTechnology}
           </h1>
-          <button
-            className="mr-[20px] mt-5 px-6 max-h-8 min-h-8 bg-[gray] text-white font-semibold rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:bg-gray-500 focus:ring-opacity-50"
-            onClick={() => {
-              setPopup(true);
-            }}
-          >
-            Set Data
-          </button>
+          <div>
+            {showPopupWarn && (
+              <span className="mt-5 px-6 bg-transparent  text-red-400 font-semibold">
+                Must select a module
+              </span>
+            )}
+            <button
+              className="mr-[20px] mt-5 px-6 max-h-8 min-h-8 bg-[gray] text-white font-semibold rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:bg-gray-500 focus:ring-opacity-50"
+              onClick={() => {
+                if (selectedModule.module) {
+                  setShowPopupWarn(false);
+                  setPopup(true);
+                } else {
+                  setShowPopupWarn(true);
+                }
+              }}
+            >
+              Set Data
+            </button>
+          </div>
 
           {popup && (
             <QuestionViewHandler
@@ -182,13 +195,16 @@ function QuestionView() {
             />
           </section>
           <div className="p-5">
-            <div className="text-lg font-semibold mb-4">
-              <h2 className="">
-                Please select an{" "}
-                <span className="bg-red-100 rounded">underlined value</span> to
-                fetch questions:
-              </h2>
-            </div>
+            {BuilderService.technologyService._technology.natureOfAssessment ===
+              "fixed" && (
+              <div className="text-lg font-semibold mb-4">
+                <h2 className="">
+                  Please select an{" "}
+                  <span className="bg-red-100 rounded">underlined value</span>{" "}
+                  to fetch questions:
+                </h2>
+              </div>
+            )}
             <section className="flex justify-center">
               {/* <h2 className="max-w-[20%]">
                 <span>{selectTechnology}</span>
@@ -388,14 +404,8 @@ function Question({
         setIncludes(LocalStorage.includes);
     }
 
-    if (modalHandler) modalHandler(flag);
+    if (modalHandler) modalHandler(flag, questionId);
   }
-
-  let bgColor;
-
-  if (difficultyId == 2) bgColor = "rose";
-  else if (difficultyId == 3) bgColor = "red";
-  else bgColor = "green";
 
   return (
     <>
@@ -406,7 +416,7 @@ function Question({
         />
       )}
       <section
-        className={` ${bgColor} scroll cursor-pointer min-h-[6rem] flex items-center border-2 border-white overflow-auto justify-between`}
+        className={`scroll cursor-pointer min-h-[3rem] p-1 flex items-center border-y-[1px] overflow-auto justify-between`}
       >
         <input
           type="checkbox"

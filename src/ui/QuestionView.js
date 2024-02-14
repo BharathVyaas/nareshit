@@ -94,19 +94,21 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
       }}
       className="z-20"
     >
-      <section className="bg-white p-6 rounded-md shadow-md">
+      <section className="bg-white p-10 rounded-md shadow-md">
         <div className="flex justify-between">
           <span className="text-2xl font-bold mb-4">Qusetion View</span>
           <span
-            className="cursor-pointer font-bold text-pretty"
+            className="cursor-pointer text-[1.8rem] -mt-[4px] font-bold text-pretty"
             onClick={() => setter(false)}
           >
-            X
+            &times;
           </span>
         </div>
         <div className="mb-4">
           <h2 className="text-lg font-semibold">Module Name</h2>
-          <p className="text-gray-600">{data.selectedModule.moduleName}</p>
+          <p className="text-gray-600">
+            {data?.selectedModule?.moduleName || "None Selected"}
+          </p>
         </div>
         <div className="mb-4">
           <h2 className="text-lg font-semibold">Topic Name</h2>

@@ -94,6 +94,26 @@ class LocalStorageClass {
     if (newData) localStorage.setItem("subTopicData", data);
   }
 
+  get questionViewFixedModal() {
+    const data = localStorage.getItem("questionViewFixedModal");
+    const result = JSON.parse(data) || {};
+    return result;
+  }
+
+  set questionViewFixedModal({ _id, questionId: newData }) {
+    if (newData) {
+      let obj = this.questionViewFixedModal;
+      if (!obj) obj = {};
+      if (!obj[_id]) obj[_id] = [];
+      if (typeof newData === "object") obj[_id] = newData;
+      else {
+        obj[_id].push(newData);
+      }
+      obj = JSON.stringify(obj);
+      localStorage.setItem("questionViewFixedModal", obj);
+    }
+  }
+
   get exclude() {
     let result = this.parse("exclude");
     if (!result) result = [];

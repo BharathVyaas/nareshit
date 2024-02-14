@@ -7,6 +7,17 @@ import BuilderService from "../services/builder";
 import { LocalStorage } from "../services/LocalStorage";
 import axios from "axios";
 
+function getTime(time) {
+  const timeString = time;
+  const [hours, minutes, seconds] = timeString.split(":");
+  const date = new Date();
+  date.setHours(hours);
+  date.setMinutes(minutes);
+  date.setSeconds(seconds);
+
+  return date;
+}
+
 function ScheduleTime() {
   const testNameRef = useRef();
   const testDescriptionRef = useRef();
@@ -15,12 +26,24 @@ function ScheduleTime() {
   const startTimeRef = useRef();
   const endTimeRef = useRef();
 
-  const [testName, setTestName] = useState("");
-  const [testDescription, setTestDescription] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [testName, setTestName] = useState(
+    LocalStorage.data.scheduleTimeData.scheduleTimeData.testName
+  );
+  const [testDescription, setTestDescription] = useState(
+    LocalStorage.data.scheduleTimeData.scheduleTimeData.testDescription
+  );
+  const [startDate, setStartDate] = useState(
+    LocalStorage.data.scheduleTimeData.scheduleTimeData.startDate
+  );
+  const [endDate, setEndDate] = useState(
+    LocalStorage.data.scheduleTimeData.scheduleTimeData.endDate
+  );
+  const [startTime, setStartTime] = useState(
+    LocalStorage.data.scheduleTimeData.scheduleTimeData.startTime
+  );
+  const [endTime, setEndTime] = useState(
+    LocalStorage.data.scheduleTimeData.scheduleTimeData.endTime
+  );
 
   const [isValid, setIsValid] = useState(false);
   const [isDateValid, setIsDateValid] = useState(false);
@@ -40,6 +63,12 @@ function ScheduleTime() {
       const startDateTime = new Date(startDate).toISOString();
       const endDateTime = new Date(endDate).toISOString();
 
+      BuilderService.scheduleTimeService.scheduleTimeData.startTime =
+        getTime(startDateTime);
+      BuilderService.scheduleTimeService.scheduleTimeData.endTime =
+        getTime(endDateTime);
+      LocalStorage.data = BuilderService.getData();
+
       setIsDateValid(startDateTime <= endDateTime);
     }
   }, [startDate, endDate]);
@@ -50,12 +79,26 @@ function ScheduleTime() {
       const startDateTime = new Date(dummyDate + "T" + startTime);
       const endDateTime = new Date(dummyDate + "T" + endTime);
 
+      BuilderService.scheduleTimeService.scheduleTimeData.startDate = new Date(
+        startDateTime
+      );
+      BuilderService.scheduleTimeService.scheduleTimeData.endDate = new Date(
+        endDateTime
+      );
+
+      LocalStorage.data = BuilderService.getData();
       setIsTimeValid(startDateTime.getTime() <= endDateTime.getTime());
     }
   }, [startTime, endTime]);
 
   useEffect(() => {
     setIsTestValid(testName && testDescription);
+
+    BuilderService.scheduleTimeService.scheduleTimeData.testName = testName;
+    BuilderService.scheduleTimeService.scheduleTimeData.testDescription =
+      testDescription;
+
+    LocalStorage.data = BuilderService.getData();
   }, [testName, testDescription]);
 
   useEffect(() => {
@@ -164,17 +207,21 @@ export async function action() {
     BuilderService.scheduleTimeService.scheduleTimeData.startDate
   ).toString();
 
-  data["TestID"] = 15723;
+  data["TestID"] = BuilderService.id.technologyId;
   data["TestName"] =
     BuilderService.scheduleTimeService.scheduleTimeData.testName;
-  data["TestStartDate"] =
-    BuilderService.scheduleTimeService.scheduleTimeData.testDescription;
-  data["TestEndDate"] = startDate;
-  data["TestStartTime"] = endDate;
-  data["TestEndTime"] =
-    BuilderService.scheduleTimeService.scheduleTimeData.startTime + ":00";
   data["TestDescription"] =
-    BuilderService.scheduleTimeService.scheduleTimeData.endTime + ":00";
+    BuilderService.scheduleTimeService.scheduleTimeData.testDescription;
+  data["TestStartDate"] = new Date(startDate);
+  data["TestEndDate"] = new Date(endDate);
+  data["TestStartTime"] = getTime(
+    BuilderService.scheduleTimeService.scheduleTimeData.startTime + ":00"
+  );
+  data["TestEndTime"] = getTime(
+    BuilderService.scheduleTimeService.scheduleTimeData.endTime + ":00"
+  );
+
+  console.log("data", data);
 
   const res = await axios.post("https://www.nareshit.net/updateTest", { data });
 

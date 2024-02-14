@@ -111,9 +111,7 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
     createdBy: element.CreatedBy,
   }));
 
-  const [selectedModule, setSelectedModule] = useState(
-    BuilderService.questionService.selectedTechnology.module || moduleNames[0]
-  );
+  const [selectedModule, setSelectedModule] = useState();
 
   useEffect(() => {
     setSelectedTechnology((prev) => {
@@ -214,9 +212,7 @@ function TopicName({ setSelectedTechnology, data }) {
     createdBy: element.CreatedBy,
   }));
 
-  const [selectedModule, setSelectedModule] = useState(
-    BuilderService.questionService.selectedTechnology.topic || topicNames[0]
-  );
+  const [selectedModule, setSelectedModule] = useState();
   const { setShouldLoad } = useContext(TopicsContext);
   useEffect(() => {
     setSelectedTechnology((prev) => {
@@ -327,10 +323,7 @@ function SubTopicName({
     modifiedBy: element.ModifiedBy,
   }));
 
-  const [selectedModule, setSelectedModule] = useState(
-    BuilderService.questionService.selectedTechnology.subTopic ||
-      subTopicNames[0]
-  );
+  const [selectedModule, setSelectedModule] = useState();
 
   useEffect(() => {
     setSelectedTechnology((prev) => {

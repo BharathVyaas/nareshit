@@ -29,7 +29,6 @@ function Randoms({ random, setRandom, fixedDisabled }) {
 
         <label className="p-5">
           <input
-            disabled={fixedDisabled}
             type="radio"
             name="random"
             value="noRandom"

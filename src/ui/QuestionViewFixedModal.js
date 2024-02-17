@@ -22,13 +22,13 @@ function QuestionViewFixedModal({ data, setter, handler }) {
   console.log("data", data);
   //
   const total = { easy: 0, medium: 0, hard: 0 };
-  const moduleId = data.element.element.selectedModule.moduleId || 0;
-  const topicId = data.element.element.selectedTopic.topicId || 0;
-  const subTopicId = data.element.element.selectedSubTopic.subTopicId || 0;
+  const moduleId = data?.element?.element?.selectedModule?.moduleId || 0;
+  const topicId = data?.element?.element?.selectedTopic?.topicId || 0;
+  const subTopicId = data?.element?.element?.selectedSubTopic?.subTopicId || 0;
 
   const [includesCount, setIncludesCount] = useState({
-    current: LocalStorage.questionViewFixedModal[_id]?.length || 0,
-    total: LocalStorage.includes.length,
+    current: LocalStorage?.questionViewFixedModal[_id]?.length || 0,
+    total: LocalStorage?.includes?.length,
   });
 
   function modalHandler(flag, questionId) {
@@ -48,14 +48,14 @@ function QuestionViewFixedModal({ data, setter, handler }) {
       let data = prev.current;
       if (flag) data += 1;
       else data -= 1;
-      return { current: data, total: LocalStorage.includes.length };
+      return { current: data, total: LocalStorage?.includes?.length };
     });
   }
 
-  total[data.type] = data.value;
+  total[data.type] = data?.value;
 
   console.log(
-    `https://www.nareshit.net/fetchDynamicQuestions?Hardcount=${total.hard}&MediumCount=${total.medium}&EasyCount=${total.easy}&SubTopicID=${subTopicId}`
+    `https://www.nareshit.net/fetchDynamicQuestions?Hardcount=${total?.hard}&MediumCount=${total?.medium}&EasyCount=${total?.easy}&SubTopicID=${subTopicId}`
   );
 
   useEffect(() => {
@@ -70,7 +70,7 @@ function QuestionViewFixedModal({ data, setter, handler }) {
   }, []);
 
   const totalCount =
-    BuilderService.assessmentService.options.MCQ.totalQuestions;
+    BuilderService?.assessmentService?.options?.MCQ?.totalQuestions || 0;
 
   const [includeContent, setIncludeContent] =
     useState(`Total Questions Included: ${includesCount.total}/

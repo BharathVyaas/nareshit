@@ -36,7 +36,7 @@ function AdminHomePage() {
                   </Link>
                 </li>
                 <li className="text-white bg-sky-400 mx-8  w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
-                  <Link to="questiondb/uploadTopic">Question's DB</Link>
+                  <Link to="http://localhost:3003/">Question's DB</Link>
                 </li>
                 <li className="text-white bg-sky-400 mx-8  w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
                   <Link>Enroll Student</Link>

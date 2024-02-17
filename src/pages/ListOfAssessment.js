@@ -61,7 +61,7 @@ function ListOfAssessment() {
     BuilderService.questionService = QueryViewClass.getInstance();
     BuilderService.technologyService = TechnologyClass.getInstance();
     BuilderService.scheduleTimeService = ScheduleTimeClass.getInstance();
-    window.location.href = "https://nareshit.netlify.app/categories/technology";
+    window.location.href = "/categories/technology";
   }
 
   const navigate = useNavigate();

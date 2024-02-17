@@ -25,6 +25,10 @@ import { QuestionViewProvider } from "./context/questionView";
 import QuestionViewFixed from "./pages/QuestionViewFixed";
 import QuestionViewFixedEasy from "./pages/QuestionViewFixedEasy";
 import { TableTotalCtxProvider } from "./context/tableTotalCtx";
+import Login from "./pages/Login";
+import UserLogin from "./components/login/UserLogin";
+import AdminLogin from "./components/login/AdminLogin";
+import Dashboard from "./pages/Dashboard";
 
 /**
  * Initializes the Builder service.
@@ -45,6 +49,15 @@ function App() {
 
   // Define the routing configuration
   const appRoutes = [
+    {
+      path: "/login",
+      element: <Login />,
+      children: [
+        { index: true, element: <UserLogin /> },
+        { path: "admin", element: <AdminLogin /> },
+      ],
+    },
+    { path: "/dashboard", element: <Dashboard /> },
     { path: "/", element: <AdminHomePage /> },
     {
       path: "questiondb",

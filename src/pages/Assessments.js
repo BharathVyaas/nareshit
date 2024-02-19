@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Form,
   Navigate,
@@ -16,8 +16,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
 import axios from "axios";
+import AuthCtx from "../context/auth.context";
 
 function Assessments() {
+  const { isLoggedIn } = useContext(AuthCtx);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login?page=/categories/assessments");
+  }, []);
+
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const queryEasy = queryParams.get("easy");

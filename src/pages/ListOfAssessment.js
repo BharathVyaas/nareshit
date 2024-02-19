@@ -12,18 +12,26 @@ import { AnimatePresence, motion } from "framer-motion";
 import BuilderService from "../services/builder";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AssessmentClass } from "../services/assessmentsService";
 import { QueryViewClass } from "../services/questionViewService";
 import { TechnologyClass } from "../services/technologyService";
 import { ScheduleTimeClass } from "../services/scheduleTimeService";
 import { LocalStorage } from "../services/LocalStorage";
+import AuthCtx from "../context/auth.context";
 
 /**
  * Component for displaying a list of assessments created by other users.
  * @returns {JSX.Element} The ListOfAssessment component.
  */
 function ListOfAssessment() {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useContext(AuthCtx);
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login?page=categories/assessmentlist");
+  }, []);
+
   const [titleData, setTitleData] = useState([]);
   const { data } = useQuery({
     queryKey: ["listofAssessment"],
@@ -63,8 +71,6 @@ function ListOfAssessment() {
     BuilderService.scheduleTimeService = ScheduleTimeClass.getInstance();
     window.location.href = "/categories/technology";
   }
-
-  const navigate = useNavigate();
 
   async function handler(data) {
     console.log("handler");

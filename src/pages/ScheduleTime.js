@@ -1,11 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Form, redirect } from "react-router-dom";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Form, redirect, useNavigate } from "react-router-dom";
 
 import { AnimatePresence, motion } from "framer-motion";
 import ScheduleTimeService from "../services/scheduleTimeService";
 import BuilderService from "../services/builder";
 import { LocalStorage } from "../services/LocalStorage";
 import axios from "axios";
+import AuthCtx from "../context/auth.context";
 
 function getTime(time) {
   const timeString = time;
@@ -19,6 +20,13 @@ function getTime(time) {
 }
 
 function ScheduleTime() {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useContext(AuthCtx);
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login?page=/categories/scheduletime");
+  }, []);
+
   const testNameRef = useRef();
   const testDescriptionRef = useRef();
   const startDateRef = useRef();

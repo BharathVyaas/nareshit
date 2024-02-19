@@ -1,6 +1,11 @@
 import { Form } from "react-router-dom";
 import { getProgLangs, queryClient } from "../util/http";
-import { redirect, useLoaderData, useLocation } from "react-router";
+import {
+  redirect,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from "react-router";
 import { useContext, useEffect, useState } from "react";
 import TechnologyService, {
   NatureOfAssessmentService,
@@ -16,10 +21,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
 import axios from "axios";
+import AuthCtx from "../context/auth.context";
 
 const formNames = ["proglangs", "catogaryType", "assessmentNature", "random"];
 
 function Technology() {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useContext(AuthCtx);
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login?page=/categories/technology");
+  }, []);
+
   const [checked, setChecked] = useState(false);
   const { programmingLanguages, fetchedData } = useLoaderData();
   const [linkDisabled, setLinkDisabled] = useState(true);

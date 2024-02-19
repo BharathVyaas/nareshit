@@ -1,5 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import AuthCtx from "../context/auth.context";
 
 /**
  *    *** Still Under Developement ***
@@ -9,6 +10,13 @@ import { Link } from "react-router-dom";
  * @returns {JSX.Element} The Admin Home Page component.
  */
 function AdminHomePage() {
+  const { isLoggedIn } = useContext(AuthCtx);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login");
+  }, []);
+
   return (
     <>
       <header className="p-[0.6rem] bg-[azure]">

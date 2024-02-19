@@ -14,7 +14,7 @@ import AssessmentQuestionBox from "../components/AssessmentQuestionbox";
 import { AnimatePresence, motion } from "framer-motion";
 import { LocalStorage } from "../services/LocalStorage";
 import UpdateQuestions from "../context/updateQuestions";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import { DifficultySubescribeService } from "../services/difficultySubescribe";
 import axios from "axios";
 import Modal from "../ui/Modal";
@@ -25,10 +25,18 @@ import AsssessmentQuestionBoxHandler from "../components/questionView/Asssessmen
 import { QuestionViewProvider } from "../context/questionView";
 import QuestionViewCtx from "../context/questionView";
 import QuestionViewHandler from "../ui/QuestionViewHandler";
+import AuthCtx from "../context/auth.context";
 
 const Titles = ["MCQ"];
 
 function QuestionView() {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useContext(AuthCtx);
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login?page=/categories/questionview");
+  }, []);
+
   const linkToNext =
     BuilderService.technologyService._technology.natureOfAssessment === "fixed";
 

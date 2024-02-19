@@ -1,7 +1,9 @@
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 
 import MainNavigation from "../ui/MainNavigation";
 import Logo from "../ui/Logo";
+import { useContext, useEffect } from "react";
+import AuthCtx from "../context/auth.context";
 
 /**
  *
@@ -11,6 +13,13 @@ import Logo from "../ui/Logo";
  * @returns {JSX.Element} The Categories page component.
  */
 function Categories() {
+  const { isLoggedIn } = useContext(AuthCtx);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login?page=/categories/assessmentlist");
+  }, []);
+
   return (
     <>
       {/*  */}

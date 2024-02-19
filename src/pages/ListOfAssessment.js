@@ -54,8 +54,7 @@ function ListOfAssessment() {
   const submit = useSubmit();
 
   function createNewHandler(e) {
-    localStorage.clear();
-    LocalStorage.technologyPage = true;
+    LocalStorage.clear();
     BuilderService.assessmentService = AssessmentClass.getInstance();
     BuilderService.id = { testId: 0, technologyId: 0, testDetailsId: 0 };
     BuilderService.questionCount = {
@@ -74,7 +73,6 @@ function ListOfAssessment() {
 
   async function handler(data) {
     console.log("handler");
-    LocalStorage.technologyPage = true;
     const res = await axios.post("https://www.nareshit.net/getBasicTestInfo", {
       data: { TestID: data.TestID },
     });

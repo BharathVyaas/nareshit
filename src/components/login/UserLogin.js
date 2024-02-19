@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import AuthCtx from "../../context/auth.context";
 import { useLocation, useNavigate } from "react-router";
+import { LocalStorage } from "../../services/LocalStorage";
 
 function UserLogin() {
   // Auth
@@ -33,7 +34,14 @@ function UserLogin() {
   function submitHandler() {
     if (isUserNameValid && isPasswordValid) {
       setIsLoggedIn(true);
+
       setLoginData({ type: "user", userName: userNameRef.current.value });
+      LocalStorage.auth = JSON.stringify({
+        isLoggedIn: true,
+        type: "user",
+        userName: userNameRef.current.value,
+      });
+
       if (page) navigate(page);
       else navigate("/dashboard");
     }

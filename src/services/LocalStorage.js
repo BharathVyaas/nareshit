@@ -7,17 +7,56 @@ class LocalStorageClass {
     return this.instance;
   }
   constructor() {
-    this.data = undefined;
-    this.moduleData = undefined;
-    this.programmingLanguageData = undefined;
+    this._technologyPage = {
+      technologyID: -1,
+      natureID: 1,
+      randomID: 1,
+      assessmentID: 1,
+    };
+    this._currentTechnology = {
+      TechnologyID: -1,
+      TechnologyName: -1,
+    };
+  }
+
+  clear() {
+    localStorage.removeItem("moduleData");
+    localStorage.removeItem("programmingLanguageData");
+    localStorage.removeItem("data");
+    localStorage.removeItem("questionView");
+    localStorage.removeItem("technologyPage");
+    localStorage.removeItem("topicData");
+    localStorage.removeItem("technology");
+  }
+
+  get auth() {
+    return JSON.parse(localStorage.getItem("auth"));
+  }
+
+  set auth(newData) {
+    localStorage.setItem("auth", newData);
   }
 
   get technologyPage() {
-    return localStorage.getItem("technologyPage");
+    const rawData = localStorage.getItem("technologyPage");
+    const parsedData = JSON.parse(rawData);
+    return parsedData;
   }
 
   set technologyPage(newTechnology) {
-    return localStorage.setItem("technologyPage", newTechnology);
+    const stringifiedData = JSON.stringify(newTechnology);
+    return localStorage.setItem("technologyPage", stringifiedData);
+  }
+
+  get currentTechnology() {
+    const rawData = localStorage.getItem("currentTechnology");
+    const parsedData = JSON.parse(rawData);
+    return parsedData;
+  }
+
+  set currentTechnology(newTechnology) {
+    const stringifiedData = JSON.stringify(newTechnology);
+    return localStorage.setItem("currentTechnology", stringifiedData);
   }
 
   get programmingLanguageFirstVisit() {

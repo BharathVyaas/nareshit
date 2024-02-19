@@ -6,14 +6,16 @@ import {
   useLocation,
   useNavigate,
 } from "react-router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import TechnologyService, {
   NatureOfAssessmentService,
   RandomService,
   SelectTechnologyService,
 } from "../services/technologyService";
+import SelectedTechnologyV2 from "../components/technology/SelectedTechnology";
 import SelectedTechnology from "../components/SelectedTechnology";
 import NatureOfAssessments from "../components/NatureOfAssessments";
+import NatureOfAssessmentV2 from "../components/technology/NatureOfAssessment";
 import Randoms from "../components/Randoms";
 import Button from "../ui/Button";
 
@@ -22,6 +24,9 @@ import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
 import axios from "axios";
 import AuthCtx from "../context/auth.context";
+import AssessmentV2 from "../components/technology/Assessment";
+import RandomV2 from "../components/technology/Random";
+import TechnologyNext from "../components/technology/TechnologyNext";
 
 const formNames = ["proglangs", "catogaryType", "assessmentNature", "random"];
 
@@ -339,6 +344,126 @@ export async function action() {
     if (easy || medium || hard)
       redirectVar += `?easy=${easy}&medium=${medium}&hard=${hard}`;
   }
+
+  return redirect(redirectVar);
+}
+
+export function TechnologyV2() {
+  const [isFormValid, setIsFormValid] = useState();
+  const shouldChangeStorage = useRef({ current: true });
+
+  const [technologyID, setTechnologyID] = useState(
+    LocalStorage?.technologyPage?.technologyID || -1
+  );
+  const [assessmentID, setAssessmentID] = useState(
+    LocalStorage?.technologyPage?.assessmentID || 1
+  );
+  const [natureID, setNatureID] = useState(
+    LocalStorage?.technologyPage?.natureID || 1
+  );
+  const [randomID, setRandomID] = useState(
+    LocalStorage?.technologyPage?.randomID || 1
+  );
+
+  const [errMsg, setErrMsg] = useState("");
+
+  useEffect(() => {
+    // set Error message to be desplayed
+    if (!technologyID) {
+      setErrMsg(errMsg);
+    } else {
+      setErrMsg("");
+    }
+
+    // must be true to enable next button
+    setIsFormValid(
+      technologyID && assessmentID && natureID && randomID && technologyID != -1
+    );
+
+    // localStorage handler
+    if (shouldChangeStorage?.current?.value || !LocalStorage.technologyPage) {
+      LocalStorage.technologyPage = {
+        technologyID,
+        assessmentID,
+        natureID,
+        randomID,
+      };
+    }
+
+    if (shouldChangeStorage && shouldChangeStorage.current) {
+      shouldChangeStorage.current.value = true;
+    }
+  }, [technologyID, natureID, randomID]);
+
+  return (
+    <div>
+      <Form method="POST" className="m-5">
+        {/**  Technology */}
+        <SelectedTechnologyV2
+          technologyID={technologyID}
+          setTechnologyID={setTechnologyID}
+        />
+
+        {/* Assessment radio */}
+        <AssessmentV2
+          assessmentID={assessmentID}
+          setAssessmentID={setAssessmentID}
+        />
+
+        {/** Nature of Assessment   */}
+        <NatureOfAssessmentV2 natureID={natureID} setNatureID={setNatureID} />
+
+        {/**  Random */}
+        <RandomV2 randomID={randomID} setRandomID={setRandomID} />
+
+        {/**  Submit */}
+        <TechnologyNext isFormValid={isFormValid} errMsg={errMsg} />
+      </Form>
+    </div>
+  );
+}
+
+export async function TechnologyActionV2({ request, params }) {
+  const formData = await request.formData();
+
+  const TestID = BuilderService.id.testId || 0;
+
+  const AssessmentID = formData.get("AssessmentID") || "1";
+  const TechnologyID = formData.get("TechnologyID") || "1";
+  const NatureID = formData.get("NatureID") || "1";
+  const RandomID = formData.get("RandomID") || "1";
+
+  const res = await axios.post("https://www.nareshit.net/createEditTest", {
+    data: {
+      TestID,
+      AssessmentID,
+      TechnologyID,
+      NatureID,
+      RandomID,
+      CreatedBy: "Admin",
+      ModifiedBy: "Admin",
+    },
+  });
+
+  console.log(
+    "url",
+    "https://www.nareshit.net/createEditTest",
+    "req",
+    {
+      TestID,
+      AssessmentID,
+      TechnologyID,
+      NatureID,
+      RandomID,
+      CreatedBy: "Admin",
+      ModifiedBy: "Admin",
+    },
+    "res",
+    res
+  );
+
+  let redirectVar = "/categories/assessments";
+  if (NatureID == 3) redirectVar = "/questiondb/uploadTopic";
 
   return redirect(redirectVar);
 }

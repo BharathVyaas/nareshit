@@ -197,3 +197,65 @@ export async function action({}, navigate) {
 
   return redirect("/categories/questionview");
 }
+
+export function AssessmentsV2() {
+  return (
+    <Form>
+      {/**  Question type */}
+      <div>
+        <label htmlFor="QuestionTypeID">
+          <input
+            className="bg-white ms-4 w-6 scrollHide border-[1px] border-gray-400 rounded"
+            id="QuestionTypeID"
+            name="QuestionTypeID"
+            type="checkbox"
+            value="1"
+            checked
+            disabled
+          />
+          MCQ
+        </label>
+      </div>
+
+      {/**  Difficulty Levels */}
+      <div>
+        <p>DifficultyLevel</p>
+        {/* easy */}
+        <div>
+          <label htmlFor="NumOfEasy">Easy:</label>
+          <input
+            className="bg-white ms-2 me-4 w-16 scrollHide border-[1px] border-gray-400 rounded"
+            type="number"
+            id="NumOfEasy"
+            name="NumOfEasy"
+            defaultValue="0"
+          />
+        </div>
+
+        {/* medium */}
+        <div>
+          <label htmlFor="NumOfMedium">Medium:</label>
+          <input
+            className="bg-white ms-2 me-4 w-16 scrollHide border-[1px] border-gray-400 rounded"
+            type="number"
+            id="NumOfMedium"
+            name="NumOfMedium"
+            defaultValue="0"
+          />
+        </div>
+
+        {/* hard */}
+        <div>
+          <label htmlFor="NumOfHard">Hard:</label>
+          <input
+            className="bg-white ms-2 me-4 w-16 scrollHide border-[1px] border-gray-400 rounded"
+            type="number"
+            id="NumOfHard"
+            name="NumOfHard"
+            defaultValue="0"
+          />
+        </div>
+      </div>
+    </Form>
+  );
+}

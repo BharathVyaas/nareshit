@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import AuthCtx from "../../context/auth.context";
 import { useNavigate } from "react-router";
+import { LocalStorage } from "../../services/LocalStorage";
 
 function UserLogin() {
   const navigate = useNavigate();
@@ -29,6 +30,13 @@ function UserLogin() {
   function submitHandler() {
     if (isUserNameValid && isPasswordValid) {
       setIsLoggedIn(true);
+
+      LocalStorage.auth = JSON.stringify({
+        isLoggedIn: true,
+        type: "admin",
+        userName: userNameRef.current.value,
+      });
+
       setLoginData({ type: "user", userName: userNameRef.current.value });
       navigate("/");
     }

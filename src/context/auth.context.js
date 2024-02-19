@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import { LocalStorage } from "../services/LocalStorage";
 
 const AuthCtx = createContext({
   isLoggedIn: false,
@@ -8,7 +9,9 @@ const AuthCtx = createContext({
 });
 
 export function AuthCtxProvider({ children }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    LocalStorage.auth ? true : false
+  );
   const [loginData, setLoginData] = useState({ type: "user", userName: "" });
 
   return (

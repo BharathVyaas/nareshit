@@ -26,6 +26,10 @@ import { QuestionViewProvider } from "../context/questionView";
 import QuestionViewCtx from "../context/questionView";
 import QuestionViewHandler from "../ui/QuestionViewHandler";
 import AuthCtx from "../context/auth.context";
+import SubTopicNameRenderer from "../components/questionViews/SubTopicNameRenderer";
+import TopicNameRenderer from "../components/questionViews/TopicNameRenderer";
+import ModuleNameRenderer from "../components/questionViews/ModuleNameRenderer";
+import Topics from "../components/questionViews/Topics";
 
 const Titles = ["MCQ"];
 
@@ -589,4 +593,21 @@ function FetchData({ setStale }) {
 
 export async function loader() {
   return 1;
+}
+
+export function QuestionViewV2() {
+  return (
+    <div>
+      {/**  head */}
+      <div className="flex justify-between">
+        <p>Selected Technology: DotNet</p>
+        <button>Set Data</button>
+      </div>
+
+      {/**  Topics */}
+      <Topics />
+
+      {/**  Combination Table */}
+    </div>
+  );
 }

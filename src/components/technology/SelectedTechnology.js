@@ -11,9 +11,9 @@ function getCurrentValue(id, arr) {
     throw new Error("must pass array as second paraem");
   }
 
-  const currentArr = arr.find((ele) => ele.TechnologyID == Number(id));
+  const currentArr = arr.find((ele) => ele?.TechnologyID == Number(id));
 
-  return currentArr.TechnologyID;
+  return currentArr?.TechnologyID;
 }
 
 function getCurrentTechnology(id, arr) {
@@ -25,7 +25,7 @@ function getCurrentTechnology(id, arr) {
     throw new Error("must pass array as second paraem");
   }
 
-  const currentArr = arr.find((ele) => ele.TechnologyID == Number(id));
+  const currentArr = arr.find((ele) => ele?.TechnologyID == Number(id));
 
   return currentArr;
 }

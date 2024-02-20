@@ -27,6 +27,7 @@ import AuthCtx from "../context/auth.context";
 import AssessmentV2 from "../components/technology/Assessment";
 import RandomV2 from "../components/technology/Random";
 import TechnologyNext from "../components/technology/TechnologyNext";
+import { UserDataService } from "./UserDataService";
 
 const formNames = ["proglangs", "catogaryType", "assessmentNature", "random"];
 
@@ -54,7 +55,7 @@ function Technology() {
   useEffect(() => {
     if (technologyId) {
       editedSelectProgrammingLanguage = updatedProgrammingLanguages.find(
-        (ele) => ele.TechnologyID === Number(technologyId)
+        (ele) => ele?.TechnologyID === Number(technologyId)
       );
     }
   }, []);
@@ -114,7 +115,7 @@ function Technology() {
 
   function handler(e) {
     if (
-      LocalStorage.technology.TechnologyID === -1 ||
+      LocalStorage.technology?.TechnologyID === -1 ||
       LocalStorage.data.technologyData._technology.programmingLanguage ===
         "Select A Technology"
     ) {
@@ -302,7 +303,7 @@ export async function action() {
   let data = {};
   data["TestID"] = BuilderService.id.testId || 0;
   data["TechnologyID"] =
-    BuilderService.id.technologyId || LocalStorage.technology.TechnologyID;
+    BuilderService.id.technologyId || LocalStorage.technology?.TechnologyID;
 
   data["AssessmentID"] = 1;
   data["NatureID"] = natureId;
@@ -364,6 +365,8 @@ export function TechnologyV2() {
   const [randomID, setRandomID] = useState(
     LocalStorage?.technologyPage?.randomID || 1
   );
+
+  console.log(UserDataService);
 
   const [errMsg, setErrMsg] = useState("");
 

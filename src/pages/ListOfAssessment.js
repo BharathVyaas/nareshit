@@ -19,6 +19,7 @@ import { TechnologyClass } from "../services/technologyService";
 import { ScheduleTimeClass } from "../services/scheduleTimeService";
 import { LocalStorage } from "../services/LocalStorage";
 import AuthCtx from "../context/auth.context";
+import { InitUserDataService, UserDataService } from "./UserDataService";
 
 /**
  * Component for displaying a list of assessments created by other users.
@@ -54,6 +55,12 @@ function ListOfAssessment() {
   const submit = useSubmit();
 
   function createNewHandler(e) {
+    /** V2 */
+
+    InitUserDataService();
+
+    /** V2 End */
+
     LocalStorage.clear();
     BuilderService.assessmentService = AssessmentClass.getInstance();
     BuilderService.id = { testId: 0, technologyId: 0, testDetailsId: 0 };

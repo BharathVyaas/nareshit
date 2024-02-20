@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Form,
   Navigate,
@@ -17,6 +17,8 @@ import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
 import axios from "axios";
 import AuthCtx from "../context/auth.context";
+import QuestionTypesV2 from "../components/assessments/QuestionTypes";
+import AssessmentsNext from "../components/assessments/AssessmentsNext";
 
 function Assessments() {
   const { isLoggedIn } = useContext(AuthCtx);
@@ -199,63 +201,118 @@ export async function action({}, navigate) {
 }
 
 export function AssessmentsV2() {
+  const shouldChangeStorage = useRef({ current: true });
+
+  const [assessment, setAssessment] = useState();
+  const [difficultyLevel, setDifficlutyLevel] = useState();
+
+  useEffect(() => {
+    if (shouldChangeStorage?.current?.value || !LocalStorage?.assessmentPage) {
+      if (difficultyLevel) {
+        LocalStorage.assessmentPage = {
+          ...difficultyLevel,
+        };
+
+        shouldChangeStorage.current.value = false;
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (difficultyLevel) {
+      LocalStorage.assessmentPage = {
+        ...difficultyLevel,
+      };
+    }
+  }, [difficultyLevel]);
+
+  useEffect(() => {
+    const res = LocalStorage.assessmentPage || {
+      MCQ: { Easy: 0, Medium: 0, Hard: 0 },
+    };
+
+    const keys = Object.keys(res);
+    const difficultyLevels = res;
+
+    setAssessment(keys);
+    setDifficlutyLevel(difficultyLevels);
+  }, []);
+
+  const handler = (questionType, level, handler) => {
+    setDifficlutyLevel((prev) => {
+      const newObj = { ...prev };
+      newObj[questionType][level] = Number(handler);
+
+      return newObj;
+    });
+    console.log(difficultyLevel);
+  };
+
   return (
-    <Form>
-      {/**  Question type */}
-      <div>
-        <label htmlFor="QuestionTypeID">
-          <input
-            className="bg-white ms-4 w-6 scrollHide border-[1px] border-gray-400 rounded"
-            id="QuestionTypeID"
-            name="QuestionTypeID"
-            type="checkbox"
-            value="1"
-            checked
-            disabled
-          />
-          MCQ
-        </label>
-      </div>
+    <div className="bg-gray-50 min-h-[70vh] p-2">
+      <Form method="POST" className="ps-3">
+        <p className="p-5">Selected Technology: DOTNET</p>
+        {/**  Question type */}
+        <QuestionTypesV2
+          handler={handler}
+          assessment={assessment}
+          difficultyLevels={difficultyLevel}
+        />
 
-      {/**  Difficulty Levels */}
-      <div>
-        <p>DifficultyLevel</p>
-        {/* easy */}
-        <div>
-          <label htmlFor="NumOfEasy">Easy:</label>
-          <input
-            className="bg-white ms-2 me-4 w-16 scrollHide border-[1px] border-gray-400 rounded"
-            type="number"
-            id="NumOfEasy"
-            name="NumOfEasy"
-            defaultValue="0"
-          />
-        </div>
-
-        {/* medium */}
-        <div>
-          <label htmlFor="NumOfMedium">Medium:</label>
-          <input
-            className="bg-white ms-2 me-4 w-16 scrollHide border-[1px] border-gray-400 rounded"
-            type="number"
-            id="NumOfMedium"
-            name="NumOfMedium"
-            defaultValue="0"
-          />
-        </div>
-
-        {/* hard */}
-        <div>
-          <label htmlFor="NumOfHard">Hard:</label>
-          <input
-            className="bg-white ms-2 me-4 w-16 scrollHide border-[1px] border-gray-400 rounded"
-            type="number"
-            id="NumOfHard"
-            name="NumOfHard"
-            defaultValue="0"
-          />
-        </div>
-      </div>
-    </Form>
+        <AssessmentsNext />
+      </Form>
+    </div>
   );
+}
+
+export async function AssessmentActionV2({ request, params }) {
+  const formData = await request.formData();
+
+  const TestID = BuilderService.id.testDetailsId || 0;
+  const TestDetailsID = BuilderService.id.testDetailsId || 0;
+
+  const QuestionTypeID = formData.get("QuestionTypeID") || 1;
+  const NumOfEasy = formData.get("NumOfEasy") || 0;
+  const NumOfMedium = formData.get("NumOfMedium") || 0;
+  const NumOfHard = formData.get("NumOfHard") || 0;
+
+  const CreatedBy = "Admin";
+  const ModifiedBy = "Admin";
+
+  let res;
+
+  try {
+    res = await axios.post("https://www.nareshit.net/createTestAssessment", {
+      data: {
+        TestID,
+        TestDetailsID,
+        QuestionTypeID,
+        NumOfEasy,
+        NumOfMedium,
+        NumOfHard,
+        CreatedBy,
+        ModifiedBy,
+      },
+    });
+  } catch (err) {}
+
+  console.log(
+    "url",
+    "https://www.nareshit.net/createTestAssessment",
+    "req",
+    {
+      TestID,
+      TestDetailsID,
+      QuestionTypeID,
+      NumOfEasy,
+      NumOfMedium,
+      NumOfHard,
+      CreatedBy,
+      ModifiedBy,
+    },
+    "res",
+    res
+  );
+
+  return 1;
 }

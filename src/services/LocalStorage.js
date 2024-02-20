@@ -48,6 +48,21 @@ class LocalStorageClass {
     return localStorage.setItem("technologyPage", stringifiedData);
   }
 
+  get assessmentPage() {
+    const rawData = localStorage.getItem("assessmentPage");
+    if (rawData) {
+      console.log(rawData);
+      const parsedData = JSON.parse(rawData);
+      return parsedData;
+    }
+    return undefined;
+  }
+
+  set assessmentPage(newTechnology) {
+    const stringifiedData = JSON.stringify(newTechnology);
+    return localStorage.setItem("assessmentPage", stringifiedData);
+  }
+
   get currentTechnology() {
     const rawData = localStorage.getItem("currentTechnology");
     const parsedData = JSON.parse(rawData);

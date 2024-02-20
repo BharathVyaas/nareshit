@@ -1,3 +1,5 @@
+import SHA256 from "crypto-js/sha256";
+
 /**
  * Technology Page Main Api Submit Data
  */
@@ -28,27 +30,32 @@ const assessmentSubmit = {
 /**
  * Random ID
  */
-let id = 1;
+const generateUniqueId = (input) => {
+  const hash = SHA256(input).toString();
+  return hash.substring(0, 10);
+};
 
 class UserDataClass {
   static instance;
 
   static getInstance() {
+    console.log("instance");
     if (!this.instance) this.instance = new UserDataClass();
     return this.instance;
   }
-
+  //
   static init() {
+    console.log("init");
     this.instance = new UserDataClass();
     return this.instance;
   }
 
   constructor() {
-    this.id = id + 1;
+    this.id = generateUniqueId(new Date().toISOString());
     this.technologyPage = technologySubmit;
     this.assessmentPage = assessmentSubmit;
   }
 }
 
-export const UserDataService = UserDataClass.getInstance();
-export const InitUserDataService = UserDataClass.getInstance();
+export const UserDataService = () => UserDataClass.getInstance();
+export const InitUserDataService = () => UserDataClass.init();

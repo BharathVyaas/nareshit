@@ -14,7 +14,7 @@ import AssessmentQuestionBox from "../components/AssessmentQuestionbox";
 import { AnimatePresence, motion } from "framer-motion";
 import { LocalStorage } from "../services/LocalStorage";
 import UpdateQuestions from "../context/updateQuestions";
-import { useLoaderData, useNavigate } from "react-router";
+import { useLoaderData, useLocation, useNavigate } from "react-router";
 import { DifficultySubescribeService } from "../services/difficultySubescribe";
 import axios from "axios";
 import Modal from "../ui/Modal";
@@ -30,10 +30,29 @@ import SubTopicNameRenderer from "../components/questionViews/SubTopicNameRender
 import TopicNameRenderer from "../components/questionViews/TopicNameRenderer";
 import ModuleNameRenderer from "../components/questionViews/ModuleNameRenderer";
 import Topics from "../components/questionViews/Topics";
+import CombinationRenderer from "../components/questionViews/CombinationRenderer";
 
 const Titles = ["MCQ"];
 
 function QuestionView() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const TechnologyID = queryParams.get("TechnologyID");
+  const [technology, setTechnology] = useState();
+
+  useEffect(() => {
+    async function techHandler() {
+      const res = await axios.get("https://www.nareshit.net/FetchTechnologies");
+
+      if (TechnologyID) {
+        setTechnology(
+          res?.data?.find((ele) => ele.TechnologyID === Number(TechnologyID))
+        );
+      }
+    }
+    techHandler();
+  }, []);
+
   const navigate = useNavigate();
   const { isLoggedIn } = useContext(AuthCtx);
 
@@ -160,7 +179,7 @@ function QuestionView() {
           </section> */}
         <div className="flex justify-between">
           <h1 className="ms-[20px] pt-5 text-lg font-semibold">
-            Selected Technology: {selectTechnology}
+            Selected Technology: {technology?.TechnologyName}
           </h1>
           <div>
             {showPopupWarn && (
@@ -185,6 +204,7 @@ function QuestionView() {
 
           {popup && (
             <QuestionViewHandler
+              technology={technology}
               topicData={topicData}
               setPopup={setPopup}
               handler={handler}
@@ -194,6 +214,7 @@ function QuestionView() {
         <div>
           <section className="flex m-[20px]">
             <QusetionViewTechnlogy
+              technology={technology}
               questionView={questionView}
               setQuestionView={setQuestionView}
               selectedModule={selectedModule}
@@ -596,18 +617,53 @@ export async function loader() {
 }
 
 export function QuestionViewV2() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  const queryEasy = queryParams.get("easy") || 0;
+  const queryMedium = queryParams.get("medium") || 0;
+  const queryHard = queryParams.get("hard") || 0;
+
+  // ...
+  const [combination, setCombination] = useState([]);
+  const [popup, setPopup] = useState(false);
+
+  const setDataHandler = (ModuleID, TopicID, SubTopicID, DataObj) => {
+    setPopup({
+      ModuleID,
+      TopicID,
+      SubTopicID,
+      DataObj,
+      easy: queryEasy,
+      medium: queryMedium,
+      hard: queryHard,
+    });
+  };
+
+  const handler = (resultObj) => {
+    setCombination((prev) => {
+      const arr = [...prev];
+      arr.push(resultObj);
+      return arr;
+    });
+  };
+
   return (
     <div>
-      {/**  head */}
-      <div className="flex justify-between">
-        <p>Selected Technology: DotNet</p>
-        <button>Set Data</button>
-      </div>
+      {/** Modal to conform combination */}
+      {popup && (
+        <QuestionViewHandler
+          modalData={popup}
+          setPopup={setPopup}
+          handler={handler}
+        />
+      )}
 
       {/**  Topics */}
-      <Topics />
+      <Topics setDataHandler={setDataHandler} />
 
       {/**  Combination Table */}
+      <CombinationRenderer combination={combination} />
     </div>
   );
 }

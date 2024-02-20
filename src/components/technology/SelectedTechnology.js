@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { forwardRef, useEffect, useState } from "react";
-import { LocalStorage } from "../../services/LocalStorage";
 
 function getCurrentValue(id, arr) {
   if (!(id || arr)) {
@@ -36,16 +35,6 @@ function SelectedTechnology({ technologyID, setTechnologyID }) {
   // store current value to display
   const [selectedValue, setSelectedValue] = useState("Select A Technology");
 
-  useEffect(() => {
-    if (LocalStorage.technologyPage && typeof programmingLanguages === "object")
-      setSelectedValue(
-        getCurrentValue(
-          LocalStorage.technologyPage.technologyID,
-          programmingLanguages
-        )
-      );
-  }, [programmingLanguages]);
-
   // fetch data
   useEffect(() => {
     async function fetchHandler() {
@@ -63,12 +52,6 @@ function SelectedTechnology({ technologyID, setTechnologyID }) {
 
     if (typeof programmingLanguages === "object") {
       setSelectedValue(getCurrentValue(e.target.value, programmingLanguages));
-
-      // LocalStorage.currentTechnology holds selected technology data
-      LocalStorage.currentTechnology = getCurrentTechnology(
-        e.target.value,
-        programmingLanguages
-      );
     }
   };
 

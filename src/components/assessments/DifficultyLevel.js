@@ -5,6 +5,7 @@ function DifficultyLevel({
   questionType,
   difficultyLevel,
   difficultyLevels,
+  id,
 }) {
   const changeHandler = (e) => {
     handler(questionType, difficultyLevel, e.target.value);
@@ -12,12 +13,12 @@ function DifficultyLevel({
 
   return (
     <div className="p-5">
-      <label htmlFor="NumOfEasy">{difficultyLevel}:</label>
+      <label htmlFor={id}>{difficultyLevel}:</label>
       <input
         className="bg-white ms-2 me-4 w-16 scrollHide border-[1px] border-gray-400 rounded"
         type="number"
-        id="NumOfEasy"
-        name="NumOfEasy"
+        id={id}
+        name={id}
         value={difficultyLevels[questionType][difficultyLevel]}
         onChange={changeHandler}
       />

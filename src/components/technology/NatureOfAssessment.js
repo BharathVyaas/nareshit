@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 function NatureOfAssessment({ natureID, setNatureID }) {
   const changeHandler = (e) => setNatureID(e.target.value);

@@ -3,7 +3,7 @@ import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
 import QuestionViewCtx from "../context/questionView";
 
-function QuestionView({ question, setModalData, data, handler, setter }) {
+function QuestionView({ data, handler, setter }) {
   const easyRef = useRef();
   const mediumRef = useRef();
   const hardRef = useRef();
@@ -13,14 +13,16 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
     useContext(QuestionViewCtx);
 
   let result = {
-    name: "My Name",
     id,
-    selectedModule: data.selectedModule,
-    selectedTopic: data.selectedTopic,
-    selectedSubTopic: data.selectedSubTopic,
-    easy: Number(easyRef.current?.value),
-    medium: Number(mediumRef.current?.value),
-    hard: Number(hardRef.current?.value),
+    selectedModule: data?.DataObj?.Module?.ModuleName,
+    ModuleID: data?.ModuleID,
+    selectedTopic: data?.DataObj?.Topic?.TopicName,
+    TopicID: data?.TopicID,
+    selectedSubTopic: data?.DataObj?.SubTopic?.SubTopicName,
+    SubTopicID: data?.SubTopicID,
+    easy: Number(data?.easy),
+    medium: Number(data?.medium),
+    hard: Number(data?.hard),
   };
 
   function submiteHandler() {
@@ -107,19 +109,19 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
         <div className="mb-4">
           <h2 className="text-lg font-semibold">Module Name</h2>
           <p className="text-gray-600">
-            {data?.selectedModule?.moduleName || "None Selected"}
+            {result.selectedModule || "None Selected"}
           </p>
         </div>
         <div className="mb-4">
           <h2 className="text-lg font-semibold">Topic Name</h2>
           <p className="text-gray-600">
-            {data.selectedTopic?.topicName || "None Selected"}
+            {result.selectedTopic || "None Selected"}
           </p>
         </div>
         <div className="mb-4">
           <h2 className="text-lg font-semibold">SubTopic Name</h2>
           <p className="text-gray-600">
-            {data.selectedSubTopic?.subTopicName || "None Selected"}
+            {result.selectedSubTopic || "None Selected"}
           </p>
         </div>
         <div className="flex space-x-4">
@@ -130,6 +132,7 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
               id="topiceasy"
               type="number"
               className="border rounded-md w-10 px-2 py-1 ml-2"
+              defaultValue={result.easy}
             />
           </label>
           <label className="flex items-center" htmlFor="topicmedium">
@@ -139,6 +142,7 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
               id="topicmedium"
               type="number"
               className="border rounded-md w-10 px-2 py-1 ml-2"
+              defaultValue={result.medium}
             />
           </label>
           <label className="flex items-center" htmlFor="topichard">
@@ -148,6 +152,7 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
               id="topichard"
               type="number"
               className="border rounded-md w-10 px-2 py-1 ml-2"
+              defaultValue={result.hard}
             />
           </label>
         </div>

@@ -3,10 +3,10 @@ import Modal from "./Modal";
 import TopicsContext from "../context/topicsContext";
 import QuestionView from "./QuestionView";
 
-function QuestionViewHandler({ topicData, setTopics, setPopup, handler }) {
+function QuestionViewHandler({ modalData, setPopup, handler }) {
   return (
     <Modal
-      data={topicData}
+      data={modalData}
       setter={setPopup}
       ModalParam={QuestionView}
       handler={handler}

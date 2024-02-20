@@ -26,6 +26,7 @@ function QuestionType({ handler, questionType, difficultyLevels }) {
         <div className="flex">
           {/* easy */}
           <DifficultyLevel
+            id={"NumOfEasy"}
             handler={handler}
             difficultyLevel={"Easy"}
             questionType={questionType}
@@ -34,6 +35,7 @@ function QuestionType({ handler, questionType, difficultyLevels }) {
 
           {/* medium */}
           <DifficultyLevel
+            id={"NumOfMedium"}
             handler={handler}
             difficultyLevel={"Medium"}
             questionType={questionType}
@@ -42,6 +44,7 @@ function QuestionType({ handler, questionType, difficultyLevels }) {
 
           {/* hard */}
           <DifficultyLevel
+            id={"NumOfHard"}
             handler={handler}
             difficultyLevel={"Hard"}
             questionType={questionType}

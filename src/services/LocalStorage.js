@@ -51,7 +51,6 @@ class LocalStorageClass {
   get assessmentPage() {
     const rawData = localStorage.getItem("assessmentPage");
     if (rawData) {
-      console.log(rawData);
       const parsedData = JSON.parse(rawData);
       return parsedData;
     }
@@ -76,7 +75,6 @@ class LocalStorageClass {
 
   get programmingLanguageFirstVisit() {
     const result = localStorage.getItem("programmingLanguageFirstVisit");
-    console.log("result", result);
     this.programmingLanguageFirstVisit = false;
     return result;
   }

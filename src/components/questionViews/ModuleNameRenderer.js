@@ -1,9 +1,13 @@
-function ModuleNameRenderer({ modules }) {
+function ModuleNameRenderer({ modules, selectedModule, setSelectedModule }) {
   return (
     <div>
       <label htmlFor="ModuleID">Module Name:</label>
 
-      <select id="ModuleID" name="ModuleID">
+      <select
+        id="ModuleID"
+        name="ModuleID"
+        onChange={(e) => setSelectedModule(e.target.value)}
+      >
         {/**  Default */}
         <option value="-1">Select A Module</option>
         {/** Module names */}

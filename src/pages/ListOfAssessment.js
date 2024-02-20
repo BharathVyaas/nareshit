@@ -20,12 +20,52 @@ import { ScheduleTimeClass } from "../services/scheduleTimeService";
 import { LocalStorage } from "../services/LocalStorage";
 import AuthCtx from "../context/auth.context";
 import { InitUserDataService, UserDataService } from "./UserDataService";
+import { UserDataCtx } from "../context/userData.context";
+
+import SHA256 from "crypto-js/sha256";
+
+/**
+ * Technology Page Main Api Submit Data
+ */
+const technologyPage = {
+  TestID: 0,
+  TechnologyID: -1,
+  AssessmentID: 1,
+  NatureID: 1,
+  RandomID: 1,
+  CreatedBy: "Admin",
+  ModifiedBy: "Admin",
+};
+
+/**
+ * Assessment Page Main Api Submit Data
+ */
+const assessmentPage = {
+  TestID: 0,
+  TestDetailsID: 0,
+  QuestionTypeID: 0,
+  NumOfEasy: 0,
+  NumOfMedium: 0,
+  NumOfHard: 0,
+  CreatedBy: "Admin",
+  ModifiedBy: "Admin",
+};
+
+/**
+ * Random ID
+ */
+const generateUniqueId = (input) => {
+  const hash = SHA256(input).toString();
+  return hash.substring(0, 10);
+};
 
 /**
  * Component for displaying a list of assessments created by other users.
  * @returns {JSX.Element} The ListOfAssessment component.
  */
 function ListOfAssessment() {
+  const { setUserData } = useContext(UserDataCtx);
+
   const navigate = useNavigate();
   const { isLoggedIn } = useContext(AuthCtx);
 
@@ -55,39 +95,20 @@ function ListOfAssessment() {
   const submit = useSubmit();
 
   function createNewHandler(e) {
-    /** V2 */
+    localStorage.setItem("TestID", 0);
 
-    InitUserDataService();
-
-    /** V2 End */
-
-    LocalStorage.clear();
-    BuilderService.assessmentService = AssessmentClass.getInstance();
-    BuilderService.id = { testId: 0, technologyId: 0, testDetailsId: 0 };
-    BuilderService.questionCount = {
-      easy: 0,
-      exclude: 0,
-      hard: 0,
-      include: 0,
-      medium: 0,
-      total: 0,
-    };
-    BuilderService.questionService = QueryViewClass.getInstance();
-    BuilderService.technologyService = TechnologyClass.getInstance();
-    BuilderService.scheduleTimeService = ScheduleTimeClass.getInstance();
-    window.location.href = "/categories/technology";
+    navigate("/categories/technology");
   }
 
   async function handler(data) {
-    console.log("handler");
-    const res = await axios.post("https://www.nareshit.net/getBasicTestInfo", {
+    const res = await axios.post("https://www.nareshit.net/createEditTest", {
       data: { TestID: data.TestID },
     });
-    console.log(data.TestID);
-    console.log("create", res);
+    /* console.log(data.TestID);
+    console.log("create", res); */
 
     navigate(
-      `/categories/technology?randomId=${res.data.data[0]?.RandomID}&natureId=${res.data.data[0]?.NatureID}&technologyId=${res.data.data[0]?.TechnologyID}`
+      `/categories/technology?edit=true&TestID=${res.data.data[0]?.TestID}&randomId=${res.data.data[0]?.RandomID}&natureId=${res.data.data[0]?.NatureID}&technologyId=${res.data.data[0]?.TechnologyID}`
     );
 
     if (res) setTitleData({ assessments: res.data });

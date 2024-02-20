@@ -4,11 +4,14 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { AuthCtxProvider } from "./context/auth.context";
+import UserDataCtxProvider from "./context/userData.context";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <AuthCtxProvider>
-    <App />
+    <UserDataCtxProvider>
+      <App />
+    </UserDataCtxProvider>
   </AuthCtxProvider>
 );
 

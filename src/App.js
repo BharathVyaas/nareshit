@@ -7,12 +7,12 @@ import Categories from "./pages/Categories";
 import ListOfAssessment, {
   loader as AssessmentLoader,
 } from "./pages/ListOfAssessment";
-import Technology, {
-  loader as TechnologyLoader,
-  action as TechnologyAction,
-} from "./pages/Technology";
-import Assessments, { action as AssessmentAction } from "./pages/Assessments";
-import QuestionView, { loader as QuestionLoader } from "./pages/QuestionView";
+import { TechnologyV2, TechnologyActionV2 } from "./pages/Technology";
+import { AssessmentActionV2, AssessmentsV2 } from "./pages/Assessments";
+import QuestionView, {
+  loader as QuestionLoader,
+  QuestionViewV2,
+} from "./pages/QuestionView";
 import ScheduleTime, {
   action as ScheduleTimeAction,
 } from "./pages/ScheduleTime";
@@ -75,22 +75,21 @@ function App() {
         },
         {
           path: "technology",
-          element: <Technology />,
+          element: <TechnologyV2 />,
           id: "tech",
-          loader: TechnologyLoader,
-          action: TechnologyAction,
+          action: TechnologyActionV2,
         },
         {
           path: "assessments",
-          element: <Assessments />,
-          action: AssessmentAction,
+          element: <AssessmentsV2 />,
+          action: AssessmentActionV2,
         },
         {
           path: "questionview",
           element: (
             <QuestionViewProvider>
               <TableTotalCtxProvider>
-                <QuestionView />
+                <QuestionViewV2 />
               </TableTotalCtxProvider>
             </QuestionViewProvider>
           ),

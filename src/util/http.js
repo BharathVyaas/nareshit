@@ -19,12 +19,11 @@ export const getProgLangs = async () => {
   return { programmingLanguages: res.data };
 };
 
-export const getModuleNames = async () => {
+export const getModuleNames = async (id) => {
+  console.log(id);
   try {
     /* console.log("getModuleNames:fetch"); */
-    const res = await axios.get(
-      `https://www.nareshit.net/fetchModules/${LocalStorage.getProgrammingLanguageById()}`
-    );
+    const res = await axios.get(`https://www.nareshit.net/fetchModules/${id}`);
     /* console.log("fetchedData", res.data); */
     const data = { moduleNames: res.data };
     return data;

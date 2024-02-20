@@ -616,6 +616,15 @@ export async function loader() {
   return 1;
 }
 
+const TableAttributeTitles = [
+  { title: "Module Name", id: "sds" },
+  { title: "Topic Name", id: "wer" },
+  { title: "Sub Topic Name", id: "wes" },
+  { title: `Easy: `, id: "fgh" },
+  { title: `Medium: `, id: "ntr" },
+  { title: `Hard:  `, id: "zcd" },
+];
+
 export function QuestionViewV2() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -624,8 +633,9 @@ export function QuestionViewV2() {
   const queryMedium = queryParams.get("medium") || 0;
   const queryHard = queryParams.get("hard") || 0;
 
-  // ...
-  const [combination, setCombination] = useState([]);
+  // {id: {element}}
+  const [combination, setCombination] = useState({});
+  //  (element: {selectedModule, selectedSubTopic,selectedTopic,easy, medium, hard, ModuleID, TopicID, SubTopicID} && combination) || (DataObj {...element} && combination)
   const [popup, setPopup] = useState(false);
 
   const setDataHandler = (ModuleID, TopicID, SubTopicID, DataObj) => {
@@ -634,17 +644,20 @@ export function QuestionViewV2() {
       TopicID,
       SubTopicID,
       DataObj,
-      easy: queryEasy,
-      medium: queryMedium,
-      hard: queryHard,
+      easy: 0,
+      medium: 0,
+      hard: 0,
+      combination,
     });
   };
 
   const handler = (resultObj) => {
+    console.log("combination", combination);
+    console.log("resultObj", resultObj);
     setCombination((prev) => {
-      const arr = [...prev];
-      arr.push(resultObj);
-      return arr;
+      const obj = { ...prev };
+      obj[resultObj.id] = resultObj;
+      return obj;
     });
   };
 
@@ -663,7 +676,11 @@ export function QuestionViewV2() {
       <Topics setDataHandler={setDataHandler} />
 
       {/**  Combination Table */}
-      <CombinationRenderer combination={combination} />
+      <CombinationRenderer
+        setPopup={setPopup}
+        combination={combination}
+        setCombination={setCombination}
+      />
     </div>
   );
 }

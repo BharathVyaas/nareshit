@@ -9,6 +9,7 @@ import axios from "axios";
 import Modal from "../../ui/Modal";
 import QuestionViewFixedModal from "../../ui/QuestionViewFixedModal.js";
 import TableTotalCtx from "../../context/tableTotalCtx.js";
+import { useLocation } from "react-router";
 
 const Titles = ["MCQ", "MCQ"];
 
@@ -172,7 +173,6 @@ function AsssessmentQuestionBoxHandler({
           styles={"bg-white rounded-lg shadow-lg w-3/4 md:w-1/2 lg:w-2/3 z-50"}
           data={popup}
           setter={setPopup}
-          handler={handler}
           ModalParam={QuestionViewFixedModal}
         />
       )}
@@ -197,10 +197,8 @@ function AsssessmentQuestionBoxHandler({
                 <TableBodyRenderer
                   nextButtonHandler={nextButtonHandler}
                   setPopup={setPopup}
-                  key={element.id + index}
-                  index={index}
+                  key={element.id}
                   element={element}
-                  handler={handler}
                   setStale={setStale}
                 />
               ))}
@@ -257,86 +255,66 @@ export function TableHead({ titles }) {
  * @param {Object} props.element - An assessment data object.
  * @returns {JSX.Element} The TableBodyRenderer component.
  */
+
 export function TableBodyRenderer({
   setPopup,
-  handler,
   element,
-  index,
-  setStale,
-  nextButtonHandler,
+  combination,
+  setCombination,
 }) {
-  const { testName, isActive, startDate, endDate, startTime, endTime } =
-    element;
-
-  const styles =
-    index % 2 === 0
-      ? "bg-gray-100 hover:bg-gray-200"
-      : "bg-white  hover:bg-gray-300";
+  const arr = Object.values(element);
+  let data;
+  if (typeof arr === "object") data = arr[0];
 
   return (
-    <tr
-      onClick={() =>
-        handler({ element, subTopicId: LocalStorage.subTopicData.subTopicId })
-      }
-      key={element.id}
-      className={styles}
-    >
+    <tr key={element.id} className="bg-gray-100 hover:bg-gray-200">
       <Tbody
-        nextButtonHandler={nextButtonHandler}
         setPopup={setPopup}
-        data={testName}
-        id={element.id}
-        setStale={setStale}
+        data={element?.selectedModule}
         type="moduleName"
         element={element}
+        combination={combination}
+        setCombination={setCombination}
       />
       <Tbody
-        nextButtonHandler={nextButtonHandler}
         setPopup={setPopup}
-        data={isActive}
-        id={element.id}
-        setStale={setStale}
+        data={element?.selectedTopic}
         type="topicName"
         element={element}
+        combination={combination}
+        setCombination={setCombination}
       />
       <Tbody
-        nextButtonHandler={nextButtonHandler}
         setPopup={setPopup}
-        data={startDate}
-        id={element.id}
-        setStale={setStale}
+        data={element?.selectedSubTopic}
         type="subTopicName"
         element={element}
+        combination={combination}
+        setCombination={setCombination}
       />
       <Tbody
-        nextButtonHandler={nextButtonHandler}
         setPopup={setPopup}
-        data={endDate}
         tag="input"
         type="easy"
-        id={element.id + " easy"}
-        setStale={setStale}
         element={element}
+        combination={combination}
+        setCombination={setCombination}
       />
       <Tbody
-        nextButtonHandler={nextButtonHandler}
         setPopup={setPopup}
-        data={startTime}
         tag="input"
         type="medium"
-        id={element.id + " medium"}
-        setStale={setStale}
         element={element}
+        combination={combination}
+        setCombination={setCombination}
       />
       <Tbody
-        nextButtonHandler={nextButtonHandler}
         setPopup={setPopup}
-        data={endTime}
         tag="input"
         type="hard"
-        id={element.id + " hard"}
-        setStale={setStale}
         element={element}
+        combination={combination}
+        setCombination={setCombination}
       />
     </tr>
   );
@@ -355,91 +333,67 @@ export function TableBodyRenderer({
  * @returns {JSX.Element} The Tbody component.
  */
 export function Tbody({
+  setPopup,
   data,
   tag,
-  id,
-  setPopup,
-  setStale,
   type,
   element,
-  nextButtonHandler,
+  combination,
+  setCombination,
   ...props
 }) {
-  /* console.log(data, tag, id, setPopup, setStale); */
-  const { data: dataCtx, setData: setDataCtx } = useContext(QuestionView);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
 
   let content = (
-    <td className="md:px-5 text-center py-1 border-[1.2px]" {...props}>
-      {data}
+    <td
+      className="md:px-5 text-center py-1 border-[1.2px]"
+      {...props}
+      onClick={() => {
+        setPopup({
+          modalData: element,
+          type,
+          element,
+          combination,
+          popupType: "view",
+        });
+      }}
+    >
+      {data || element[type] || "None Selected"}
     </td>
   );
 
-  const [value, setValue] = useState(data);
+  // used to change count
+  function handler(present, previous, flag) {
+    // returns array of combination objects
+    const allElements = Object.values(combination);
 
-  function handler(_data, flag, setter, _total, id, siblings) {
-    setStale((prev) => true);
-    let data = Number(_data);
-    let evaluate;
+    // total from asssessment page
+    const queryTotal = Number(queryParams.get(type)) || 0;
 
-    if (id.includes("easy")) evaluate = "easy";
-    if (id.includes("medium")) evaluate = "medium";
-    if (id.includes("hard")) evaluate = "hard";
+    // stroes a number
+    let total = allElements.reduce((acc, ele) => {
+      return Number(ele[type]) + acc;
+    }, 0);
 
-    if (!evaluate)
-      throw new Error("AssessmentQuestionBoxHandler:Tbody:handler");
+    // to get current Data
+    total -= previous;
+    total += present;
 
-    const max_value = _total.assessmentData.MCQ.difficulty[evaluate];
-    let current_value = 0;
-    const siblings_eval_array = [];
-    let siblings_evaluate = 0;
+    // if total is less then queryTotal and user doing add
+    // ||
+    // if present is less then 0 and user trying to do sub
+    if ((total <= queryTotal && flag) || (present >= 0 && !flag)) {
+      // if user want to decrease count and count is already 0 dont go lower
+      if (present >= 0 || flag) {
+        setCombination((prev) => {
+          const obj = { ...prev };
+          obj[element.id][type] = Number(present);
 
-    siblings.forEach((element) => siblings_eval_array.push(element[evaluate]));
-
-    siblings_evaluate = siblings_eval_array.reduce((e, a) => e + a, 0);
-
-    let sibData = siblings_evaluate;
-    sibData += flag ? 1 : -1;
-
-    if (sibData > max_value) {
-      return;
-    } else {
-      let localStorageData = LocalStorage.questionView;
-      localStorageData = localStorageData.map((element) => {
-        if (element.id + " " + evaluate === id) {
-          current_value = element[evaluate];
-          element[evaluate] = _data;
-        }
-        return element;
-      });
-
-      LocalStorage.questionView = localStorageData;
-      //
-
-      setDataCtx(LocalStorage.questionView);
-
-      setValue(_data);
-      nextButtonHandler(evaluate, _data);
+          return obj;
+        });
+      }
     }
-  }
-
-  function windowPopupHandler(data) {
-    const _id =
-      data.type +
-      data?.element?.element?.selectedModule?.moduleName +
-      data?.element?.element?.selectedTopic?.topicName +
-      data?.element?.element?.selectedSubTopic?.subTopicName;
-
-    if (
-      (LocalStorage.questionViewFixedModal[_id]?.length || 0) + 1 >
-      data.value
-    )
-      window.alert(
-        `Must remove ${Math.abs(
-          (LocalStorage.questionViewFixedModal[_id]?.length || 0) +
-            1 -
-            data.value
-        )} questions from ${data.type}`
-      );
   }
 
   const underline =
@@ -458,48 +412,32 @@ export function Tbody({
           <button
             className="grid place-content-center w-6 mx-1 rounded bg-slate-700 text-white"
             onClick={(e) => {
-              setStale((prev) => !prev);
-              handler(
-                data + 1,
-                true,
-                setValue,
-                LocalStorage.data,
-                id,
-                LocalStorage.questionView
-              );
+              handler(Number(element[type] + 1), Number(element[type]), true);
             }}
           >
             +
           </button>
 
           <button
+            /* className={underline} */
+            className="bg-transparent underline underline-offset-2 decoration-2 decoration-red-500"
             onClick={() => {
-              if (
-                BuilderService.technologyService._technology
-                  .natureOfAssessment === "fixed"
-              )
-                setPopup({ value, type, element });
+              setPopup({
+                modalData: element,
+                type,
+                element,
+                combination,
+                popupType: "view",
+              });
             }}
-            className={underline}
           >
-            {value}
+            {element[type]}
           </button>
 
           <button
             className="grid place-content-center w-6 mx-1 rounded bg-slate-700 text-white"
             onClick={(e) => {
-              if (data - 1 >= 0) {
-                setStale((prev) => !prev);
-                handler(
-                  data - 1,
-                  false,
-                  setValue,
-                  LocalStorage.data,
-                  id,
-                  LocalStorage.questionView
-                );
-                windowPopupHandler({ value, type, element });
-              }
+              handler(Number(element[type] - 1), Number(element[type]), false);
             }}
           >
             -

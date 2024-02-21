@@ -3,6 +3,7 @@ import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
 import QuestionViewCtx from "../context/questionView";
 import { useLocation } from "react-router";
+import QuestionViewFixedModal from "./QuestionViewFixedModal";
 
 // Returns Result Object
 function getResult(data, id) {
@@ -78,11 +79,24 @@ function getTotal(data) {
 }
 
 function QuestionView({ data, handler, setter }) {
+  let currentCombination;
+
+  if (data?.combination && data?.element?.id) {
+    currentCombination = data?.combination[data?.element?.id];
+  }
+
   if (data.popupType === "edit")
     return (
       <QuestionViewEditModal data={data} handler={handler} setter={setter} />
     );
-  return <h1>hi</h1>;
+  return (
+    <QuestionViewModalView
+      data={data}
+      handler={handler}
+      setter={setter}
+      currentCombination={currentCombination}
+    />
+  );
 }
 
 export default QuestionView;
@@ -99,7 +113,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
   const easyRef = useRef();
   const mediumRef = useRef();
   const hardRef = useRef();
-  const id = useId;
+  const id = useId();
   const [isValid, setIsValid] = useState(true);
 
   const { easyTotal, mediumTotal, hardTotal } = getTotal(data);
@@ -123,6 +137,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
       setIsValid(true);
     }
   }
+
   return (
     <div
       onClick={(e) => {
@@ -208,68 +223,15 @@ function QuestionViewEditModal({ data, handler, setter }) {
   );
 }
 
-/**
- * let go = false;
-
-    let easy = 0;
-    let medium = 0;
-    let hard = 0;
-
-    LocalStorage.questionView.forEach((element) => (easy += element.easy));
-    LocalStorage.questionView.forEach((element) => (medium += element.medium));
-    LocalStorage.questionView.forEach((element) => (hard += element.hard));
-
-    result.easy = Number(easyRef.current?.value);
-    result.medium = Number(mediumRef.current?.value);
-    result.hard = Number(hardRef.current?.value);
-
-    const finelEasy = result.easy + easy;
-    const finelMedium = result.medium + medium;
-    const finelHard = result.hard + hard;
-
-    setCtxData([]);
-
-    if (
-      finelEasy <= LocalStorage.data.assessmentData.MCQ.difficulty.easy &&
-      finelMedium <= LocalStorage.data.assessmentData.MCQ.difficulty.medium &&
-      finelHard <= LocalStorage.data.assessmentData.MCQ.difficulty.hard
-    ) {
-      go = true;
-      handler(result);
-      setter(false);
-      setIsValid(true);
-      LocalStorage.questionView = LocalStorage.questionView;
-
-      // ..
-    }
-
-    if (!go) {
-      setIsValid(false);
-      if (finelEasy > LocalStorage.data.assessmentData.MCQ.difficulty.easy) {
-        easyRef.current.style.border = "2px solid red";
-      } else if (
-        finelEasy <= LocalStorage.data.assessmentData.MCQ.difficulty.easy
-      ) {
-        easyRef.current.style.border = "1px solid gray";
-      }
-      if (
-        finelMedium > LocalStorage.data.assessmentData.MCQ.difficulty.medium
-      ) {
-        mediumRef.current.style.border = "2px solid red";
-      } else if (
-        finelMedium <= LocalStorage.data.assessmentData.MCQ.difficulty.medium
-      ) {
-        mediumRef.current.style.border = "1px solid gray";
-      }
-      if (finelHard > LocalStorage.data.assessmentData.MCQ.difficulty.medium) {
-        hardRef.current.style.border = "2px solid red";
-      } else if (
-        finelHard <= LocalStorage.data.assessmentData.MCQ.difficulty.medium
-      ) {
-        hardRef.current.style.border = "1px solid gray";
-      } else {
-        throw new Error("unexpected error QuestionView submitHandler");
-      }
-    }
-    
- */
+function QuestionViewModalView({ data, handler, setter, currentCombination }) {
+  return (
+    <div className="">
+      <QuestionViewFixedModal
+        data={data}
+        handler={handler}
+        setter={setter}
+        currentCombination={currentCombination}
+      />
+    </div>
+  );
+}

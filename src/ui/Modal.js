@@ -5,7 +5,7 @@ import { QuestionViewProvider } from "../context/questionView";
 import { AnimatePresence, motion } from "framer-motion";
 
 function Modal({ data, setter, ModalParam, handler, styles }) {
-  let style = "bg-white rounded-lg shadow-lg w-3/4 md:w-1/2 lg:w-1/3 z-50";
+  let style = "bg-white rounded-lg shadow-lg w-3/4 md:w-1/2 lg:w-[55vw]  z-50";
 
   if (styles) style = styles;
 

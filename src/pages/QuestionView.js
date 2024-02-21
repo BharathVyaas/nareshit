@@ -272,173 +272,57 @@ function QuestionView() {
 
 export default QuestionView;
 
-export function Questions({ questions, modalHandler }) {
-  const [questionArr, setQuestionArr] = useState(questions);
-
-  useEffect(() => {
-    setQuestionArr(questions);
-  }, [questions]);
-
-  const questionHandler = useCallback(async (difficultyId, count) => {
-    try {
-      switch (difficultyId) {
-        case "1": {
-          setQuestionArr(
-            questions.filter((question) => {
-              return question.DifficultyLevelID === 1;
-            })
-          );
-          break;
-        }
-        case "2": {
-          setQuestionArr(
-            questions.filter((question) => {
-              return question.DifficultyLevelID === 2;
-            })
-          );
-
-          break;
-        }
-        case "3": {
-          setQuestionArr(
-            questions.filter((question) => {
-              return question.DifficultyLevelID === 3;
-            })
-          );
-          break;
-        }
-        case "all": {
-          /* setQuestionArr(questions); */
-          setQuestionArr(questions);
-          break;
-        }
-        default: {
-          const excludedArr = LocalStorage.exclude;
-
-          if (excludedArr.length === 0) break;
-
-          const excludedQuestions = excludedArr.map((id) => {
-            let postFilter = questions.filter(
-              (question) => question.QuestionID === id
-            );
-            postFilter = postFilter && postFilter[0];
-            return postFilter;
-          });
-
-          let excludedMap = {};
-          excludedQuestions?.forEach((element) => {
-            if (!excludedMap[String(element?.DifficultyLevelID)])
-              excludedMap[String(element?.DifficultyLevelID)] = [];
-            excludedMap[String(element?.DifficultyLevelID)].push(
-              element?.QuestionID
-            );
-          });
-
-          const includedQuestions = questions.filter(
-            (element) => !LocalStorage.exclude.includes(element.QuestionID)
-          );
-
-          let easy = excludedMap["1"]?.length;
-          let medium = excludedMap["2"]?.length;
-          let hard = excludedMap["3"]?.length;
-
-          if (!easy) easy = 0;
-          if (!medium) medium = 0;
-          if (!hard) hard = 0;
-          LocalStorage.exclude = [];
-
-          break;
-        }
-      }
-    } catch (err) {
-      console.error(err);
+export function Questions({
+  questions,
+  modalHandler,
+  type,
+  currentValue,
+  setCurrentValue,
+  currentCombination,
+}) {
+  const includeHandler = (flag, question) => {
+    let includes = [];
+    if (currentCombination.includes && currentCombination.includes[type]) {
+      includes = currentCombination.includes[type].includes || [];
     }
-  }, []);
 
-  DifficultySubescribeService.insert(questionHandler);
-
-  const [includes, setIncludes] = useState([]);
-
+    // user want to add
+    if (flag) {
+      // if item doesn't exists
+      if (!includes.includes(question.QuestionID)) {
+        includes.push(question.QuestionID);
+        setCurrentValue((prev) => prev + 1);
+      } else {
+        return;
+      }
+    }
+    // user want to remove
+    if (!flag) {
+      if (includes.includes(question.QuestionID)) {
+        const index = includes.indexOf(question.QuestionID);
+        includes.splice(index, 1); // Remove the element at the found index
+        setCurrentValue((prev) => prev - 1);
+      } else {
+        return;
+      }
+    }
+  };
   return (
     <>
-      {questionArr &&
-        questionArr.map((question, index) => (
+      {questions &&
+        questions.map((question) => (
           <Question
-            key={question.QuestionID + index}
-            difficultyId={question?.DifficultyLevelID}
-            questions={questionArr}
-            modalHandler={modalHandler}
-            questionId={question.QuestionID}
             question={question}
-            includes={includes}
-            setIncludes={setIncludes}
+            handler={modalHandler}
+            includeHandler={includeHandler}
           />
         ))}
     </>
   );
 }
 
-function Question({
-  question,
-  questions,
-  includes,
-  setIncludes,
-  questionId,
-  difficultyId,
-  modalHandler,
-}) {
+function Question({ question, handler, includeHandler }) {
   const [modalData, setModalData] = useState(false);
-
-  function removeElement(arr, value) {
-    return arr.filter((item) => item !== value);
-  }
-
-  /* useEffect(() => {
-    if (questions) {
-      setIncludes(questions.map((question) => question.QuestionID));
-    }
-  }, [questions]); */
-
-  useEffect(() => {
-    setIncludes(LocalStorage.includes);
-  }, []);
-
-  const [includeCount, setIncludeCount] = useState(0);
-
-  function handler(flag) {
-    // Check Length
-    if (flag) {
-      setIncludeCount(LocalStorage.includes.length);
-    }
-
-    // Includes
-    if (flag) {
-      if (!LocalStorage.includes.includes(questionId)) {
-        LocalStorage.includes = [...LocalStorage.includes, questionId];
-      }
-    }
-    if (!flag) {
-      if (LocalStorage.includes.includes(questionId)) {
-        LocalStorage.pullIncludes(questionId);
-      }
-    }
-    // Exclude
-    if (flag) {
-      LocalStorage.pullExclude(questionId);
-      if (includes && !includes.includes(questionId))
-        setIncludes((prev) => {
-          const arr = [...prev];
-          arr.push(questionId);
-          return arr;
-        });
-    } else {
-      LocalStorage.pushExclude(questionId);
-      if (includes && includes.includes(questionId))
-        setIncludes(LocalStorage.includes);
-    }
-
-    if (modalHandler) modalHandler(flag, questionId);
-  }
 
   return (
     <>
@@ -453,23 +337,12 @@ function Question({
       >
         <input
           type="checkbox"
-          checked={includes.includes(questionId)}
           onChange={(e) => {
-            console.log("ds");
-            handler(e.target.checked);
+            includeHandler(e.target.checked, question);
+            handler(e.target.checked, question);
           }}
           className="max-w-[5%] min-w-[5%]"
         />
-
-        {/**<article
-          className="ps-4 overflow-hidden h-full w-[90%] flex items-center cursor-pointer"
-          onClick={() => {
-            setModalData(question);
-          }}
-        >
-          <h3>{question.Question}</h3>
-        </article>
-         */}
         <div
           className="flex ms-2 container items-center"
           onClick={() => {
@@ -479,16 +352,6 @@ function Question({
           <article className="max-w-[95%] min-w-[95%] overflow-hidden ">
             <h3>{question.Question}</h3>
           </article>
-          {/* <article className="max-w-[35%] min-w-[35%] overflow-hidden ">
-            <h3>{question.Question}</h3>
-          </article>
-          <Option option="Option1" question={question} questionKey="OptionA" />
-          <Option option="Option2" question={question} questionKey="OptionB" />
-          <Option option="Option3" question={question} questionKey="OptionC" />
-          <Option option="Option4" question={question} questionKey="OptionD" />
-          <aside className="max-w-[30%] min-w-[30%] overflow-hidden ">
-            <h3>{question.CorrectAnswer}</h3>
-          </aside> */}
         </div>
       </section>
     </>
@@ -648,17 +511,47 @@ export function QuestionViewV2() {
       medium: 0,
       hard: 0,
       combination,
+      popupType: "edit",
     });
   };
 
-  const handler = (resultObj) => {
+  // type if we include new question type refers to the modal difficulty type
+  const handler = (resultObj, type) => {
     console.log("combination", combination);
     console.log("resultObj", resultObj);
-    setCombination((prev) => {
-      const obj = { ...prev };
-      obj[resultObj.id] = resultObj;
-      return obj;
-    });
+
+    if (resultObj.id) {
+      const key = resultObj.id;
+      // if user want to added combination
+
+      setCombination((prev) => {
+        const obj = { ...prev };
+        // if object doesn't exists
+        if (!combination[key]) {
+          obj[key] = resultObj;
+        }
+
+        if (!obj[key]?.includes) {
+          obj[key].includes = {};
+        }
+
+        return obj;
+      });
+    } else {
+      const key = Object.keys(resultObj)[0];
+      const obj = { ...combination };
+      if (combination[key]) {
+        const data = {
+          includes: resultObj[key][type],
+          count: resultObj[key][type].length,
+        };
+
+        obj[key].includes[type] = data;
+
+        obj[key][type] = data.count;
+      }
+      setCombination(obj);
+    }
   };
 
   return (

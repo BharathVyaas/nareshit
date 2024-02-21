@@ -350,12 +350,19 @@ export function Tbody({
       className="md:px-5 text-center py-1 border-[1.2px]"
       {...props}
       onClick={() => {
+        console.log({
+          modalData: element,
+          type,
+          element,
+          combination,
+          popupType: "edit",
+        });
         setPopup({
           modalData: element,
           type,
           element,
           combination,
-          popupType: "view",
+          popupType: "edit",
         });
       }}
     >
@@ -428,6 +435,7 @@ export function Tbody({
                 element,
                 combination,
                 popupType: "view",
+                currentTotal: element[type],
               });
             }}
           >

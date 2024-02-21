@@ -127,12 +127,23 @@ function QuestionViewFixedModal({
   }, [data.type]);
 
   // ...
+  const key = currentCombination.id;
+  const [includes, setIncludes] = useState({
+    [key]: {
+      easy: currentCombination?.includes?.easy?.includes || [],
+      medium: currentCombination?.includes?.medium?.includes || [],
+      hard: currentCombination?.includes?.hard?.includes || [],
+    },
+  });
 
-  const [includes, setIncludes] = useState({});
+  console.log("includes", includes);
 
   function modalHandler(flag, question) {
-    console.log(data);
-    if (flag) {
+    if (
+      flag &&
+      Object.values(includes)[0][data.type].length <
+        currentCombination[data.type]
+    ) {
       setIncludes((prev) => {
         const obj = { ...prev };
         if (!obj[data.modalData?.id]) {

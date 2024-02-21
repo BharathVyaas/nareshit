@@ -547,8 +547,6 @@ export function QuestionViewV2() {
         };
 
         obj[key].includes[type] = data;
-
-        obj[key][type] = data.count;
       }
       setCombination(obj);
     }

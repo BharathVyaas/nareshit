@@ -104,8 +104,8 @@ function ListOfAssessment() {
     const res = await axios.post("https://www.nareshit.net/createEditTest", {
       data: { TestID: data.TestID },
     });
-    /* console.log(data.TestID);
-    console.log("create", res); */
+    console.log(data.TestID);
+    console.log("create", res);
 
     navigate(
       `/categories/technology?edit=true&TestID=${res.data.data[0]?.TestID}&randomId=${res.data.data[0]?.RandomID}&natureId=${res.data.data[0]?.NatureID}&technologyId=${res.data.data[0]?.TechnologyID}`

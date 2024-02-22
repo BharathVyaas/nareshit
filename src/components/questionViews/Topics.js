@@ -5,7 +5,7 @@ import SubTopicNameRenderer from "./SubTopicNameRenderer";
 import axios from "axios";
 import { useLocation } from "react-router";
 
-function Topics({ setDataHandler }) {
+function Topics({ setDataHandler, combination }) {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const technologyName = queryParams.get("TechnologyName") || 0;
@@ -38,6 +38,26 @@ function Topics({ setDataHandler }) {
     const res = await axios.get(`https://www.nareshit.net/FetchSubTopics/${2}`);
 
     setSubTopics(res.data);
+  };
+  console.log(combination);
+  const saveHandler = async () => {
+    const res = await axios.post(
+      "https://www.nareshit.net/InsertionQuestionView",
+      {
+        Combinations: JSON.stringify(combination),
+      }
+    );
+
+    console.log(
+      "url",
+      "https://www.nareshit.net/InsertionQuestionView",
+      "data",
+      {
+        Combinations: JSON.stringify(combination),
+      },
+      "res",
+      res
+    );
   };
 
   // Modules
@@ -92,6 +112,12 @@ function Topics({ setDataHandler }) {
         <p className="ms-[20px] pt-5 text-lg font-semibold">
           Selected Technology: {technologyName}
         </p>
+        <button
+          onClick={saveHandler}
+          className="mr-[20px] mt-5 px-6 max-h-8 min-h-8 bg-[gray] text-white font-semibold rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:bg-gray-500 focus:ring-opacity-50"
+        >
+          Save
+        </button>
         <button
           onClick={() => {
             if (selectedModule && selectedModule != -1) onSetData();

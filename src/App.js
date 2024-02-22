@@ -29,6 +29,8 @@ import Login from "./pages/Login";
 import UserLogin from "./components/login/UserLogin";
 import AdminLogin from "./components/login/AdminLogin";
 import Dashboard from "./pages/Dashboard";
+import EnrollStudent from "./pages/enrollStudent/EnrollStudent";
+import UserManagement from "./pages/userManagement/UserManagement";
 
 /**
  * Initializes the Builder service.
@@ -105,6 +107,14 @@ function App() {
           action: ScheduleTimeAction,
         },
       ],
+    },
+    {
+      path: "user-management",
+      element: <UserManagement />,
+    },
+    {
+      path: "enroll-student",
+      element: <EnrollStudent />,
     },
   ];
 

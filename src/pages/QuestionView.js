@@ -275,6 +275,7 @@ export default QuestionView;
 export function Questions({
   questions,
   modalHandler,
+  currentIncludes,
   type,
   currentValue,
   setCurrentValue,
@@ -285,12 +286,12 @@ export function Questions({
     if (currentCombination.includes && currentCombination.includes[type]) {
       includes = currentCombination.includes[type].includes || [];
     }
-
+    console.log(currentValue, includes.length, currentIncludes);
     if (flag) {
-      if (Number(currentValue) >= includes.length) {
+      if (!(Number(currentValue) >= currentIncludes)) {
         window.alert(`Questions should not exeed ${currentValue}`);
+        e.target.checked = false;
       }
-      e.target.checked = false;
     }
 
     // user want to add
@@ -585,7 +586,7 @@ export function QuestionViewV2() {
       )}
 
       {/**  Topics */}
-      <Topics setDataHandler={setEditModalHandler} />
+      <Topics combination={combination} setDataHandler={setEditModalHandler} />
 
       {/**  Combination Table */}
       <CombinationRenderer

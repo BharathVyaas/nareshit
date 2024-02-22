@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { forwardRef, useEffect, useState } from "react";
+import { useLocation } from "react-router";
 
 function getCurrentValue(id, arr) {
   if (!(id || arr)) {
@@ -30,10 +31,14 @@ function getCurrentTechnology(id, arr) {
 }
 
 function SelectedTechnology({ technologyID, setTechnologyID }) {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const technologyId = queryParams.get("technologyId");
+
   const [programmingLanguages, setProgrammingLanguages] = useState();
 
   // store current value to display
-  const [selectedValue, setSelectedValue] = useState("Select A Technology");
+  const [selectedValue, setSelectedValue] = useState(String(technologyId));
 
   // fetch data
   useEffect(() => {
@@ -59,10 +64,12 @@ function SelectedTechnology({ technologyID, setTechnologyID }) {
     <div className="flex flex-col mx-4">
       {/** Technology Name from ID */}
       <input
-        value={
+        className="hidden"
+        value={String(
           programmingLanguages?.find((ele) => ele.TechnologyID == selectedValue)
             ?.TechnologyName
-        }
+        )}
+        onChange={() => {}}
         name="TechnologyName"
       />
 

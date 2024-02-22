@@ -104,6 +104,8 @@ function QuestionViewFixedModal({
   const currentMedium = currentCombination?.medium;
   const currentHard = currentCombination?.hard;
 
+  console.log(currentCombination);
+
   let currentTotal;
 
   // used to update current include value in modal
@@ -205,6 +207,7 @@ function QuestionViewFixedModal({
           currentCombination={currentCombination}
           type={data?.type}
           currentValue={currentValue}
+          currentIncludes={includes[key][data.type]?.length}
           setCurrentValue={setCurrentValue}
         />
 
@@ -257,6 +260,7 @@ function QuestionViewFixedModalBody({
   type,
   setCurrentValue,
   currentCombination,
+  currentIncludes,
 }) {
   const [questions, setQuestions] = useState([]);
 
@@ -290,6 +294,7 @@ function QuestionViewFixedModalBody({
           currentCombination={currentCombination}
           currentValue={currentValue}
           setCurrentValue={setCurrentValue}
+          currentIncludes={currentIncludes}
         />
       )}
     </motion.div>

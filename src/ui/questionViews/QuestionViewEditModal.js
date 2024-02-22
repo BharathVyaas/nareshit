@@ -103,42 +103,27 @@ function QuestionViewEditModal({ data, handler, setter }) {
     console.log(data);
     // if we are creating new Combination
 
-    // if every thing is okey.
-    if (easyTotal + Number(easyRef.current.value) <= queryEasy) go++;
-    if (mediumTotal + Number(mediumRef.current.value) <= queryMedium) go++;
-    if (hardTotal + Number(hardRef.current.value) <= queryHard) go++;
-    if (go > 2) {
-      result.easy = Number(easyRef.current.value);
-      result.medium = Number(mediumRef.current.value);
-      result.hard = Number(hardRef.current.value);
+    if (
+      Number(easyRef.current.value) > 0 ||
+      Number(mediumRef.current.value) > 0 ||
+      Number(hardRef.current.value) > 0
+    ) {
+      if (easyTotal + Number(easyRef.current.value) <= queryEasy)
+        // if every thing is okey.
+        go++;
+      if (mediumTotal + Number(mediumRef.current.value) <= queryMedium) go++;
+      if (hardTotal + Number(hardRef.current.value) <= queryHard) go++;
+      if (go > 2) {
+        result.easy = Number(easyRef.current.value);
+        result.medium = Number(mediumRef.current.value);
+        result.hard = Number(hardRef.current.value);
 
-      if (data.DataObj) {
-        const res = await axios.post(
-          "https://www.nareshit.net/InsertionQuestionView",
-          {
-            TechnologyId: technologyId,
-            TechnologyName: technologyName,
-            ModuleName: data.DataObj?.Module?.ModuleName,
-            ModuleId: data.ModuleID,
-            TopicName: data.DataObj?.Topic?.TopicName,
-            TopicId: data.TopicID,
-            SubtopicName: data.DataObj?.SubTopic?.SubTopicName,
-            SubtopicId: data.SubTopicID,
-            MediumCount: mediumRef.current.value,
-            HardCount: hardRef.current.value,
-            EasyCount: easyRef.current.value,
-            TestID,
-            TestDetailsID,
-          }
-        );
-
-        console.log(
-          "url",
-          "https://www.nareshit.net/InsertionQuestionView",
-          "data",
-          {
-            data: {
-              TestDetailsId: TestDetailsID,
+        if (data.DataObj) {
+          const res = await axios.post(
+            "https://www.nareshit.net/InsertionQuestionView",
+            {
+              TechnologyId: technologyId,
+              TechnologyName: technologyName,
               ModuleName: data.DataObj?.Module?.ModuleName,
               ModuleId: data.ModuleID,
               TopicName: data.DataObj?.Topic?.TopicName,
@@ -148,18 +133,41 @@ function QuestionViewEditModal({ data, handler, setter }) {
               MediumCount: mediumRef.current.value,
               HardCount: hardRef.current.value,
               EasyCount: easyRef.current.value,
-              TestId: 12,
-              TestDetailsId: 24,
-            },
-          },
-          "res",
-          res
-        );
-      }
+              TestId: TestID,
+              TestDetailsId: TestDetailsID,
+              Combinations: JSON.stringify(data?.combination),
+            }
+          );
 
-      handler(result, "edit");
-      setter(false);
-      setIsValid(true);
+          console.log(
+            "url",
+            "https://www.nareshit.net/InsertionQuestionView",
+            "data",
+            {
+              TechnologyId: technologyId,
+              TechnologyName: technologyName,
+              ModuleName: data.DataObj?.Module?.ModuleName,
+              ModuleId: data.ModuleID,
+              TopicName: data.DataObj?.Topic?.TopicName,
+              TopicId: data.TopicID,
+              SubtopicName: data.DataObj?.SubTopic?.SubTopicName,
+              SubtopicId: data.SubTopicID,
+              MediumCount: mediumRef.current.value,
+              HardCount: hardRef.current.value,
+              EasyCount: easyRef.current.value,
+              TestId: TestID,
+              TestDetailsId: TestDetailsID,
+              Combinations: JSON.stringify(data?.combination),
+            },
+            "res",
+            res
+          );
+        }
+
+        handler(result, "edit");
+        setter(false);
+        setIsValid(true);
+      }
     }
   }
 

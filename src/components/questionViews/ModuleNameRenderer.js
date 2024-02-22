@@ -1,6 +1,6 @@
 function ModuleNameRenderer({ modules, selectedModule, setSelectedModule }) {
   return (
-    <div>
+    <div className="max-w-[31%] w-[31%] ms-[20px] flex flex-col me-6">
       <label htmlFor="ModuleID">Module Name:</label>
 
       <select

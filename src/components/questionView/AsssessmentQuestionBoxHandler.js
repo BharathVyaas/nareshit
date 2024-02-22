@@ -241,7 +241,7 @@ export function TableHead({ titles }) {
   return (
     <tr className="border-[2px] border-black">
       {titles.map(({ title, id }) => (
-        <th className="px-5 border-x-2 border-black" key={id}>
+        <th className="px-0 border-x-2 border-black" key={id}>
           {title}
         </th>
       ))}
@@ -257,7 +257,8 @@ export function TableHead({ titles }) {
  */
 
 export function TableBodyRenderer({
-  setPopup,
+  setViewModal,
+  setEditModal,
   element,
   combination,
   setCombination,
@@ -269,7 +270,8 @@ export function TableBodyRenderer({
   return (
     <tr key={element.id} className="bg-gray-100 hover:bg-gray-200">
       <Tbody
-        setPopup={setPopup}
+        setViewModal={setViewModal}
+        setEditModal={setEditModal}
         data={element?.selectedModule}
         type="moduleName"
         element={element}
@@ -277,7 +279,8 @@ export function TableBodyRenderer({
         setCombination={setCombination}
       />
       <Tbody
-        setPopup={setPopup}
+        setViewModal={setViewModal}
+        setEditModal={setEditModal}
         data={element?.selectedTopic}
         type="topicName"
         element={element}
@@ -285,7 +288,8 @@ export function TableBodyRenderer({
         setCombination={setCombination}
       />
       <Tbody
-        setPopup={setPopup}
+        setViewModal={setViewModal}
+        setEditModal={setEditModal}
         data={element?.selectedSubTopic}
         type="subTopicName"
         element={element}
@@ -293,7 +297,8 @@ export function TableBodyRenderer({
         setCombination={setCombination}
       />
       <Tbody
-        setPopup={setPopup}
+        setViewModal={setViewModal}
+        setEditModal={setEditModal}
         tag="input"
         type="easy"
         element={element}
@@ -301,7 +306,8 @@ export function TableBodyRenderer({
         setCombination={setCombination}
       />
       <Tbody
-        setPopup={setPopup}
+        setViewModal={setViewModal}
+        setEditModal={setEditModal}
         tag="input"
         type="medium"
         element={element}
@@ -309,7 +315,8 @@ export function TableBodyRenderer({
         setCombination={setCombination}
       />
       <Tbody
-        setPopup={setPopup}
+        setViewModal={setViewModal}
+        setEditModal={setEditModal}
         tag="input"
         type="hard"
         element={element}
@@ -333,7 +340,8 @@ export function TableBodyRenderer({
  * @returns {JSX.Element} The Tbody component.
  */
 export function Tbody({
-  setPopup,
+  setViewModal,
+  setEditModal,
   data,
   tag,
   type,
@@ -350,14 +358,14 @@ export function Tbody({
       className="md:px-5 text-center py-1 border-[1.2px]"
       {...props}
       onClick={() => {
-        console.log({
+        /* console.log("edit", {
           modalData: element,
           type,
-          element,
+          element: element,
           combination,
           popupType: "edit",
-        });
-        setPopup({
+        }); */
+        setEditModal({
           modalData: element,
           type,
           element,
@@ -429,7 +437,7 @@ export function Tbody({
             /* className={underline} */
             className="bg-transparent underline underline-offset-2 decoration-2 decoration-red-500"
             onClick={() => {
-              setPopup({
+              setViewModal({
                 modalData: element,
                 type,
                 element,

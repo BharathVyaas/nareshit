@@ -185,7 +185,6 @@ function QuestionViewFixedModal({
         }
 
         console.log(obj);
-        setCurrentValue(obj[data.modalData.id.length] || 0);
         return obj;
       });
     }
@@ -215,6 +214,7 @@ function QuestionViewFixedModal({
           handler={parentHandler}
           setter={setter}
           currentTotal={currentTotal}
+          currentIncludes={includes[key][data.type]?.length}
           currentValue={currentValue}
         />
       </motion.div>
@@ -302,6 +302,7 @@ function QuestionViewFixedModalFooter({
   handler,
   setter,
   currentTotal,
+  currentIncludes,
   currentValue,
 }) {
   const submitHandler = () => {
@@ -312,7 +313,7 @@ function QuestionViewFixedModalFooter({
   return (
     <div className="mt-4 text-center flex w-[50vw]">
       <p className="py-2 ms-10">
-        current count: {currentValue}/{currentTotal || 0}
+        current count: {currentIncludes || 0}/{currentValue || 0}
       </p>
       <button
         onClick={submitHandler}

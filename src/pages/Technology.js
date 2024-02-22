@@ -16,7 +16,6 @@ export function TechnologyV2() {
    *
    * Default Data
    */
-
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const randomId = queryParams.get("randomId");
@@ -130,7 +129,6 @@ export async function TechnologyActionV2({ request, params }) {
   console.log("getBasicTestDetailsInfo response:", res);
 
   TestID = res.data.data[0]?.TestID || 0;
-  TechnologyID = res.data.data[0]?.TechnologyID;
 
   let TestDetailsID = res.data.data[0]?.TestDetailsID;
   let NumOfEasy = res.data.data[0]?.NumOfEasy;

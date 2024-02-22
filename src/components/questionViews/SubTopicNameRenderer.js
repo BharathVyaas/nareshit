@@ -4,7 +4,7 @@ function SubTopicNameRenderer({
   setSelectedSubTopic,
 }) {
   return (
-    <div>
+    <div className="max-w-[33%] w-[33%] flex flex-col me-6">
       <label htmlFor="ModuleID">Module Name:</label>
 
       <select

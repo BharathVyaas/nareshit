@@ -280,10 +280,17 @@ export function Questions({
   setCurrentValue,
   currentCombination,
 }) {
-  const includeHandler = (flag, question) => {
+  const includeHandler = (flag, question, e) => {
     let includes = [];
     if (currentCombination.includes && currentCombination.includes[type]) {
       includes = currentCombination.includes[type].includes || [];
+    }
+
+    if (flag) {
+      if (Number(currentValue) >= includes.length) {
+        window.alert(`Questions should not exeed ${currentValue}`);
+      }
+      e.target.checked = false;
     }
 
     // user want to add
@@ -291,7 +298,6 @@ export function Questions({
       // if item doesn't exists
       if (!includes.includes(question.QuestionID)) {
         includes.push(question.QuestionID);
-        setCurrentValue((prev) => prev + 1);
       } else {
         return;
       }
@@ -301,18 +307,23 @@ export function Questions({
       if (includes.includes(question.QuestionID)) {
         const index = includes.indexOf(question.QuestionID);
         includes.splice(index, 1); // Remove the element at the found index
-        setCurrentValue((prev) => prev - 1);
       } else {
         return;
       }
     }
   };
+
   return (
     <>
       {questions &&
         questions.map((question) => (
           <Question
             question={question}
+            includeArr={
+              (currentCombination.includes &&
+                currentCombination.includes[type]?.includes) ||
+              []
+            }
             handler={modalHandler}
             includeHandler={includeHandler}
           />
@@ -321,8 +332,13 @@ export function Questions({
   );
 }
 
-function Question({ question, handler, includeHandler }) {
+function Question({ question, handler, includeHandler, includeArr }) {
   const [modalData, setModalData] = useState(false);
+  let isIncluded = false;
+
+  if (includeArr) {
+    isIncluded = includeArr.includes(question.QuestionID);
+  }
 
   return (
     <>
@@ -337,8 +353,9 @@ function Question({ question, handler, includeHandler }) {
       >
         <input
           type="checkbox"
+          defaultChecked={isIncluded}
           onChange={(e) => {
-            includeHandler(e.target.checked, question);
+            includeHandler(e.target.checked, question, e);
             handler(e.target.checked, question);
           }}
           className="max-w-[5%] min-w-[5%]"
@@ -479,30 +496,17 @@ export async function loader() {
   return 1;
 }
 
-const TableAttributeTitles = [
-  { title: "Module Name", id: "sds" },
-  { title: "Topic Name", id: "wer" },
-  { title: "Sub Topic Name", id: "wes" },
-  { title: `Easy: `, id: "fgh" },
-  { title: `Medium: `, id: "ntr" },
-  { title: `Hard:  `, id: "zcd" },
-];
-
 export function QuestionViewV2() {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-
-  const queryEasy = queryParams.get("easy") || 0;
-  const queryMedium = queryParams.get("medium") || 0;
-  const queryHard = queryParams.get("hard") || 0;
-
   // {id: {element}}
   const [combination, setCombination] = useState({});
   //  (element: {selectedModule, selectedSubTopic,selectedTopic,easy, medium, hard, ModuleID, TopicID, SubTopicID} && combination) || (DataObj {...element} && combination)
   const [popup, setPopup] = useState(false);
 
-  const setDataHandler = (ModuleID, TopicID, SubTopicID, DataObj) => {
-    setPopup({
+  const [editModal, setEditModal] = useState(false);
+  const [viewModal, setViewModal] = useState(false);
+
+  const setEditModalHandler = (ModuleID, TopicID, SubTopicID, DataObj) => {
+    setEditModal({
       ModuleID,
       TopicID,
       SubTopicID,
@@ -519,6 +523,7 @@ export function QuestionViewV2() {
   const handler = (resultObj, type) => {
     console.log("combination", combination);
     console.log("resultObj", resultObj);
+    console.log("type", type);
 
     if (resultObj.id) {
       const key = resultObj.id;
@@ -534,6 +539,13 @@ export function QuestionViewV2() {
         if (!obj[key]?.includes) {
           obj[key].includes = {};
         }
+
+        if (type === "edit") {
+          obj[key].easy = Number(resultObj.easy) || 0;
+          obj[key].medium = Number(resultObj.medium) || 0;
+          obj[key].hard = Number(resultObj.hard) || 0;
+        }
+        console.log("obj", obj);
 
         return obj;
       });
@@ -553,22 +565,32 @@ export function QuestionViewV2() {
   };
 
   return (
-    <div>
+    <div className="bg-gray-50 min-h-[70vh]">
       {/** Modal to conform combination */}
-      {popup && (
+      {viewModal && (
         <QuestionViewHandler
-          modalData={popup}
-          setPopup={setPopup}
+          modalData={viewModal}
+          setPopup={setViewModal}
+          handler={handler}
+        />
+      )}
+
+      {/**  Edit Modal */}
+      {editModal && (
+        <QuestionViewHandler
+          modalData={editModal}
+          setPopup={setEditModal}
           handler={handler}
         />
       )}
 
       {/**  Topics */}
-      <Topics setDataHandler={setDataHandler} />
+      <Topics setDataHandler={setEditModalHandler} />
 
       {/**  Combination Table */}
       <CombinationRenderer
-        setPopup={setPopup}
+        setViewModal={setViewModal}
+        setEditModal={setEditModal}
         combination={combination}
         setCombination={setCombination}
       />

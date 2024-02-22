@@ -3,8 +3,13 @@ import ModuleNameRenderer from "./ModuleNameRenderer";
 import TopicNameRenderer from "./TopicNameRenderer";
 import SubTopicNameRenderer from "./SubTopicNameRenderer";
 import axios from "axios";
+import { useLocation } from "react-router";
 
 function Topics({ setDataHandler }) {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const technologyId = queryParams.get("TechnologyID") || 0;
+
   const [modules, setModules] = useState();
   const [topics, setTopics] = useState();
   const [subTopics, setSubTopics] = useState();
@@ -84,30 +89,41 @@ function Topics({ setDataHandler }) {
     <>
       {/**  head */}
       <div className="flex justify-between">
-        <p>Selected Technology: DotNet</p>
-        <button onClick={onSetData}>Set Data</button>
+        <p className="ms-[20px] pt-5 text-lg font-semibold">
+          Selected Technology: DotNet
+        </p>
+        <button
+          onClick={() => {
+            if (selectedModule && selectedModule != -1) onSetData();
+          }}
+          className="mr-[20px] mt-5 px-6 max-h-8 min-h-8 bg-[gray] text-white font-semibold rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:bg-gray-500 focus:ring-opacity-50"
+        >
+          Set Data
+        </button>
       </div>
-      <div className="flex justify-between">
-        {/** Select Module */}
-        <ModuleNameRenderer
-          modules={modules}
-          selectedModule={selectedModule}
-          setSelectedModule={setSelectedModule}
-        />
+      <div className="flex my-[20px] w-full">
+        <div className="flex justify-between w-full">
+          {/** Select Module */}
+          <ModuleNameRenderer
+            modules={modules}
+            selectedModule={selectedModule}
+            setSelectedModule={setSelectedModule}
+          />
 
-        {/** Select Topic */}
-        <TopicNameRenderer
-          topics={topics}
-          selectedTopic={selectedTopic}
-          setSelectedTopic={setSelectedTopic}
-        />
+          {/** Select Topic */}
+          <TopicNameRenderer
+            topics={topics}
+            selectedTopic={selectedTopic}
+            setSelectedTopic={setSelectedTopic}
+          />
 
-        {/** Select SubTopic */}
-        <SubTopicNameRenderer
-          subTopics={subTopics}
-          selectedSubTopics={selectedSubTopic}
-          setSelectedSubTopic={setSelectedSubTopic}
-        />
+          {/** Select SubTopic */}
+          <SubTopicNameRenderer
+            subTopics={subTopics}
+            selectedSubTopics={selectedSubTopic}
+            setSelectedSubTopic={setSelectedSubTopic}
+          />
+        </div>
       </div>
     </>
   );

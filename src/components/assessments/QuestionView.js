@@ -1,6 +1,11 @@
 import DifficultyLevel from "./DifficultyLevel";
 
 function QuestionType({ handler, questionType, difficultyLevels }) {
+  const totalCount =
+    Number(difficultyLevels[questionType]["Easy"]) +
+    Number(difficultyLevels[questionType]["Medium"]) +
+    Number(difficultyLevels[questionType]["Hard"]);
+
   return (
     <>
       {/**  Question Type */}
@@ -17,6 +22,15 @@ function QuestionType({ handler, questionType, difficultyLevels }) {
           />
           {questionType}
         </label>
+      </div>
+
+      <div>
+        <label>Number of Questions:</label>
+        <input
+          type="number"
+          value={String(totalCount)}
+          className="bg-white ms-2 me-4 w-16 scrollHide border-[1px] border-gray-400 rounded"
+        />
       </div>
 
       {/**  Difficulty Levels */}

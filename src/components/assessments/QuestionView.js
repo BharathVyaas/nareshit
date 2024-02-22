@@ -1,10 +1,42 @@
+import { useState } from "react";
 import DifficultyLevel from "./DifficultyLevel";
 
-function QuestionType({ handler, questionType, difficultyLevels }) {
-  const totalCount =
+function QuestionType({
+  handler: parentHandler,
+  questionType,
+  difficultyLevels,
+}) {
+  const [totalCount, setTotalCount] = useState(
     Number(difficultyLevels[questionType]["Easy"]) +
-    Number(difficultyLevels[questionType]["Medium"]) +
-    Number(difficultyLevels[questionType]["Hard"]);
+      Number(difficultyLevels[questionType]["Medium"]) +
+      Number(difficultyLevels[questionType]["Hard"])
+  );
+
+  const totalChangeHandler = (e) => {
+    const newValue = Number(e.target.value);
+    const currentTotal =
+      Number(difficultyLevels[questionType]["Easy"]) +
+      Number(difficultyLevels[questionType]["Medium"]) +
+      Number(difficultyLevels[questionType]["Hard"]);
+    if (newValue >= currentTotal) {
+      setTotalCount(e.target.value);
+    }
+  };
+
+  const handler = (questionType, level, newValue) => {
+    if (
+      !(
+        Number(difficultyLevels[questionType]["Easy"]) +
+          Number(difficultyLevels[questionType]["Medium"]) +
+          Number(difficultyLevels[questionType]["Hard"]) -
+          Number(difficultyLevels[questionType][level]) +
+          Number(newValue) >
+        totalCount
+      )
+    ) {
+      parentHandler(questionType, level, newValue);
+    }
+  };
 
   return (
     <>
@@ -29,6 +61,7 @@ function QuestionType({ handler, questionType, difficultyLevels }) {
         <input
           type="number"
           value={String(totalCount)}
+          onChange={totalChangeHandler}
           className="bg-white ms-2 me-4 w-16 scrollHide border-[1px] border-gray-400 rounded"
         />
       </div>

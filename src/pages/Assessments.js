@@ -61,7 +61,7 @@ export function AssessmentsV2() {
   const handler = (questionType, level, handler) => {
     setDifficlutyLevel((prev) => {
       const newObj = { ...prev };
-      newObj[questionType][level] = Number(handler);
+      newObj[questionType][level] = handler;
 
       return newObj;
     });

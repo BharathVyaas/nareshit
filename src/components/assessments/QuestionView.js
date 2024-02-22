@@ -56,7 +56,7 @@ function QuestionType({
         </label>
       </div>
 
-      <div>
+      <div className="ms-5 mt-5">
         <label>Number of Questions:</label>
         <input
           type="number"

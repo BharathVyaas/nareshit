@@ -57,6 +57,15 @@ function SelectedTechnology({ technologyID, setTechnologyID }) {
 
   return (
     <div className="flex flex-col mx-4">
+      {/** Technology Name from ID */}
+      <input
+        value={
+          programmingLanguages?.find((ele) => ele.TechnologyID == selectedValue)
+            ?.TechnologyName
+        }
+        name="TechnologyName"
+      />
+
       <label>Select Technology</label>
       <select
         id="proglang"

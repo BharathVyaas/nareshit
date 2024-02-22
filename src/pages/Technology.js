@@ -85,6 +85,7 @@ export async function TechnologyActionV2({ request, params }) {
   let TestID = params.TestID || 0;
 
   let AssessmentID = formData.get("AssessmentID") || "1";
+  let TechnologyName = formData.get("TechnologyName") || "None Selected";
   let TechnologyID = formData.get("TechnologyID") || "1";
   let NatureID = formData.get("NatureID") || "1";
   let RandomID = formData.get("RandomID") || "1";
@@ -140,7 +141,7 @@ export async function TechnologyActionV2({ request, params }) {
   let redirectVar = "/categories/assessments";
 
   if (TestID) {
-    redirectVar = `/categories/assessments?edit=true&TestID=${TestID}&TestDetailsID=${TestDetailsID}&TechnologyID=${TechnologyID}&NumOfEasy=${NumOfEasy}&NumOfMedium=${NumOfMedium}&NumOfHard=${NumOfHard}`;
+    redirectVar = `/categories/assessments?edit=true&TestID=${TestID}&TestDetailsID=${TestDetailsID}&TechnologyName=${TechnologyName}&TechnologyID=${TechnologyID}&NumOfEasy=${NumOfEasy}&NumOfMedium=${NumOfMedium}&NumOfHard=${NumOfHard}`;
   }
 
   if (NatureID == 3) redirectVar = "/questiondb/uploadTopic";

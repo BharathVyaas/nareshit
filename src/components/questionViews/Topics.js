@@ -8,7 +8,7 @@ import { useLocation } from "react-router";
 function Topics({ setDataHandler }) {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const technologyId = queryParams.get("TechnologyID") || 0;
+  const technologyName = queryParams.get("TechnologyName") || 0;
 
   const [modules, setModules] = useState();
   const [topics, setTopics] = useState();
@@ -90,7 +90,7 @@ function Topics({ setDataHandler }) {
       {/**  head */}
       <div className="flex justify-between">
         <p className="ms-[20px] pt-5 text-lg font-semibold">
-          Selected Technology: DotNet
+          Selected Technology: {technologyName}
         </p>
         <button
           onClick={() => {

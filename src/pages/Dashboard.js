@@ -19,6 +19,9 @@ function Dashboard() {
         </h1>
       </div>
       <hr className="me-4" />
+      <div>
+        <h2>Todays Assessments</h2>
+      </div>
     </div>
   );
 }

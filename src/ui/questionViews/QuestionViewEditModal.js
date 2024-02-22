@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useId, useRef, useState } from "react";
 import { useLocation } from "react-router";
 
@@ -79,6 +80,10 @@ function QuestionViewEditModal({ data, handler, setter }) {
   // max total values
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const TestID = queryParams.get("TestID") || 0;
+  const TestDetailsID = queryParams.get("TestDetailsID") || 0;
+  const technologyId = queryParams.get("TechnologyID") || 0;
+  const technologyName = queryParams.get("TechnologyName") || 0;
   const queryEasy = queryParams.get("easy") || 0;
   const queryMedium = queryParams.get("medium") || 0;
   const queryHard = queryParams.get("hard") || 0;
@@ -93,8 +98,10 @@ function QuestionViewEditModal({ data, handler, setter }) {
 
   let result = getResult(data, id);
 
-  function submiteHandler() {
+  async function submiteHandler() {
     let go = 0;
+    console.log(data);
+    // if we are creating new Combination
 
     // if every thing is okey.
     if (easyTotal + Number(easyRef.current.value) <= queryEasy) go++;
@@ -104,6 +111,51 @@ function QuestionViewEditModal({ data, handler, setter }) {
       result.easy = Number(easyRef.current.value);
       result.medium = Number(mediumRef.current.value);
       result.hard = Number(hardRef.current.value);
+
+      if (data.DataObj) {
+        const res = await axios.post(
+          "https://www.nareshit.net/InsertionQuestionView",
+          {
+            TechnologyId: technologyId,
+            TechnologyName: technologyName,
+            ModuleName: data.DataObj?.Module?.ModuleName,
+            ModuleId: data.ModuleID,
+            TopicName: data.DataObj?.Topic?.TopicName,
+            TopicId: data.TopicID,
+            SubtopicName: data.DataObj?.SubTopic?.SubTopicName,
+            SubtopicId: data.SubTopicID,
+            MediumCount: mediumRef.current.value,
+            HardCount: hardRef.current.value,
+            EasyCount: easyRef.current.value,
+            TestID,
+            TestDetailsID,
+          }
+        );
+
+        console.log(
+          "url",
+          "https://www.nareshit.net/InsertionQuestionView",
+          "data",
+          {
+            data: {
+              TestDetailsId: TestDetailsID,
+              ModuleName: data.DataObj?.Module?.ModuleName,
+              ModuleId: data.ModuleID,
+              TopicName: data.DataObj?.Topic?.TopicName,
+              TopicId: data.TopicID,
+              SubtopicName: data.DataObj?.SubTopic?.SubTopicName,
+              SubtopicId: data.SubTopicID,
+              MediumCount: mediumRef.current.value,
+              HardCount: hardRef.current.value,
+              EasyCount: easyRef.current.value,
+              TestId: 12,
+              TestDetailsId: 24,
+            },
+          },
+          "res",
+          res
+        );
+      }
 
       handler(result, "edit");
       setter(false);

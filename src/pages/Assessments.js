@@ -93,6 +93,7 @@ export async function AssessmentActionV2({ request }) {
   const TestID = url.searchParams.get("TestID") || 0;
   const TestDetailsID = url.searchParams.get("TestDetailsID") || 0;
   const TechnologyID = url.searchParams.get("TechnologyID") || 0;
+  const TechnologyName = url.searchParams.get("TechnologyName") || 0;
 
   const QuestionTypeID = formData.get("QuestionTypeID") || 1;
   const NumOfEasy = formData.get("NumOfEasy") || 0;
@@ -139,10 +140,10 @@ export async function AssessmentActionV2({ request }) {
     res
   );
 
-  let redirectVar = `/categories/questionview?edit=false&TechnologyID=${TechnologyID}&easy=${10}&medium=${10}&hard=${10}`;
+  let redirectVar = `/categories/questionview?edit=false&TechnologyID=${TechnologyID}&TechnologyName=${TechnologyName}&easy=${10}&medium=${10}&hard=${10}`;
 
   if (TestID) {
-    redirectVar = `/categories/questionview?edit=true&TechnologyID=${TechnologyID}&easy=${10}&medium=${10}&hard=${10}`;
+    redirectVar = `/categories/questionview?edit=true&TestID=${TestID}&TechnologyName=${TechnologyName}&TestDetailsID=${TestDetailsID}&TechnologyID=${TechnologyID}&easy=${10}&medium=${10}&hard=${10}`;
   }
 
   return redirect(redirectVar);

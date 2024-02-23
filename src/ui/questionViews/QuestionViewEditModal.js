@@ -1,11 +1,13 @@
 import axios from "axios";
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useLocation } from "react-router";
 
 // Returns Result Object
 function getResult(data, id) {
+  const newId = new Date().toLocaleString() + id;
+
   let result = {
-    id: data?.element?.id || id,
+    id: data?.element?.id || newId,
     selectedModule: data?.element?.selectedModule,
     ModuleID: data?.element?.ModuleID,
     selectedTopic: data?.element?.selectedTopic,
@@ -20,7 +22,7 @@ function getResult(data, id) {
   // when creating new Combination data object is different
   if (data.DataObj) {
     result = {
-      id: data?.DataObj?.id || id,
+      id: data?.DataObj?.id || newId,
       selectedModule: data?.DataObj?.Module?.ModuleName,
       ModuleID: data?.ModuleID,
       selectedTopic: data?.DataObj?.Topic?.TopicName,
@@ -38,6 +40,7 @@ function getResult(data, id) {
 
 // Returns Total from reducing all combonations.
 function getTotal(data) {
+  console.log(data);
   const combinationArr = Object.values(data.combination);
 
   let easyTotal = combinationArr.reduce(
@@ -94,9 +97,52 @@ function QuestionViewEditModal({ data, handler, setter }) {
   const id = useId();
   const [isValid, setIsValid] = useState(true);
 
+  const getDisabledInputStyles = (n) => {
+    if (n == 0) {
+      return "bg-gray-200 text-gray-700 border rounded-md w-10 px-2 py-1 ml-2";
+    }
+    return "border rounded-md w-10 px-2 py-1 ml-2";
+  };
+
   const { easyTotal, mediumTotal, hardTotal } = getTotal(data);
+  const [maxCount, setMaxCount] = useState({
+    easyCount: 0,
+    mediumCount: 0,
+    hardCount: 0,
+  });
+  const [warn, setWarn] = useState(false);
 
   let result = getResult(data, id);
+
+  const fetchMaxCount = async () => {
+    let ModuleId = data?.ModuleID;
+    ModuleId = ModuleId == 0 || ModuleId == -1 ? null : ModuleId;
+    let TopicId = data?.TopicID;
+    TopicId = TopicId == 0 || TopicId == -1 ? null : TopicId;
+    let SubTopicId = data?.SubTopicID;
+    SubTopicId = SubTopicId == 0 || SubTopicId == -1 ? null : SubTopicId;
+
+    const reqData = {
+      TechnologyId: technologyId,
+      ModuleId,
+      TopicId,
+      SubTopicId,
+    };
+    const res = await axios.post(
+      "https://www.nareshit.net/FetchAvailableQuestionsByCount",
+      reqData
+    );
+
+    setMaxCount({
+      easyCount: res?.data?.dbresult[0]?.EasyCount || 0,
+      mediumCount: res?.data?.dbresult[0]?.MediumCount || 0,
+      hardCount: res?.data?.dbresult[0]?.HardCount || 0,
+    });
+  };
+
+  useEffect(() => {
+    fetchMaxCount();
+  }, []);
 
   async function submiteHandler() {
     let go = 0;
@@ -108,6 +154,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
       Number(mediumRef.current.value) > 0 ||
       Number(hardRef.current.value) > 0
     ) {
+      setWarn(false);
       if (easyTotal + Number(easyRef.current.value) <= queryEasy)
         // if every thing is okey.
         go++;
@@ -169,6 +216,14 @@ function QuestionViewEditModal({ data, handler, setter }) {
         setIsValid(true);
       }
     }
+    if (
+      easyTotal < Number(easyRef?.current?.value) ||
+      mediumTotal < Number(mediumRef?.current?.value) ||
+      hardTotal < Number(hardRef?.current?.value)
+    ) {
+      console.log("in");
+      setWarn(true);
+    }
   }
 
   return (
@@ -207,41 +262,73 @@ function QuestionViewEditModal({ data, handler, setter }) {
           </p>
         </div>
         <div className="flex space-x-4">
-          <label className="flex items-center" htmlFor="topiceasy">
-            Easy:
-            <input
-              ref={easyRef}
-              id="topiceasy"
-              type="number"
-              className="border rounded-md w-10 px-2 py-1 ml-2"
-              defaultValue={result.easy}
-            />
-          </label>
-          <label className="flex items-center" htmlFor="topicmedium">
-            Medium:
-            <input
-              ref={mediumRef}
-              id="topicmedium"
-              type="number"
-              className="border rounded-md w-10 px-2 py-1 ml-2"
-              defaultValue={result.medium}
-            />
-          </label>
-          <label className="flex items-center" htmlFor="topichard">
-            Hard:
-            <input
-              ref={hardRef}
-              id="topichard"
-              type="number"
-              className="border rounded-md w-10 px-2 py-1 ml-2"
-              defaultValue={result.hard}
-            />
-          </label>
+          <div className="flex content-center">
+            <label className="flex items-center" htmlFor="topiceasy">
+              Easy:
+              <input
+                ref={easyRef}
+                id="topiceasy"
+                type="number"
+                disabled={(maxCount?.easyCount || 0) == 0}
+                className={getDisabledInputStyles(maxCount?.easyCount || 0)}
+                defaultValue={result.easy}
+              />
+            </label>
+            <p className="grid grid-flow-col place-content-center">
+              <span className="font-bold mx-2">/</span>
+              <span className="text-base text-yellow-600 content-ceter">
+                {maxCount?.easyCount || 0}
+              </span>
+            </p>
+          </div>
+          <div className="flex content-center">
+            <label className="flex items-center" htmlFor="topicmedium">
+              Medium:
+              <input
+                ref={mediumRef}
+                id="topicmedium"
+                type="number"
+                disabled={(maxCount?.mediumCount || 0) == 0}
+                className={getDisabledInputStyles(maxCount?.mediumCount || 0)}
+                defaultValue={result.medium}
+              />
+            </label>
+            <p className="grid grid-flow-col place-content-center">
+              <span className="font-bold mx-2">/</span>
+              <span className="text-base text-yellow-600 content-ceter">
+                {maxCount?.mediumCount || 0}
+              </span>
+            </p>
+          </div>
+          <div className="flex content-center">
+            <label className="flex items-center" htmlFor="topichard">
+              Hard:
+              <input
+                ref={hardRef}
+                id="topichard"
+                type="number"
+                disabled={(maxCount?.hardCount || 0) == 0}
+                className={getDisabledInputStyles(maxCount?.hardCount || 0)}
+                defaultValue={result.hard}
+              />
+            </label>
+            <p className="grid grid-flow-col place-content-center">
+              <span className="font-bold mx-2">/</span>
+              <span className="text-base text-yellow-600 content-ceter">
+                {maxCount?.hardCount || 0}
+              </span>
+            </p>
+          </div>
         </div>
         <div className="grid place-content-center mt-2">
           {!isValid && (
             <p className="text-red-800 font-semibold absloute">
               Try Entering Smaller Value!
+            </p>
+          )}
+          {warn && (
+            <p>
+              Can only set {easyTotal} {mediumTotal} {hardTotal}
             </p>
           )}
           <button

@@ -92,20 +92,24 @@ function ListOfAssessment() {
   const { assessments } = useLoaderData();
   let updatedData = assessments;
 
-  const submit = useSubmit();
-
   function createNewHandler(e) {
-    localStorage.setItem("TestID", 0);
+    LocalStorage.clear();
 
     navigate("/categories/technology");
   }
 
   async function handler(data) {
-    const res = await axios.post("https://www.nareshit.net/createEditTest", {
+    const res = await axios.post("https://www.nareshit.net/getBasicTestInfo", {
       data: { TestID: data.TestID },
     });
-    console.log(data.TestID);
-    console.log("create", res);
+    console.log(
+      "data",
+      data.TestID,
+      "url",
+      "https://www.nareshit.net/getBasicTestInfo",
+      "create",
+      res
+    );
 
     navigate(
       `/categories/technology?edit=true&TestID=${res.data.data[0]?.TestID}&randomId=${res.data.data[0]?.RandomID}&natureId=${res.data.data[0]?.NatureID}&technologyId=${res.data.data[0]?.TechnologyID}`
@@ -123,7 +127,7 @@ function ListOfAssessment() {
       <motion.main
         initial={{ x: "100%" }}
         animate={{ x: 0, transition: { duration: 0.3 } }}
-        exit={{ x: "100%", transition: { duration: 0.3 } }}
+        exit={{ x: "-100%", transition: { duration: 0.3 } }}
         className="bg-slate-100 min-h-[70vh] min-w-[80vw]  overflow-scroll py-[20px] shadow-xl mx-auto my-[20px]"
       >
         <section>

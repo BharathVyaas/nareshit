@@ -262,6 +262,7 @@ export function TableBodyRenderer({
   element,
   combination,
   setCombination,
+  natureID,
 }) {
   const arr = Object.values(element);
   let data;
@@ -270,6 +271,7 @@ export function TableBodyRenderer({
   return (
     <tr key={element.id} className="bg-gray-100 hover:bg-gray-200">
       <Tbody
+        natureID={natureID}
         setViewModal={setViewModal}
         setEditModal={setEditModal}
         data={element?.selectedModule}
@@ -279,6 +281,7 @@ export function TableBodyRenderer({
         setCombination={setCombination}
       />
       <Tbody
+        natureID={natureID}
         setViewModal={setViewModal}
         setEditModal={setEditModal}
         data={element?.selectedTopic}
@@ -288,6 +291,7 @@ export function TableBodyRenderer({
         setCombination={setCombination}
       />
       <Tbody
+        natureID={natureID}
         setViewModal={setViewModal}
         setEditModal={setEditModal}
         data={element?.selectedSubTopic}
@@ -297,6 +301,7 @@ export function TableBodyRenderer({
         setCombination={setCombination}
       />
       <Tbody
+        natureID={natureID}
         setViewModal={setViewModal}
         setEditModal={setEditModal}
         tag="input"
@@ -306,6 +311,7 @@ export function TableBodyRenderer({
         setCombination={setCombination}
       />
       <Tbody
+        natureID={natureID}
         setViewModal={setViewModal}
         setEditModal={setEditModal}
         tag="input"
@@ -315,6 +321,7 @@ export function TableBodyRenderer({
         setCombination={setCombination}
       />
       <Tbody
+        natureID={natureID}
         setViewModal={setViewModal}
         setEditModal={setEditModal}
         tag="input"
@@ -348,6 +355,7 @@ export function Tbody({
   element,
   combination,
   setCombination,
+  natureID,
   ...props
 }) {
   const location = useLocation();
@@ -380,42 +388,45 @@ export function Tbody({
 
   // used to change count
   function handler(present, previous, flag) {
-    // returns array of combination objects
-    const allElements = Object.values(combination);
+    if ((element?.includes?.[type]?.includes?.length || 0) > present) {
+      window.alert("Must remove 1 question before reducing count");
+    } else {
+      // returns array of combination objects
+      const allElements = Object.values(combination);
 
-    // total from asssessment page
-    const queryTotal = Number(queryParams.get(type)) || 0;
+      // total from asssessment page
+      const queryTotal = Number(queryParams.get(type)) || 0;
 
-    // stroes a number
-    let total = allElements.reduce((acc, ele) => {
-      return Number(ele[type]) + acc;
-    }, 0);
+      // stroes a number
+      let total = allElements.reduce((acc, ele) => {
+        return Number(ele[type]) + acc;
+      }, 0);
 
-    // to get current Data
-    total -= previous;
-    total += present;
+      // to get current Data
+      total -= previous;
+      total += present;
 
-    // if total is less then queryTotal and user doing add
-    // ||
-    // if present is less then 0 and user trying to do sub
-    if ((total <= queryTotal && flag) || (present >= 0 && !flag)) {
-      // if user want to decrease count and count is already 0 dont go lower
-      if (present >= 0 || flag) {
-        setCombination((prev) => {
-          const obj = { ...prev };
-          obj[element.id][type] = Number(present);
+      // if total is less then queryTotal and user doing add
+      // ||
+      // if present is less then 0 and user trying to do sub
+      if ((total <= queryTotal && flag) || (present >= 0 && !flag)) {
+        // if user want to decrease count and count is already 0 dont go lower
+        if (present >= 0 || flag) {
+          setCombination((prev) => {
+            const obj = { ...prev };
+            obj[element.id][type] = Number(present);
 
-          return obj;
-        });
+            return obj;
+          });
+        }
       }
     }
   }
 
   const underline =
-    BuilderService.technologyService._technology.natureOfAssessment === "fixed"
-      ? "bg-transparent underline underline-offset-2 decoration-2 decoration-red-500 "
-      : "bg-transparent";
-
+    natureID === 2
+      ? "bg-transparent underline underline-offset-2 decoration-2 decoration-red-500"
+      : "bg-transparent ";
   if (tag === "input")
     content = (
       <td
@@ -435,16 +446,17 @@ export function Tbody({
 
           <button
             /* className={underline} */
-            className="bg-transparent underline underline-offset-2 decoration-2 decoration-red-500"
+            className={underline}
             onClick={() => {
-              setViewModal({
-                modalData: element,
-                type,
-                element,
-                combination,
-                popupType: "view",
-                currentTotal: element[type],
-              });
+              if (natureID === 2)
+                setViewModal({
+                  modalData: element,
+                  type,
+                  element,
+                  combination,
+                  popupType: "view",
+                  currentTotal: element[type],
+                });
             }}
           >
             {element[type]}

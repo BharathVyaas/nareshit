@@ -3,13 +3,14 @@ import Modal from "./Modal";
 import TopicsContext from "../context/topicsContext";
 import QuestionView from "./QuestionView";
 
-function QuestionViewHandler({ modalData, setPopup, handler }) {
+function QuestionViewHandler({ modalData, setPopup, handler, styles }) {
   return (
     <Modal
       data={modalData}
       setter={setPopup}
       ModalParam={QuestionView}
       handler={handler}
+      styles={styles}
     />
   );
 }

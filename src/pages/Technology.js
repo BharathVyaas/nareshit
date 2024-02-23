@@ -10,6 +10,7 @@ import axios from "axios";
 import AssessmentV2 from "../components/technology/Assessment";
 import RandomV2 from "../components/technology/Random";
 import TechnologyNext from "../components/technology/TechnologyNext";
+import { AnimatePresence, motion } from "framer-motion";
 
 export function TechnologyV2() {
   /**
@@ -52,40 +53,55 @@ export function TechnologyV2() {
   }, [technologyID, natureID, randomID]);
 
   return (
-    <div>
-      <Form method="POST" className="m-5">
-        {/**  Technology */}
-        <SelectedTechnologyV2
-          technologyID={technologyID}
-          setTechnologyID={setTechnologyID}
-        />
+    <AnimatePresence>
+      <motion.main
+        initial={{ x: "100%" }}
+        animate={{ x: 0, transition: { duration: 0.3 } }}
+        exit={{ x: "-100%", transition: { duration: 0.3 } }}
+      >
+        <Form method="POST" className="m-5">
+          {/**  Technology */}
+          <SelectedTechnologyV2
+            technologyID={technologyID}
+            setTechnologyID={setTechnologyID}
+          />
 
-        {/* Assessment radio */}
-        <AssessmentV2
-          assessmentID={assessmentID}
-          setAssessmentID={setAssessmentID}
-        />
+          {/* Assessment radio */}
+          <AssessmentV2
+            assessmentID={assessmentID}
+            setAssessmentID={setAssessmentID}
+          />
 
-        {/** Nature of Assessment   */}
-        <NatureOfAssessmentV2 natureID={natureID} setNatureID={setNatureID} />
+          {/** Nature of Assessment   */}
+          <NatureOfAssessmentV2 natureID={natureID} setNatureID={setNatureID} />
 
-        {/**  Random */}
-        <RandomV2 randomID={randomID} setRandomID={setRandomID} />
+          {/**  Random */}
+          <RandomV2 randomID={randomID} setRandomID={setRandomID} />
 
-        {/**  Submit */}
-        <TechnologyNext isFormValid={isFormValid} errMsg={errMsg} />
-      </Form>
-    </div>
+          {/**  Submit */}
+          <TechnologyNext isFormValid={isFormValid} errMsg={errMsg} />
+        </Form>
+      </motion.main>
+    </AnimatePresence>
   );
 }
 
 export async function TechnologyActionV2({ request, params }) {
+  const url = new URL(request.url);
+
+  const queryTestID =
+    url.searchParams.get("TestID") == undefined
+      ? 0
+      : url.searchParams.get("TestID");
+
   const formData = await request.formData();
 
-  let TestID = params.TestID || 0;
+  console.log("data", formData.get("RandomID"));
+
+  let TestID = queryTestID || params.TestID || 0;
 
   let AssessmentID = formData.get("AssessmentID") || "1";
-  let TechnologyName = formData.get("TechnologyName") || "None Selected";
+  let TechnologyName = formData.get("TechnologyName") || "0";
   let TechnologyID = formData.get("TechnologyID") || "1";
   let NatureID = formData.get("NatureID") || "1";
   let RandomID = formData.get("RandomID") || "1";
@@ -120,7 +136,6 @@ export async function TechnologyActionV2({ request, params }) {
   );
 
   TestID = res.data.data[0]?.TestID;
-  TestID = 15901;
 
   // Get Data to make add Default values
   res = await axios.post("https://www.nareshit.net/getBasicTestDetailsInfo", {
@@ -129,14 +144,13 @@ export async function TechnologyActionV2({ request, params }) {
 
   console.log("getBasicTestDetailsInfo response:", res);
 
-  TestID = res.data.data[0]?.TestID || 0;
-
-  let TestDetailsID = res.data.data[0]?.TestDetailsID;
+  let TestDetailsID = res.data.data[0]?.TestDetailsID || 0;
   let NumOfEasy = res.data.data[0]?.NumOfEasy;
   let NumOfMedium = res.data.data[0]?.NumOfMedium;
   let NumOfHard = res.data.data[0]?.NumOfHard;
 
   console.log("req", params);
+  console.log("test", TestID);
 
   let redirectVar = "/categories/assessments";
 

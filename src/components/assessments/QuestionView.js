@@ -5,6 +5,10 @@ function QuestionType({
   handler: parentHandler,
   questionType,
   difficultyLevels,
+  easyCount,
+  mediumCount,
+  hardCount,
+  setWarn,
 }) {
   const [totalCount, setTotalCount] = useState(
     Number(difficultyLevels[questionType]["Easy"]) +
@@ -35,6 +39,21 @@ function QuestionType({
       )
     ) {
       parentHandler(questionType, level, newValue);
+    }
+  };
+
+  const valueChangeHandler = (prevValue, newValue) => {
+    if (
+      Number(difficultyLevels[questionType]["Easy"]) +
+        Number(difficultyLevels[questionType]["Medium"]) +
+        Number(difficultyLevels[questionType]["Hard"]) -
+        prevValue +
+        newValue !=
+      totalCount
+    ) {
+      setWarn(totalCount != 0 && true);
+    } else {
+      setWarn(false);
     }
   };
 
@@ -77,7 +96,9 @@ function QuestionType({
             handler={handler}
             difficultyLevel={"Easy"}
             questionType={questionType}
+            valueChangeHandler={valueChangeHandler}
             difficultyLevels={difficultyLevels}
+            maxCount={easyCount}
           />
 
           {/* medium */}
@@ -86,7 +107,9 @@ function QuestionType({
             handler={handler}
             difficultyLevel={"Medium"}
             questionType={questionType}
+            valueChangeHandler={valueChangeHandler}
             difficultyLevels={difficultyLevels}
+            maxCount={mediumCount}
           />
 
           {/* hard */}
@@ -95,7 +118,9 @@ function QuestionType({
             handler={handler}
             difficultyLevel={"Hard"}
             questionType={questionType}
+            valueChangeHandler={valueChangeHandler}
             difficultyLevels={difficultyLevels}
+            maxCount={hardCount}
           />
         </div>
       </div>

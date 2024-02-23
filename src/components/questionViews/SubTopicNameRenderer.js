@@ -5,16 +5,16 @@ function SubTopicNameRenderer({
 }) {
   return (
     <div className="max-w-[33%] w-[33%] flex flex-col me-6">
-      <label htmlFor="ModuleID">Module Name:</label>
+      <label htmlFor="SubTopicID">SubTopic Name:</label>
 
       <select
-        id="ModuleID"
-        name="ModuleID"
+        id="SubTopicID"
+        name="SubTopicID"
         onChange={(e) => setSelectedSubTopic(e.target.value)}
       >
         {/**  Default */}
-        <option value="-1">Select A Module</option>
-        {/** Module names */}
+        <option value="-1">Select A SubTopic</option>
+        {/** SubTopic names */}
         {subTopics &&
           subTopics.map(({ SubTopicID, SubTopicName }) => {
             return (

@@ -8,7 +8,11 @@ import ListOfAssessment, {
   loader as AssessmentLoader,
 } from "./pages/ListOfAssessment";
 import { TechnologyV2, TechnologyActionV2 } from "./pages/Technology";
-import { AssessmentActionV2, AssessmentsV2 } from "./pages/Assessments";
+import {
+  AssessmentActionV2,
+  AssessmentLoaderV2,
+  AssessmentsV2,
+} from "./pages/Assessments";
 import QuestionView, {
   loader as QuestionLoader,
   QuestionViewV2,
@@ -85,6 +89,7 @@ function App() {
           path: "assessments",
           element: <AssessmentsV2 />,
           action: AssessmentActionV2,
+          loader: AssessmentLoaderV2,
         },
         {
           path: "questionview",

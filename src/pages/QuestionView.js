@@ -31,6 +31,8 @@ import TopicNameRenderer from "../components/questionViews/TopicNameRenderer";
 import ModuleNameRenderer from "../components/questionViews/ModuleNameRenderer";
 import Topics from "../components/questionViews/Topics";
 import CombinationRenderer from "../components/questionViews/CombinationRenderer";
+import QuestionViewNext from "../components/questionViews/QuestionViewNext";
+import _debounce from "lodash/debounce";
 
 const Titles = ["MCQ"];
 
@@ -148,6 +150,15 @@ function QuestionView() {
     }); */
   }
 
+  const setDataHandler = () => {
+    if (selectedModule.module) {
+      setShowPopupWarn(false);
+      setPopup(true);
+    } else {
+      setShowPopupWarn(true);
+    }
+  };
+
   const [isValid, setIsValid] = useState(false);
 
   return (
@@ -189,14 +200,7 @@ function QuestionView() {
             )}
             <button
               className="mr-[20px] mt-5 px-6 max-h-8 min-h-8 bg-[gray] text-white font-semibold rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:bg-gray-500 focus:ring-opacity-50"
-              onClick={() => {
-                if (selectedModule.module) {
-                  setShowPopupWarn(false);
-                  setPopup(true);
-                } else {
-                  setShowPopupWarn(true);
-                }
-              }}
+              onClick={setDataHandler}
             >
               Set Data
             </button>
@@ -286,9 +290,9 @@ export function Questions({
     if (currentCombination.includes && currentCombination.includes[type]) {
       includes = currentCombination.includes[type].includes || [];
     }
-    console.log(currentValue, includes.length, currentIncludes);
+
     if (flag) {
-      if (!(Number(currentValue) >= currentIncludes)) {
+      if (Number(currentIncludes) >= currentValue) {
         window.alert(`Questions should not exeed ${currentValue}`);
         e.target.checked = false;
       }
@@ -498,13 +502,75 @@ export async function loader() {
 }
 
 export function QuestionViewV2() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const TestID = queryParams.get("TestID");
+  const TestDetailsID = queryParams.get("TestDetailsID");
+
+  // for validation for dynamic and fixed
+  const [natureID, setNatureID] = useState(0);
+
   // {id: {element}}
   const [combination, setCombination] = useState({});
-  //  (element: {selectedModule, selectedSubTopic,selectedTopic,easy, medium, hard, ModuleID, TopicID, SubTopicID} && combination) || (DataObj {...element} && combination)
-  const [popup, setPopup] = useState(false);
 
+  //  (element: {selectedModule, selectedSubTopic,selectedTopic,easy, medium, hard, ModuleID, TopicID, SubTopicID} && combination) || (DataObj {...element} && combination)
   const [editModal, setEditModal] = useState(false);
   const [viewModal, setViewModal] = useState(false);
+
+  const [isFormValid, setFormIsValid] = useState(true);
+  const [errMsg, setErrMsg] = useState(false);
+
+  // for optimize
+
+  const getCombonations = _debounce(async () => {
+    const res = await axios.post(
+      "https://www.nareshit.net/SelectQuestionCombination",
+      {
+        TestId: TestID,
+        TestDetailsId: TestDetailsID,
+      }
+    );
+    setCombination(JSON.parse(res?.data?.dbresult?.[0]?.combinations) || {});
+  }, 500);
+
+  const postCombinations = _debounce(async () => {
+    const res = await axios.post(
+      "https://www.nareshit.net/Insert_Update_QuestionCombination",
+      {
+        TestId: TestID,
+        TestDetailsId: TestDetailsID,
+        Combinations: JSON.stringify(combination),
+      }
+    );
+    console.log(res.data.dbresult[0].combinations);
+  }, 500);
+
+  useEffect(() => {
+    getCombonations();
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(combination).length > 0) postCombinations();
+  }, [combination]);
+
+  const fetchCombonations = async () => {
+    /* const res = await axios.post("https://www.nareshit.net/CreateDynamicTest", {
+      TestId: 34,
+    });
+    setCombination(JSON.parse(res.data.dbresult)); */
+  };
+
+  const fetchNatureID = async () => {
+    let res = await axios.post("https://www.nareshit.net/getBasicTestInfo", {
+      data: { TestID: TestID },
+    });
+    setNatureID(res.data?.data[0].NatureID);
+  };
+
+  useEffect(() => {
+    fetchCombonations();
+    fetchNatureID();
+  }, []);
 
   const setEditModalHandler = (ModuleID, TopicID, SubTopicID, DataObj) => {
     setEditModal({
@@ -546,7 +612,6 @@ export function QuestionViewV2() {
           obj[key].medium = Number(resultObj.medium) || 0;
           obj[key].hard = Number(resultObj.hard) || 0;
         }
-        console.log("obj", obj);
 
         return obj;
       });
@@ -566,35 +631,55 @@ export function QuestionViewV2() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-[70vh]">
-      {/** Modal to conform combination */}
-      {viewModal && (
-        <QuestionViewHandler
-          modalData={viewModal}
-          setPopup={setViewModal}
-          handler={handler}
-        />
-      )}
+    <AnimatePresence>
+      <motion.main
+        initial={{ x: "100%" }}
+        animate={{ x: 0, transition: { duration: 0.3 } }}
+        exit={{ x: "-100%", transition: { duration: 0.3 } }}
+      >
+        <div className="bg-gray-50 min-h-[70vh]">
+          {/** Modal to conform combination */}
+          {viewModal && (
+            <QuestionViewHandler
+              modalData={viewModal}
+              setPopup={setViewModal}
+              handler={handler}
+            />
+          )}
 
-      {/**  Edit Modal */}
-      {editModal && (
-        <QuestionViewHandler
-          modalData={editModal}
-          setPopup={setEditModal}
-          handler={handler}
-        />
-      )}
+          {/**  Edit Modal */}
+          {editModal && (
+            <QuestionViewHandler
+              modalData={editModal}
+              setPopup={setEditModal}
+              handler={handler}
+              styles={"w-[640px]"}
+            />
+          )}
 
-      {/**  Topics */}
-      <Topics combination={combination} setDataHandler={setEditModalHandler} />
+          {/**  Topics */}
+          <Topics
+            combination={combination}
+            setDataHandler={setEditModalHandler}
+          />
 
-      {/**  Combination Table */}
-      <CombinationRenderer
-        setViewModal={setViewModal}
-        setEditModal={setEditModal}
-        combination={combination}
-        setCombination={setCombination}
-      />
-    </div>
+          {/**  Combination Table */}
+          <CombinationRenderer
+            natureID={natureID}
+            setViewModal={setViewModal}
+            setEditModal={setEditModal}
+            combination={combination}
+            setCombination={setCombination}
+          />
+
+          {/**  Question View Next */}
+          <QuestionViewNext
+            isFormValid={isFormValid}
+            errMsg={errMsg}
+            TestID={TestID}
+          />
+        </div>
+      </motion.main>
+    </AnimatePresence>
   );
 }

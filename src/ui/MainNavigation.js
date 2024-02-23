@@ -21,10 +21,11 @@ function MainNavigation() {
         <li className="">
           <NavLink
             to="technology"
+            onClick={(e) => e.preventDefault()}
             className={({ isActive }) =>
               isActive
                 ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
-                : "text-white font-medium rounded px-6 py-3"
+                : "text-white cursor-default font-medium rounded px-6 py-3"
             }
             end
           >
@@ -34,10 +35,11 @@ function MainNavigation() {
         <li className="">
           <NavLink
             to="assessments"
+            onClick={(e) => e.preventDefault()}
             className={({ isActive }) =>
               isActive
                 ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
-                : "text-white font-medium rounded px-6 py-3"
+                : "text-white cursor-default font-medium rounded px-6 py-3"
             }
             end
           >
@@ -47,10 +49,11 @@ function MainNavigation() {
         <li className="">
           <NavLink
             to="questionview"
+            onClick={(e) => e.preventDefault()}
             className={({ isActive }) =>
               isActive
                 ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
-                : "text-white font-medium rounded px-6 py-3"
+                : "text-white cursor-default font-medium rounded px-6 py-3"
             }
             end
           >
@@ -60,10 +63,11 @@ function MainNavigation() {
         <li className="">
           <NavLink
             to="scheduletime"
+            onClick={(e) => e.preventDefault()}
             className={({ isActive }) =>
               isActive
                 ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
-                : "text-white font-medium rounded px-6 py-3"
+                : "text-white cursor-default font-medium rounded px-6 py-3"
             }
             end
           >

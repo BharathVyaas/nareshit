@@ -34,48 +34,22 @@ function ScheduleTime() {
   const startTimeRef = useRef();
   const endTimeRef = useRef();
 
-  const [testName, setTestName] = useState(
-    LocalStorage.data.scheduleTimeData.scheduleTimeData.testName
-  );
-  const [testDescription, setTestDescription] = useState(
-    LocalStorage.data.scheduleTimeData.scheduleTimeData.testDescription
-  );
-  const [startDate, setStartDate] = useState(
-    LocalStorage.data.scheduleTimeData.scheduleTimeData.startDate
-  );
-  const [endDate, setEndDate] = useState(
-    LocalStorage.data.scheduleTimeData.scheduleTimeData.endDate
-  );
-  const [startTime, setStartTime] = useState(
-    LocalStorage.data.scheduleTimeData.scheduleTimeData.startTime
-  );
-  const [endTime, setEndTime] = useState(
-    LocalStorage.data.scheduleTimeData.scheduleTimeData.endTime
-  );
+  const [testName, setTestName] = useState("");
+  const [testDescription, setTestDescription] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
 
   const [isValid, setIsValid] = useState(false);
-  const [isDateValid, setIsDateValid] = useState(false);
-  const [isTimeValid, setIsTimeValid] = useState(false);
+  const [isDateValid, setIsDateValid] = useState(true);
+  const [isTimeValid, setIsTimeValid] = useState(true);
   const [isTestValid, setIsTestValid] = useState(false);
-
-  BuilderService.scheduleTimeService.scheduleTimeData.testName = testName;
-  BuilderService.scheduleTimeService.scheduleTimeData.testDescription =
-    testDescription;
-  BuilderService.scheduleTimeService.scheduleTimeData.startDate = startDate;
-  BuilderService.scheduleTimeService.scheduleTimeData.endDate = endDate;
-  BuilderService.scheduleTimeService.scheduleTimeData.startTime = startTime;
-  BuilderService.scheduleTimeService.scheduleTimeData.endTime = endTime;
 
   useEffect(() => {
     if (startDate && endDate) {
       const startDateTime = new Date(startDate).toISOString();
       const endDateTime = new Date(endDate).toISOString();
-
-      BuilderService.scheduleTimeService.scheduleTimeData.startTime =
-        getTime(startDateTime);
-      BuilderService.scheduleTimeService.scheduleTimeData.endTime =
-        getTime(endDateTime);
-      LocalStorage.data = BuilderService.getData();
 
       setIsDateValid(startDateTime <= endDateTime);
     }
@@ -87,36 +61,22 @@ function ScheduleTime() {
       const startDateTime = new Date(dummyDate + "T" + startTime);
       const endDateTime = new Date(dummyDate + "T" + endTime);
 
-      BuilderService.scheduleTimeService.scheduleTimeData.startDate = new Date(
-        startDateTime
-      );
-      BuilderService.scheduleTimeService.scheduleTimeData.endDate = new Date(
-        endDateTime
-      );
-
-      LocalStorage.data = BuilderService.getData();
       setIsTimeValid(startDateTime.getTime() <= endDateTime.getTime());
     }
   }, [startTime, endTime]);
 
   useEffect(() => {
     setIsTestValid(testName && testDescription);
-
-    BuilderService.scheduleTimeService.scheduleTimeData.testName = testName;
-    BuilderService.scheduleTimeService.scheduleTimeData.testDescription =
-      testDescription;
-
-    LocalStorage.data = BuilderService.getData();
   }, [testName, testDescription]);
 
   useEffect(() => {
-    setIsValid(isTestValid);
+    setIsValid(isTestValid && isDateValid && isTimeValid);
   }, [isTimeValid, isDateValid, isTestValid]);
 
   return (
     <AnimatePresence>
       <motion.main
-        initial={{ x: "100%", transition: { duration: 0.3 } }}
+        initial={{ x: "100%" }}
         animate={{ x: 0, transition: { duration: 0.3 } }}
       >
         <Form
@@ -128,7 +88,7 @@ function ScheduleTime() {
           </label>
           <input
             type="text"
-            name="testName"
+            name="TestName"
             id="testName"
             value={testName}
             onChange={(e) => setTestName(e.target.value)}
@@ -139,7 +99,7 @@ function ScheduleTime() {
           </label>
           <input
             type="text"
-            name="testDescription"
+            name="TestDescription"
             id="testDescription"
             value={testDescription}
             onChange={(e) => setTestDescription(e.target.value)}
@@ -150,7 +110,7 @@ function ScheduleTime() {
           </label>
           <input
             type="date"
-            name="startDate"
+            name="TestStartDate"
             id="startDate"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
@@ -161,7 +121,7 @@ function ScheduleTime() {
           </label>
           <input
             type="date"
-            name="endDate"
+            name="TestEndDate"
             id="endDate"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
@@ -172,7 +132,7 @@ function ScheduleTime() {
           </label>
           <input
             type="time"
-            name="startTime"
+            name="TestStartTime"
             id="startTime"
             value={startTime}
             onChange={(e) => setStartTime(e.target.value)}
@@ -184,7 +144,7 @@ function ScheduleTime() {
           <input
             className="w-full border-[1.2px]  _text-start border-black h-[2.2rem] p-2"
             type="time"
-            name="endTime"
+            name="TestEndTime"
             id="endTime"
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
@@ -204,34 +164,45 @@ function ScheduleTime() {
 
 export default ScheduleTime;
 
-export async function action() {
-  const data = {};
+export async function action({ request, params }) {
+  const url = new URL(request.url);
 
-  const startDate = new Date(
-    BuilderService.scheduleTimeService.scheduleTimeData.startDate
-  ).toString();
+  const queryTestID =
+    url.searchParams.get("TestID") == undefined
+      ? 0
+      : url.searchParams.get("TestID");
 
-  const endDate = new Date(
-    BuilderService.scheduleTimeService.scheduleTimeData.startDate
-  ).toString();
+  const formData = await request.formData();
+  const TestName = formData.get("TestName");
+  const TestDescription = formData.get("TestDescription");
+  let TestStartDate = formData.get("TestStartDate");
+  let TestEndDate = formData.get("TestEndDate");
+  const TestStartTime = formData.get("TestStartTime");
+  const TestEndTime = formData.get("TestEndTime");
 
-  data["TestID"] = BuilderService.id.technologyId;
-  data["TestName"] =
-    BuilderService.scheduleTimeService.scheduleTimeData.testName;
-  data["TestDescription"] =
-    BuilderService.scheduleTimeService.scheduleTimeData.testDescription;
-  data["TestStartDate"] = new Date(startDate);
-  data["TestEndDate"] = new Date(endDate);
-  data["TestStartTime"] = getTime(
-    BuilderService.scheduleTimeService.scheduleTimeData.startTime + ":00"
-  );
-  data["TestEndTime"] = getTime(
-    BuilderService.scheduleTimeService.scheduleTimeData.endTime + ":00"
-  );
+  console.log({
+    data: {
+      TestID: queryTestID,
+      TestName,
+      TestDescription,
+      TestStartDate,
+      TestEndDate,
+      TestStartTime,
+      TestEndTime,
+    },
+  });
 
-  console.log("data", data);
-
-  const res = await axios.post("https://www.nareshit.net/updateTest", { data });
+  const res = await axios.post("https://www.nareshit.net/updateTest", {
+    data: {
+      TestID: queryTestID,
+      TestName,
+      TestDescription,
+      TestStartDate,
+      TestEndDate,
+      TestStartTime,
+      TestEndTime,
+    },
+  });
 
   console.log(res);
 

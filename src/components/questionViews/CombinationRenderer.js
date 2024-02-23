@@ -37,11 +37,13 @@ function getTableAttributeTitles(
 
   return TableAttributeTitles;
 }
+
 function CombinationRenderer({
   combination,
   setCombination,
   setViewModal,
   setEditModal,
+  natureID,
 }) {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -71,6 +73,7 @@ function CombinationRenderer({
             {combination &&
               Object.values(combination).map((element) => (
                 <TableBodyRenderer
+                  natureID={natureID}
                   combination={combination}
                   setCombination={setCombination}
                   setViewModal={setViewModal}

@@ -138,12 +138,16 @@ function QuestionViewFixedModal({
     },
   });
 
-  console.log("includes", includes);
-
   function modalHandler(flag, question) {
+    /* if (flag) {
+      if (includes[key][data.type]?.length === 5)
+        if (includes[key][data.type]?.length + 1 > currentValue) {
+          window.alert("Must remove one question before inserting new");
+        }
+    } */
     if (
       flag &&
-      Object.values(includes)[0][data.type].length <
+      Object.values(includes)[0][data.type].length <=
         currentCombination[data.type]
     ) {
       setIncludes((prev) => {
@@ -155,14 +159,12 @@ function QuestionViewFixedModal({
             hard: [],
           };
         }
-        console.log(obj);
         if (
           obj[data.modalData?.id] &&
           !obj[data.modalData?.id][data?.type].includes(question.QuestionID)
         ) {
           obj[data.modalData?.id][data?.type].push(question.QuestionID);
         }
-        console.log(obj);
         return obj;
       });
     } else {

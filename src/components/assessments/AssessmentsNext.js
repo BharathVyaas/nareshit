@@ -15,6 +15,14 @@ export function AssessmentsNext({
   if (hard == undefined) hard = true;
 
   let disabled = easy && medium && hard;
+  const nextHandler = (e) => {
+    if (disabled || warn) {
+      setWarn(true);
+      e.preventDefault();
+    } else {
+      setWarn(false);
+    }
+  };
 
   return (
     <>
@@ -23,7 +31,7 @@ export function AssessmentsNext({
           {warn && (
             <p className="width-full text-center text-red-600 font-semibold mb-3">
               {disabled
-                ? "Total Questins must be grater then 0"
+                ? "Number of Questins must be grater then 0"
                 : "Total Questions must match easy + medium + hard"}
             </p>
           )}
@@ -36,7 +44,7 @@ export function AssessmentsNext({
 
         <div className="w-full flex">
           <button
-            disabled={disabled || warn}
+            onClick={nextHandler}
             className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
           >
             Next

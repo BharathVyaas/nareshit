@@ -33,6 +33,7 @@ import Topics from "../components/questionViews/Topics";
 import CombinationRenderer from "../components/questionViews/CombinationRenderer";
 import QuestionViewNext from "../components/questionViews/QuestionViewNext";
 import _debounce from "lodash/debounce";
+import { includes } from "lodash";
 
 const Titles = ["MCQ"];
 
@@ -293,7 +294,7 @@ export function Questions({
 
     if (flag) {
       if (Number(currentIncludes) >= currentValue) {
-        window.alert(`Questions should not exeed ${currentValue}`);
+        window.alert(`Questions should not exceed ${currentValue}`);
         e.target.checked = false;
       }
     }
@@ -520,8 +521,11 @@ export function QuestionViewV2() {
   const [isFormValid, setFormIsValid] = useState(true);
   const [errMsg, setErrMsg] = useState(false);
 
-  // for optimize
+  const queryEasy = queryParams.get("easy") || 0;
+  const queryMedium = queryParams.get("medium") || 0;
+  const queryHard = queryParams.get("hard") || 0;
 
+  // for optimize
   const getCombonations = _debounce(async () => {
     const res = await axios.post(
       "https://www.nareshit.net/SelectQuestionCombination",
@@ -530,7 +534,7 @@ export function QuestionViewV2() {
         TestDetailsId: TestDetailsID,
       }
     );
-    console.log(res?.data?.dbresult?.[0]?.combinations);
+
     setCombination(JSON.parse(res?.data?.dbresult?.[0]?.combinations || "{}"));
   }, 100);
 
@@ -619,7 +623,6 @@ export function QuestionViewV2() {
           obj[key].medium = Number(resultObj.medium) || 0;
           obj[key].hard = Number(resultObj.hard) || 0;
         }
-
         return obj;
       });
     } else {
@@ -636,6 +639,82 @@ export function QuestionViewV2() {
       setCombination(obj);
     }
   };
+
+  const [tableTotal, setTableTotal] = useState({ easy: 0, medium: 0, hard: 0 });
+
+  useEffect(() => {
+    if (combination) {
+      Object.values(combination).forEach((ele) => {
+        // if Nature is not dynamic
+        if (natureID == 2) {
+          const includesObj = ele.includes;
+          console.log("data", ele.includes);
+
+          for (let key in ele.includes) {
+            const value = ele.includes[key];
+
+            if (key === "easy") {
+              setTableTotal((prev) => {
+                if (!prev) return prev;
+                const obj = { ...prev };
+                console.log("obj", obj);
+                obj.easy += value?.count || 0;
+                return obj;
+              });
+            }
+            if (key === "medium") {
+              setTableTotal((prev) => {
+                if (!prev) return prev;
+                const obj = { ...prev };
+                console.log("obj", obj);
+                obj.medium += value?.count || 0;
+                return obj;
+              });
+            }
+            if (key === "hard") {
+              setTableTotal((prev) => {
+                if (!prev) return prev;
+                const obj = { ...prev };
+                console.log("obj", obj);
+                obj.hard += value?.count || 0;
+                return obj;
+              });
+            }
+          }
+        } else if (natureID == 1) {
+          setTableTotal((prev) => {
+            if (!prev) return prev;
+            const updatedTableTotal = Object.values(combination).reduce(
+              (acc, ele) => {
+                return {
+                  easy: (acc?.easy || 0) + (ele.easy || 0),
+                  medium: (acc?.medium || 0) + (ele.medium || 0),
+                  hard: (acc?.hard || 0) + (ele.hard || 0),
+                };
+              },
+              { easy: 0, medium: 0, hard: 0 }
+            );
+            return updatedTableTotal;
+          });
+        }
+      });
+    }
+  }, [combination]);
+
+  console.log(
+    "tableTotal",
+    natureID,
+    tableTotal.easy,
+    queryEasy,
+    tableTotal.medium,
+    queryMedium,
+    tableTotal.hard,
+    queryHard,
+    tableTotal.easy == queryEasy,
+    tableTotal.medium == queryMedium,
+    tableTotal.hard == queryHard,
+    combination
+  );
 
   return (
     <AnimatePresence>
@@ -684,6 +763,11 @@ export function QuestionViewV2() {
             isFormValid={isFormValid}
             errMsg={errMsg}
             TestID={TestID}
+            isTableTotalValid={
+              tableTotal.easy >= queryEasy &&
+              tableTotal.medium >= queryMedium &&
+              tableTotal.hard >= queryHard
+            }
           />
         </div>
       </motion.main>

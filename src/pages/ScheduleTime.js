@@ -151,7 +151,6 @@ function ScheduleTime() {
           />
           <button
             disabled={!isValid}
-            onClick={() => console.log(BuilderService)}
             className="px-8 py-2 mx-auto mt-4 bg-green-300 hover:bg-green-400"
           >
             Test Prepared

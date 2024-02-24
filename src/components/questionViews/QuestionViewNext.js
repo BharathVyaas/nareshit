@@ -1,19 +1,28 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { redirect, useNavigate } from "react-router";
 
-function QuestionViewNext({ isFormValid, errMsg, TestID }) {
+function QuestionViewNext({ isFormValid, errMsg, TestID, isTableTotalValid }) {
   const [displayErr, setDisplayErr] = useState("");
   const navigate = useNavigate();
 
   const clickHandler = (e) => {
-    if (!isFormValid) {
-      setDisplayErr(errMsg || "Must Select A Valid Technology");
+    // if user did not select all questions.
+    if (!isTableTotalValid) {
       e.preventDefault();
     } else {
-      setDisplayErr("");
-      let navVar = `/categories/scheduletime?TestID=${TestID}`;
-      navigate(navVar);
+      if (!isFormValid) {
+        setDisplayErr(errMsg || "Must Select A Valid Technology");
+        e.preventDefault();
+      } else {
+        setDisplayErr("");
+        let navVar = `/categories/scheduletime?TestID=${TestID}`;
+        navigate(navVar);
+      }
     }
+  };
+
+  const previewHandler = () => {
+    window.location.href = `https://www.nareshit.net/previewexampage?testID=${TestID}`;
   };
 
   return (
@@ -23,13 +32,22 @@ function QuestionViewNext({ isFormValid, errMsg, TestID }) {
           {displayErr}
         </p>
       )}
-      <div className="w-full flex mt-14" onClick={clickHandler}>
-        <button
-          onClick={clickHandler}
-          className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
-        >
-          Next
-        </button>
+      <div className="flex w-full">
+        <div className="mx-auto">
+          <button
+            onClick={previewHandler}
+            className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
+          >
+            Preview
+          </button>
+        </div>
+        <div className="mx-auto" onClick={clickHandler}>
+          <button
+            className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

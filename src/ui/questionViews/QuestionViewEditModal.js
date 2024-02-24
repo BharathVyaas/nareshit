@@ -1,4 +1,5 @@
 import axios from "axios";
+import { includes } from "lodash";
 import { useEffect, useId, useRef, useState } from "react";
 import { useLocation } from "react-router";
 
@@ -140,13 +141,49 @@ function QuestionViewEditModal({ data, handler, setter }) {
     });
   };
 
+  // Easy Cal
+  const [correctEasy, setCorrectEasy] = useState(0);
+  useEffect(() => {
+    const maxEasyCount = maxCount?.easyCount || 0;
+    const availableEasyTotal = easyTotal == 0 ? 0 : queryEasy - easyTotal;
+    setCorrectEasy(
+      maxEasyCount > availableEasyTotal ? queryEasy - easyTotal : maxEasyCount
+    );
+  }, [maxCount]);
+
+  // Medium Cal
+  const [correctMedium, setCorrectMedium] = useState(0);
+  useEffect(() => {
+    {
+      const maxMediumCount = maxCount?.mediumCount || 0;
+      const availableMediumTotal =
+        mediumTotal == 0 ? 0 : queryMedium - mediumTotal;
+      setCorrectMedium(
+        maxMediumCount > availableMediumTotal
+          ? queryMedium - mediumTotal
+          : availableMediumTotal
+      );
+    }
+  }, [maxCount]);
+
+  // Hard Cal
+  const [correctHard, setCurrentHard] = useState(0);
+  useEffect(() => {
+    const maxHardCount = maxCount?.hardCount || 0;
+    const availableHardTotal = hardTotal == 0 ? 0 : queryHard - hardTotal;
+    setCurrentHard(
+      maxHardCount > availableHardTotal
+        ? queryHard - hardTotal
+        : availableHardTotal
+    );
+  }, [maxCount]);
+
   useEffect(() => {
     fetchMaxCount();
   }, []);
 
   async function submiteHandler() {
     let go = 0;
-    console.log(data);
     // if we are creating new Combination
 
     if (
@@ -154,66 +191,72 @@ function QuestionViewEditModal({ data, handler, setter }) {
       Number(mediumRef.current.value) > 0 ||
       Number(hardRef.current.value) > 0
     ) {
-      setWarn(false);
-      if (easyTotal + Number(easyRef.current.value) <= queryEasy)
-        // if every thing is okey.
-        go++;
-      if (mediumTotal + Number(mediumRef.current.value) <= queryMedium) go++;
-      if (hardTotal + Number(hardRef.current.value) <= queryHard) go++;
-      if (go > 2) {
-        result.easy = Number(easyRef.current.value);
-        result.medium = Number(mediumRef.current.value);
-        result.hard = Number(hardRef.current.value);
+      if (
+        Number(easyRef.current.value) <= correctEasy &&
+        Number(mediumRef.current.value) <= correctMedium &&
+        Number(hardRef.current.value) <= correctHard
+      ) {
+        setWarn(false);
+        if (easyTotal + Number(easyRef.current.value) <= queryEasy)
+          // if every thing is okey.
+          go++;
+        if (mediumTotal + Number(mediumRef.current.value) <= queryMedium) go++;
+        if (hardTotal + Number(hardRef.current.value) <= queryHard) go++;
+        if (go > 2) {
+          result.easy = Number(easyRef.current.value);
+          result.medium = Number(mediumRef.current.value);
+          result.hard = Number(hardRef.current.value);
 
-        if (data.DataObj) {
-          const res = await axios.post(
-            "https://www.nareshit.net/InsertionQuestionView",
-            {
-              TechnologyId: technologyId,
-              TechnologyName: technologyName,
-              ModuleName: data.DataObj?.Module?.ModuleName,
-              ModuleId: data.ModuleID,
-              TopicName: data.DataObj?.Topic?.TopicName,
-              TopicId: data.TopicID,
-              SubtopicName: data.DataObj?.SubTopic?.SubTopicName,
-              SubtopicId: data.SubTopicID,
-              MediumCount: mediumRef.current.value,
-              HardCount: hardRef.current.value,
-              EasyCount: easyRef.current.value,
-              TestId: TestID,
-              TestDetailsId: TestDetailsID,
-              Combinations: JSON.stringify(data?.combination),
-            }
-          );
+          if (data.DataObj) {
+            const res = await axios.post(
+              "https://www.nareshit.net/InsertionQuestionView",
+              {
+                TechnologyId: technologyId,
+                TechnologyName: technologyName,
+                ModuleName: data.DataObj?.Module?.ModuleName,
+                ModuleId: data.ModuleID,
+                TopicName: data.DataObj?.Topic?.TopicName,
+                TopicId: data.TopicID,
+                SubtopicName: data.DataObj?.SubTopic?.SubTopicName,
+                SubtopicId: data.SubTopicID,
+                MediumCount: mediumRef.current.value,
+                HardCount: hardRef.current.value,
+                EasyCount: easyRef.current.value,
+                TestId: TestID,
+                TestDetailsId: TestDetailsID,
+                Combinations: JSON.stringify(data?.combination),
+              }
+            );
 
-          console.log(
-            "url",
-            "https://www.nareshit.net/InsertionQuestionView",
-            "data",
-            {
-              TechnologyId: technologyId,
-              TechnologyName: technologyName,
-              ModuleName: data.DataObj?.Module?.ModuleName,
-              ModuleId: data.ModuleID,
-              TopicName: data.DataObj?.Topic?.TopicName,
-              TopicId: data.TopicID,
-              SubtopicName: data.DataObj?.SubTopic?.SubTopicName,
-              SubtopicId: data.SubTopicID,
-              MediumCount: mediumRef.current.value,
-              HardCount: hardRef.current.value,
-              EasyCount: easyRef.current.value,
-              TestId: TestID,
-              TestDetailsId: TestDetailsID,
-              Combinations: JSON.stringify(data?.combination),
-            },
-            "res",
-            res
-          );
+            console.log(
+              "url",
+              "https://www.nareshit.net/InsertionQuestionView",
+              "data",
+              {
+                TechnologyId: technologyId,
+                TechnologyName: technologyName,
+                ModuleName: data.DataObj?.Module?.ModuleName,
+                ModuleId: data.ModuleID,
+                TopicName: data.DataObj?.Topic?.TopicName,
+                TopicId: data.TopicID,
+                SubtopicName: data.DataObj?.SubTopic?.SubTopicName,
+                SubtopicId: data.SubTopicID,
+                MediumCount: mediumRef.current.value,
+                HardCount: hardRef.current.value,
+                EasyCount: easyRef.current.value,
+                TestId: TestID,
+                TestDetailsId: TestDetailsID,
+                Combinations: JSON.stringify(data?.combination),
+              },
+              "res",
+              res
+            );
+          }
+
+          handler(result, "edit");
+          setter(false);
+          setIsValid(true);
         }
-
-        handler(result, "edit");
-        setter(false);
-        setIsValid(true);
       }
     }
     if (
@@ -221,7 +264,6 @@ function QuestionViewEditModal({ data, handler, setter }) {
       mediumTotal < Number(mediumRef?.current?.value) ||
       hardTotal < Number(hardRef?.current?.value)
     ) {
-      console.log("in");
       setWarn(true);
     }
   }
@@ -277,7 +319,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
             <p className="grid grid-flow-col place-content-center">
               <span className="font-bold mx-2">/</span>
               <span className="text-base text-yellow-600 content-ceter">
-                {maxCount?.easyCount || 0}
+                {correctEasy}
               </span>
             </p>
           </div>
@@ -296,7 +338,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
             <p className="grid grid-flow-col place-content-center">
               <span className="font-bold mx-2">/</span>
               <span className="text-base text-yellow-600 content-ceter">
-                {maxCount?.mediumCount || 0}
+                {correctMedium}
               </span>
             </p>
           </div>
@@ -315,7 +357,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
             <p className="grid grid-flow-col place-content-center">
               <span className="font-bold mx-2">/</span>
               <span className="text-base text-yellow-600 content-ceter">
-                {maxCount?.hardCount || 0}
+                {correctHard}
               </span>
             </p>
           </div>
@@ -326,11 +368,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
               Try Entering Smaller Value!
             </p>
           )}
-          {warn && (
-            <p>
-              Can only set {easyTotal} {mediumTotal} {hardTotal}
-            </p>
-          )}
+
           <button
             onClick={submiteHandler}
             className={`text-white font-semibold inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}

@@ -165,6 +165,7 @@ function QuestionViewFixedModal({
         ) {
           obj[data.modalData?.id][data?.type].push(question.QuestionID);
         }
+        console.log("obj1", obj);
         return obj;
       });
     } else {
@@ -177,7 +178,7 @@ function QuestionViewFixedModal({
             hard: [],
           };
         }
-        console.log(obj);
+
         if (
           obj[data.modalData?.id] &&
           obj[data.modalData?.id][data?.type].includes(question.QuestionID)
@@ -187,8 +188,7 @@ function QuestionViewFixedModal({
           );
           obj[data.modalData?.id][data?.type].splice(index, 1); // Remove the element at the found index
         }
-
-        console.log(obj);
+        console.log("obj2", obj);
         return obj;
       });
     }

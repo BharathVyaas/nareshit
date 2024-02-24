@@ -530,8 +530,8 @@ export function QuestionViewV2() {
         TestDetailsId: TestDetailsID,
       }
     );
-    setCombination(JSON.parse(res?.data?.dbresult?.[0]?.combinations) || {});
-  }, 500);
+    setCombination(JSON.parse(res?.data?.dbresult?.[0]?.combinations || "{}"));
+  }, 100);
 
   const postCombinations = _debounce(async () => {
     const res = await axios.post(
@@ -542,8 +542,8 @@ export function QuestionViewV2() {
         Combinations: JSON.stringify(combination),
       }
     );
-    console.log(res.data.dbresult[0].combinations);
-  }, 500);
+    /* console.log(res.data.dbresult[0].combinations); */
+  }, 100);
 
   useEffect(() => {
     getCombonations();
@@ -564,7 +564,7 @@ export function QuestionViewV2() {
     let res = await axios.post("https://www.nareshit.net/getBasicTestInfo", {
       data: { TestID: TestID },
     });
-    setNatureID(res.data?.data[0].NatureID);
+    setNatureID(res.data?.data[0].NatureID || 0);
   };
 
   useEffect(() => {

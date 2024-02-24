@@ -530,6 +530,7 @@ export function QuestionViewV2() {
         TestDetailsId: TestDetailsID,
       }
     );
+    console.log(res?.data?.dbresult?.[0]?.combinations);
     setCombination(JSON.parse(res?.data?.dbresult?.[0]?.combinations || "{}"));
   }, 100);
 
@@ -551,6 +552,12 @@ export function QuestionViewV2() {
 
   useEffect(() => {
     if (Object.keys(combination).length > 0) postCombinations();
+    /* console.log(
+      "combo",
+      Object.values(combination).map((ele) =>
+        Object.values(ele.includes).map((ele) => ele.includes)
+      )[0][0]
+    ); */
   }, [combination]);
 
   const fetchCombonations = async () => {

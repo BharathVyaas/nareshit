@@ -3,12 +3,18 @@ import { includes } from "lodash";
 import { useEffect, useId, useRef, useState } from "react";
 import { useLocation } from "react-router";
 
+import CryptoJS from "crypto-js";
+
 // Returns Result Object
 function getResult(data, id) {
-  const newId = new Date().toLocaleString() + id;
+  const timestamp = new Date().getTime().toString(); // Get current timestamp
+  const randomString = Math.random().toString(36).substring(2, 10); // Generate a random string
+  const combinedString = timestamp + randomString; // Combine timestamp and random string
+  const encoded = btoa(combinedString); // Base64 encode the combined string
+  const smallerId = encoded.substring(0, 8) + id; // Take the first 8 characters
 
   let result = {
-    id: data?.element?.id || newId,
+    id: data?.element?.id || smallerId,
     selectedModule: data?.element?.selectedModule,
     ModuleID: data?.element?.ModuleID,
     selectedTopic: data?.element?.selectedTopic,
@@ -23,7 +29,7 @@ function getResult(data, id) {
   // when creating new Combination data object is different
   if (data.DataObj) {
     result = {
-      id: data?.DataObj?.id || newId,
+      id: data?.DataObj?.id || smallerId,
       selectedModule: data?.DataObj?.Module?.ModuleName,
       ModuleID: data?.ModuleID,
       selectedTopic: data?.DataObj?.Topic?.TopicName,
@@ -146,9 +152,12 @@ function QuestionViewEditModal({ data, handler, setter }) {
   useEffect(() => {
     const maxEasyCount = maxCount?.easyCount || 0;
     const availableEasyTotal = easyTotal == 0 ? 0 : queryEasy - easyTotal;
-    setCorrectEasy(
-      maxEasyCount > availableEasyTotal ? queryEasy - easyTotal : maxEasyCount
-    );
+    if (maxEasyCount == 0) setCorrectEasy(0);
+    else {
+      setCorrectEasy(
+        maxEasyCount > availableEasyTotal ? queryEasy - easyTotal : maxEasyCount
+      );
+    }
   }, [maxCount]);
 
   // Medium Cal
@@ -158,11 +167,15 @@ function QuestionViewEditModal({ data, handler, setter }) {
       const maxMediumCount = maxCount?.mediumCount || 0;
       const availableMediumTotal =
         mediumTotal == 0 ? 0 : queryMedium - mediumTotal;
-      setCorrectMedium(
-        maxMediumCount > availableMediumTotal
-          ? queryMedium - mediumTotal
-          : availableMediumTotal
-      );
+      if (maxMediumCount == 0) {
+        setCorrectMedium(0);
+      } else {
+        setCorrectMedium(
+          maxMediumCount > availableMediumTotal
+            ? queryMedium - mediumTotal
+            : availableMediumTotal
+        );
+      }
     }
   }, [maxCount]);
 
@@ -171,11 +184,15 @@ function QuestionViewEditModal({ data, handler, setter }) {
   useEffect(() => {
     const maxHardCount = maxCount?.hardCount || 0;
     const availableHardTotal = hardTotal == 0 ? 0 : queryHard - hardTotal;
-    setCurrentHard(
-      maxHardCount > availableHardTotal
-        ? queryHard - hardTotal
-        : availableHardTotal
-    );
+    if (maxHardCount == 0) {
+      setCurrentHard(0);
+    } else {
+      setCurrentHard(
+        maxHardCount > availableHardTotal
+          ? queryHard - hardTotal
+          : availableHardTotal
+      );
+    }
   }, [maxCount]);
 
   useEffect(() => {
@@ -311,8 +328,8 @@ function QuestionViewEditModal({ data, handler, setter }) {
                 ref={easyRef}
                 id="topiceasy"
                 type="number"
-                disabled={(maxCount?.easyCount || 0) == 0}
-                className={getDisabledInputStyles(maxCount?.easyCount || 0)}
+                disabled={(correctEasy || 0) == 0}
+                className={getDisabledInputStyles(correctEasy || 0)}
                 defaultValue={result.easy}
               />
             </label>
@@ -330,8 +347,8 @@ function QuestionViewEditModal({ data, handler, setter }) {
                 ref={mediumRef}
                 id="topicmedium"
                 type="number"
-                disabled={(maxCount?.mediumCount || 0) == 0}
-                className={getDisabledInputStyles(maxCount?.mediumCount || 0)}
+                disabled={(correctMedium || 0) == 0}
+                className={getDisabledInputStyles(correctMedium || 0)}
                 defaultValue={result.medium}
               />
             </label>
@@ -349,8 +366,8 @@ function QuestionViewEditModal({ data, handler, setter }) {
                 ref={hardRef}
                 id="topichard"
                 type="number"
-                disabled={(maxCount?.hardCount || 0) == 0}
-                className={getDisabledInputStyles(maxCount?.hardCount || 0)}
+                disabled={(correctHard || 0) == 0}
+                className={getDisabledInputStyles(correctHard || 0)}
                 defaultValue={result.hard}
               />
             </label>

@@ -104,8 +104,6 @@ function QuestionViewFixedModal({
   const currentMedium = currentCombination?.medium;
   const currentHard = currentCombination?.hard;
 
-  console.log(currentCombination);
-
   let currentTotal;
 
   // used to update current include value in modal
@@ -138,6 +136,17 @@ function QuestionViewFixedModal({
     },
   });
 
+  const postIncludes = (obj) => {
+    let includesArr = [];
+    Object.values(obj[data.modalData?.id]).map((ele) => {
+      if (ele) {
+        ele.forEach((item) => includesArr.push(item));
+      }
+    });
+
+    console.log("data", includesArr);
+  };
+
   function modalHandler(flag, question) {
     /* if (flag) {
       if (includes[key][data.type]?.length === 5)
@@ -165,7 +174,9 @@ function QuestionViewFixedModal({
         ) {
           obj[data.modalData?.id][data?.type].push(question.QuestionID);
         }
-        console.log("obj1", obj);
+        // to post the new included object
+        postIncludes(obj);
+
         return obj;
       });
     } else {
@@ -188,7 +199,10 @@ function QuestionViewFixedModal({
           );
           obj[data.modalData?.id][data?.type].splice(index, 1); // Remove the element at the found index
         }
-        console.log("obj2", obj);
+
+        // to post the new included object
+        postIncludes(obj);
+
         return obj;
       });
     }

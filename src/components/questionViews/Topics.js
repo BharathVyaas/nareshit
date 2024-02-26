@@ -143,9 +143,9 @@ function Topics({ setDataHandler, combination }) {
           )}
           <button
             onClick={onSetData}
-            className="mr-[20px] w-[118px] mt-5 px-6 max-h-8 min-h-8 bg-[gray] text-white font-semibold rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:bg-gray-500 focus:ring-opacity-50"
+            className="mr-[20px] w-[250px] mt-5 px-6 max-h-8 min-h-8 bg-[gray] text-white font-semibold rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:bg-gray-500 focus:ring-opacity-50"
           >
-            Set Data
+            Set Question Template
           </button>
           <button
             onClick={saveHandler}

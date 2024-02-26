@@ -30,7 +30,9 @@ export function AssessmentsNext({
         <div className="flex flex-col align-center">
           {warn && (
             <p className="width-full text-center text-red-600 font-semibold mb-3">
-              {disabled
+              {typeof warn == "string"
+                ? warn
+                : disabled
                 ? "Number of Questins must be grater then 0"
                 : "Total Questions must match easy + medium + hard"}
             </p>

@@ -203,7 +203,7 @@ function QuestionView() {
               className="mr-[20px] mt-5 px-6 max-h-8 min-h-8 bg-[gray] text-white font-semibold rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:bg-gray-500 focus:ring-opacity-50"
               onClick={setDataHandler}
             >
-              Set Data
+              Set Question Template
             </button>
           </div>
 
@@ -526,7 +526,8 @@ export function QuestionViewV2() {
   const queryHard = queryParams.get("hard") || 0;
 
   // for optimize
-  const getCombonations = _debounce(async () => {
+  const getCombinations = _debounce(async (natureID) => {
+    console.log(natureID);
     const res = await axios.post(
       "https://www.nareshit.net/SelectQuestionCombination",
       {
@@ -535,7 +536,28 @@ export function QuestionViewV2() {
       }
     );
 
-    setCombination(JSON.parse(res?.data?.dbresult?.[0]?.combinations || "{}"));
+    const fetchedCombinations = JSON.parse(
+      res?.data?.dbresult?.[0]?.combinations || "{}"
+    );
+
+    if (natureID === 1) {
+      // Iterate over the properties of fetchedCombinations
+      for (const prop in fetchedCombinations) {
+        if (Object.hasOwnProperty.call(fetchedCombinations, prop)) {
+          const value = fetchedCombinations[prop];
+          // Check if the value is an object and has an 'includes' property
+          if (typeof value === "object" && value.hasOwnProperty("includes")) {
+            // Set the 'includes' property to an empty object
+            value.includes = {};
+          }
+        }
+      }
+    }
+
+    setCombination(fetchedCombinations);
+
+    // Return the updated fetchedCombinations
+    return fetchedCombinations;
   }, 100);
 
   const postCombinations = _debounce(async () => {
@@ -549,10 +571,6 @@ export function QuestionViewV2() {
     );
     /* console.log(res.data.dbresult[0].combinations); */
   }, 100);
-
-  useEffect(() => {
-    getCombonations();
-  }, []);
 
   useEffect(() => {
     if (Object.keys(combination).length > 0) postCombinations();
@@ -571,16 +589,16 @@ export function QuestionViewV2() {
     setCombination(JSON.parse(res.data.dbresult)); */
   };
 
-  const fetchNatureID = async () => {
+  const fetchNatureID = async (getCombinations) => {
     let res = await axios.post("https://www.nareshit.net/getBasicTestInfo", {
       data: { TestID: TestID },
     });
     setNatureID(res.data?.data[0].NatureID || 0);
+    getCombinations(res.data?.data[0].NatureID || 0);
   };
 
   useEffect(() => {
-    fetchCombonations();
-    fetchNatureID();
+    fetchNatureID(getCombinations);
   }, []);
 
   const setEditModalHandler = (ModuleID, TopicID, SubTopicID, DataObj) => {
@@ -648,7 +666,6 @@ export function QuestionViewV2() {
         // if Nature is not dynamic
         if (natureID == 2) {
           const includesObj = ele.includes;
-          console.log("data", ele.includes);
 
           for (let key in ele.includes) {
             const value = ele.includes[key];
@@ -657,7 +674,6 @@ export function QuestionViewV2() {
               setTableTotal((prev) => {
                 if (!prev) return prev;
                 const obj = { ...prev };
-                console.log("obj", obj);
                 obj.easy += value?.count || 0;
                 return obj;
               });
@@ -666,7 +682,6 @@ export function QuestionViewV2() {
               setTableTotal((prev) => {
                 if (!prev) return prev;
                 const obj = { ...prev };
-                console.log("obj", obj);
                 obj.medium += value?.count || 0;
                 return obj;
               });
@@ -675,46 +690,37 @@ export function QuestionViewV2() {
               setTableTotal((prev) => {
                 if (!prev) return prev;
                 const obj = { ...prev };
-                console.log("obj", obj);
                 obj.hard += value?.count || 0;
                 return obj;
               });
             }
           }
-        } else if (natureID == 1) {
+        }
+        if (natureID == 1) {
+          let totalTableEasy = 0;
+          let totalTableMedium = 0;
+          let totalTableHard = 0;
+          Object.values(combination).forEach((ele) => {
+            totalTableEasy += ele?.easy || 0;
+            totalTableMedium += ele?.medium || 0;
+            totalTableHard += ele?.hard || 0;
+          });
+          console.log(tableTotal, totalTableEasy);
           setTableTotal((prev) => {
             if (!prev) return prev;
-            const updatedTableTotal = Object.values(combination).reduce(
-              (acc, ele) => {
-                return {
-                  easy: (acc?.easy || 0) + (ele.easy || 0),
-                  medium: (acc?.medium || 0) + (ele.medium || 0),
-                  hard: (acc?.hard || 0) + (ele.hard || 0),
-                };
-              },
-              { easy: 0, medium: 0, hard: 0 }
-            );
-            return updatedTableTotal;
+            let obj = { ...prev };
+
+            obj.easy = totalTableEasy;
+            obj.medium = totalTableMedium;
+            obj.hard = totalTableHard;
+
+            return obj;
           });
         }
       });
     }
+    console.log(combination);
   }, [combination]);
-
-  console.log(
-    "tableTotal",
-    natureID,
-    tableTotal.easy,
-    queryEasy,
-    tableTotal.medium,
-    queryMedium,
-    tableTotal.hard,
-    queryHard,
-    tableTotal.easy == queryEasy,
-    tableTotal.medium == queryMedium,
-    tableTotal.hard == queryHard,
-    combination
-  );
 
   return (
     <AnimatePresence>

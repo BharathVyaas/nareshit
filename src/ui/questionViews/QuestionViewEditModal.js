@@ -21,9 +21,9 @@ function getResult(data, id) {
     TopicID: data?.element?.TopicID,
     selectedSubTopic: data?.element?.selectedTopic,
     SubTopicID: data?.element?.SubTopicID,
-    easy: Number(data?.element?.easy),
-    medium: Number(data?.element?.medium),
-    hard: Number(data?.element?.hard),
+    easy: data?.element?.easy || "",
+    medium: data?.element?.medium || "",
+    hard: data?.element?.hard || "",
   };
 
   // when creating new Combination data object is different
@@ -36,9 +36,9 @@ function getResult(data, id) {
       TopicID: data?.TopicID,
       selectedSubTopic: data?.DataObj?.SubTopic?.SubTopicName,
       SubTopicID: data?.SubTopicID,
-      easy: Number(data?.easy),
-      medium: Number(data?.medium),
-      hard: Number(data?.hard),
+      easy: data?.easy || "",
+      medium: data?.medium || "",
+      hard: data?.hard || "",
     };
   }
 
@@ -47,7 +47,6 @@ function getResult(data, id) {
 
 // Returns Total from reducing all combonations.
 function getTotal(data) {
-  console.log(data);
   const combinationArr = Object.values(data.combination);
 
   let easyTotal = combinationArr.reduce(
@@ -77,9 +76,9 @@ function getTotal(data) {
     data.DataObj &&
     (data.DataObj.easy || data.DataObj.medium || data.DataObj.hard)
   ) {
-    easyTotal -= Number(data.DataObj.easy);
-    mediumTotal -= Number(data.DataObj.medium);
-    hardTotal -= Number(data.DataObj.hard);
+    easyTotal -= Number(data?.DataObj?.easy);
+    mediumTotal -= Number(data?.DataObj?.medium);
+    hardTotal -= Number(data?.DataObj?.hard);
   }
 
   return { easyTotal, mediumTotal, hardTotal };
@@ -94,9 +93,9 @@ function QuestionViewEditModal({ data, handler, setter }) {
   const TestDetailsID = queryParams.get("TestDetailsID") || 0;
   const technologyId = queryParams.get("TechnologyID") || 0;
   const technologyName = queryParams.get("TechnologyName") || 0;
-  const queryEasy = queryParams.get("easy") || 0;
-  const queryMedium = queryParams.get("medium") || 0;
-  const queryHard = queryParams.get("hard") || 0;
+  const queryEasy = queryParams.get("easy") || "";
+  const queryMedium = queryParams.get("medium") || "";
+  const queryHard = queryParams.get("hard") || "";
 
   const easyRef = useRef();
   const mediumRef = useRef();
@@ -113,11 +112,10 @@ function QuestionViewEditModal({ data, handler, setter }) {
 
   const { easyTotal, mediumTotal, hardTotal } = getTotal(data);
   const [maxCount, setMaxCount] = useState({
-    easyCount: 0,
-    mediumCount: 0,
-    hardCount: 0,
+    easyCount: "",
+    mediumCount: "",
+    hardCount: "",
   });
-  const [warn, setWarn] = useState(false);
 
   let result = getResult(data, id);
 
@@ -141,9 +139,9 @@ function QuestionViewEditModal({ data, handler, setter }) {
     );
 
     setMaxCount({
-      easyCount: res?.data?.dbresult[0]?.EasyCount || 0,
-      mediumCount: res?.data?.dbresult[0]?.MediumCount || 0,
-      hardCount: res?.data?.dbresult[0]?.HardCount || 0,
+      easyCount: res?.data?.dbresult[0]?.EasyCount || "",
+      mediumCount: res?.data?.dbresult[0]?.MediumCount || "",
+      hardCount: res?.data?.dbresult[0]?.HardCount || "",
     });
   };
 
@@ -213,7 +211,6 @@ function QuestionViewEditModal({ data, handler, setter }) {
         Number(mediumRef.current.value) <= correctMedium &&
         Number(hardRef.current.value) <= correctHard
       ) {
-        setWarn(false);
         if (easyTotal + Number(easyRef.current.value) <= queryEasy)
           // if every thing is okey.
           go++;
@@ -230,15 +227,15 @@ function QuestionViewEditModal({ data, handler, setter }) {
               {
                 TechnologyId: technologyId,
                 TechnologyName: technologyName,
-                ModuleName: data.DataObj?.Module?.ModuleName,
-                ModuleId: data.ModuleID,
-                TopicName: data.DataObj?.Topic?.TopicName,
-                TopicId: data.TopicID,
-                SubtopicName: data.DataObj?.SubTopic?.SubTopicName,
-                SubtopicId: data.SubTopicID,
-                MediumCount: mediumRef.current.value,
-                HardCount: hardRef.current.value,
-                EasyCount: easyRef.current.value,
+                ModuleName: data?.DataObj?.Module?.ModuleName,
+                ModuleId: data?.ModuleID,
+                TopicName: data?.DataObj?.Topic?.TopicName,
+                TopicId: data?.TopicID,
+                SubtopicName: data?.DataObj?.SubTopic?.SubTopicName,
+                SubtopicId: data?.SubTopicID,
+                MediumCount: mediumRef?.current?.value || 0,
+                HardCount: hardRef?.current?.value || 0,
+                EasyCount: easyRef?.current?.value || 0,
                 TestId: TestID,
                 TestDetailsId: TestDetailsID,
                 Combinations: JSON.stringify(data?.combination),
@@ -252,15 +249,15 @@ function QuestionViewEditModal({ data, handler, setter }) {
               {
                 TechnologyId: technologyId,
                 TechnologyName: technologyName,
-                ModuleName: data.DataObj?.Module?.ModuleName,
-                ModuleId: data.ModuleID,
+                ModuleName: data?.DataObj?.Module?.ModuleName,
+                ModuleId: data?.ModuleID,
                 TopicName: data.DataObj?.Topic?.TopicName,
-                TopicId: data.TopicID,
-                SubtopicName: data.DataObj?.SubTopic?.SubTopicName,
-                SubtopicId: data.SubTopicID,
-                MediumCount: mediumRef.current.value,
-                HardCount: hardRef.current.value,
-                EasyCount: easyRef.current.value,
+                TopicId: data?.TopicID,
+                SubtopicName: data?.DataObj?.SubTopic?.SubTopicName,
+                SubtopicId: data?.SubTopicID,
+                MediumCount: mediumRef?.current?.value || 0,
+                HardCount: hardRef?.current?.value || 0,
+                EasyCount: easyRef?.current?.value || 0,
                 TestId: TestID,
                 TestDetailsId: TestDetailsID,
                 Combinations: JSON.stringify(data?.combination),
@@ -276,12 +273,18 @@ function QuestionViewEditModal({ data, handler, setter }) {
         }
       }
     }
-    if (
+    /* if (
       easyTotal < Number(easyRef?.current?.value) ||
       mediumTotal < Number(mediumRef?.current?.value) ||
       hardTotal < Number(hardRef?.current?.value)
     ) {
       setWarn(true);
+    } */
+
+    if (!(go > 2)) {
+      setIsValid(false);
+    } else {
+      setIsValid(true);
     }
   }
 
@@ -329,7 +332,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
                 id="topiceasy"
                 type="number"
                 disabled={(correctEasy || 0) == 0}
-                className={getDisabledInputStyles(correctEasy || 0)}
+                className={getDisabledInputStyles(correctEasy)}
                 defaultValue={result.easy}
               />
             </label>
@@ -382,7 +385,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
         <div className="grid place-content-center mt-2">
           {!isValid && (
             <p className="text-red-800 font-semibold absloute">
-              Try Entering Smaller Value!
+              Try Entering Smaller Values!
             </p>
           )}
 

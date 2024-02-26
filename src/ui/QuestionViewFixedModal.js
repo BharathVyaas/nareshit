@@ -9,6 +9,26 @@ import { useLocation } from "react-router";
 let COUNT = 0;
 let CURRENT_COUNT = 0;
 
+function getURL(type, currentCombination) {
+  let DifficultyLevelID = 1;
+
+  if (type === "easy") {
+    DifficultyLevelID = 1;
+  } else if (type === "medium") {
+    DifficultyLevelID = 2;
+  } else if (type == "hard") {
+    DifficultyLevelID = 3;
+  }
+
+  return `https://www.nareshit.net/fetchFixedQuestions?DifficultyLevelID=${DifficultyLevelID}&ModuleID=${
+    currentCombination.ModuleID
+  }&TopicID=${
+    currentCombination.TopicID == 0 ? null : currentCombination.TopicID
+  }&SubTopicID=${
+    currentCombination.SubTopicID == 0 ? null : currentCombination.SubTopicID
+  }`;
+}
+
 // Returns Result Object
 function getResult(data, id) {
   let result = {
@@ -280,19 +300,14 @@ function QuestionViewFixedModalBody({
 }) {
   const [questions, setQuestions] = useState([]);
 
-  /*   console.log(
-    `https://www.nareshit.net/fetchDynamicQuestions?Hardcount=${total?.hard}&MediumCount=${total?.medium}&EasyCount=${total?.easy}&SubTopicID=${subTopicId}`
-  ); */
+  console.log(currentCombination);
 
   useEffect(() => {
-    axios
-      .get(
-        `https://www.nareshit.net/fetchDynamicQuestions?Hardcount=${1}&MediumCount=${2}&EasyCount=${20}&SubTopicID=${173}`
-      )
-      .then((res) => {
-        /* console.log(res); */
-        setQuestions(res.data);
-      });
+    console.log(getURL(type, currentCombination));
+    axios.get(getURL(type, currentCombination)).then((res) => {
+      console.log("res", res);
+      setQuestions(res.data);
+    });
   }, []);
 
   return (

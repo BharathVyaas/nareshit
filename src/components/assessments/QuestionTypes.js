@@ -10,6 +10,9 @@ function QuestionTypes({
   hardCount,
   warn,
   setWarn,
+  queryTotal,
+  setCurrentTotal,
+  currentTotal,
 }) {
   return assessment ? (
     <ul>
@@ -22,7 +25,10 @@ function QuestionTypes({
             mediumCount={mediumCount}
             hardCount={hardCount}
             warn={warn}
+            currentTotal={currentTotal}
+            setCurrentTotal={setCurrentTotal}
             setWarn={setWarn}
+            queryTotal={queryTotal}
             difficultyLevels={difficultyLevels}
           />
         </li>

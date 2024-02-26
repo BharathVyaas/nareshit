@@ -1,10 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Form, redirect, useNavigate } from "react-router-dom";
-
+import { Form, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import ScheduleTimeService from "../services/scheduleTimeService";
-import BuilderService from "../services/builder";
-import { LocalStorage } from "../services/LocalStorage";
 import axios from "axios";
 import AuthCtx from "../context/auth.context";
 
@@ -42,28 +38,22 @@ function ScheduleTime() {
   const [endTime, setEndTime] = useState("");
 
   const [isValid, setIsValid] = useState(false);
-  const [isDateValid, setIsDateValid] = useState(true);
+  const [isDateValid, setIsDateValid] = useState(false);
   const [isTimeValid, setIsTimeValid] = useState(true);
   const [isTestValid, setIsTestValid] = useState(false);
 
   useEffect(() => {
     if (startDate && endDate) {
-      const startDateTime = new Date(startDate).toISOString();
-      const endDateTime = new Date(endDate).toISOString();
+      const today = new Date();
+      const startDateObj = new Date(startDate);
+      const endDateObj = new Date(endDate);
 
-      setIsDateValid(startDateTime <= endDateTime);
+      const isStartDateValid = startDateObj >= today;
+      const isEndDateValid = startDateObj <= endDateObj;
+
+      setIsDateValid(isStartDateValid && isEndDateValid);
     }
   }, [startDate, endDate]);
-
-  useEffect(() => {
-    if (startTime && endTime) {
-      const dummyDate = "2022-01-01";
-      const startDateTime = new Date(dummyDate + "T" + startTime);
-      const endDateTime = new Date(dummyDate + "T" + endTime);
-
-      setIsTimeValid(startDateTime.getTime() <= endDateTime.getTime());
-    }
-  }, [startTime, endTime]);
 
   useEffect(() => {
     setIsTestValid(testName && testDescription);
@@ -72,6 +62,14 @@ function ScheduleTime() {
   useEffect(() => {
     setIsValid(isTestValid && isDateValid && isTimeValid);
   }, [isTimeValid, isDateValid, isTestValid]);
+
+  console.log(
+    "time\n",
+    isTimeValid,
+    "\ndate\n",
+    isDateValid,
+    isTestValid && isTimeValid && isDateValid
+  );
 
   return (
     <AnimatePresence>
@@ -105,50 +103,78 @@ function ScheduleTime() {
             onChange={(e) => setTestDescription(e.target.value)}
             className="w-full border-[1.2px]  _text-start border-black h-[2.2rem] p-2"
           />
-          <label htmlFor="startDate" className="w-full block p-1">
-            Start Date
-          </label>
-          <input
-            type="date"
-            name="TestStartDate"
-            id="startDate"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="w-full border-[1.2px]  _text-start border-black h-[2.2rem] p-2"
-          />
-          <label htmlFor="endDate" className="w-full block p-1">
-            End Date
-          </label>
-          <input
-            type="date"
-            name="TestEndDate"
-            id="endDate"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="w-full border-[1.2px]  _text-start border-black h-[2.2rem] p-2"
-          />
-          <label htmlFor="startTime" className="w-full block p-1">
-            Start Time
-          </label>
-          <input
-            type="time"
-            name="TestStartTime"
-            id="startTime"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-            className="w-full border-[1.2px]  _text-start border-black h-[2.2rem] p-2"
-          />
-          <label htmlFor="endTime" className="w-full block p-1">
-            End Time
-          </label>
-          <input
-            className="w-full border-[1.2px]  _text-start border-black h-[2.2rem] p-2"
-            type="time"
-            name="TestEndTime"
-            id="endTime"
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
-          />
+
+          <div className="flex justify-between">
+            <div className="w-full sm:w-[8rem] flex flex-col">
+              <label htmlFor="startTime" className="block p-1">
+                Start Time
+              </label>
+              <input
+                type="time"
+                name="TestStartTime"
+                id="startTime"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                className="border border-black text-left h-10 px-3"
+              />
+            </div>
+            <div className="w-full sm:w-[8rem] flex flex-col">
+              <label htmlFor="endTime" className="block p-1">
+                End Time
+              </label>
+              <input
+                type="time"
+                name="TestEndTime"
+                id="endTime"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+                className="border border-black text-left h-10 px-3"
+              />
+            </div>
+
+            <div className="w-full sm:w-[10rem] flex flex-col">
+              <label htmlFor="startDate" className="block p-1">
+                Start Date
+              </label>
+              <input
+                type="date"
+                name="TestStartDate"
+                id="startDate"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="border border-black h-10 text-left px-3"
+              />
+            </div>
+            <div className="w-full sm:w-[10rem] flex flex-col">
+              <label htmlFor="endDate" className="block p-1">
+                End Date
+              </label>
+              <input
+                type="date"
+                name="TestEndDate"
+                id="endDate"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="border border-black text-left h-10 px-3"
+              />
+            </div>
+          </div>
+
+          {/* Warning message for invalid fields */}
+
+          <div className="mt-3">
+            {!isDateValid && (
+              <p className="text-red-500 text-sm mt-1 text-center">
+                Invalid date range
+              </p>
+            )}
+            {!isTestValid && (
+              <p className="text-red-500 text-sm mt-1 text-center">
+                Test name and description are required
+              </p>
+            )}
+          </div>
+
           <button
             disabled={!isValid}
             className="px-8 py-2 mx-auto mt-4 bg-green-300 hover:bg-green-400"

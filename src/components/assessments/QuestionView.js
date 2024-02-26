@@ -9,21 +9,28 @@ function QuestionType({
   mediumCount,
   hardCount,
   setWarn,
+  queryTotal,
+  setCurrentTotal,
+  currentTotal,
 }) {
-  const [totalCount, setTotalCount] = useState(
-    Number(difficultyLevels[questionType]["Easy"]) +
-      Number(difficultyLevels[questionType]["Medium"]) +
-      Number(difficultyLevels[questionType]["Hard"])
-  );
-
   const totalChangeHandler = (e) => {
     const newValue = Number(e.target.value);
-    const currentTotal =
-      Number(difficultyLevels[questionType]["Easy"]) +
-      Number(difficultyLevels[questionType]["Medium"]) +
-      Number(difficultyLevels[questionType]["Hard"]);
-    if (newValue >= currentTotal) {
-      setTotalCount(e.target.value);
+
+    if (newValue < queryTotal) {
+      setWarn(true);
+    }
+
+    /* if (queryTotal <= e.target.value) {
+      setShowTotalQuestionsWarn(false);
+    } else {
+      setShowTotalQuestionsWarn(true);
+    } */
+    setCurrentTotal(e.target.value);
+    if (e.target.value != queryTotal) {
+      setWarn(`You Have Selected ${queryTotal} Questions. Should not decrease
+      Existing Value`);
+    } else {
+      setWarn(false);
     }
   };
 
@@ -35,7 +42,7 @@ function QuestionType({
           Number(difficultyLevels[questionType]["Hard"]) -
           Number(difficultyLevels[questionType][level]) +
           Number(newValue) >
-        totalCount
+        currentTotal
       )
     ) {
       parentHandler(questionType, level, newValue);
@@ -49,9 +56,19 @@ function QuestionType({
         Number(difficultyLevels[questionType]["Hard"]) -
         prevValue +
         newValue !=
-      totalCount
+      currentTotal
     ) {
-      setWarn(totalCount != 0 && true);
+      setWarn(currentTotal != 0 && true);
+    }
+    if (
+      Number(difficultyLevels[questionType]["Easy"]) +
+        Number(difficultyLevels[questionType]["Medium"]) +
+        Number(difficultyLevels[questionType]["Hard"]) -
+        prevValue +
+        newValue !=
+      currentTotal
+    ) {
+      setWarn(true);
     } else {
       setWarn(false);
     }
@@ -75,14 +92,19 @@ function QuestionType({
         </label>
       </div>
 
-      <div className="ms-5 mt-5">
-        <label>Number of Questions:</label>
-        <input
-          type="number"
-          value={String(totalCount)}
-          onChange={totalChangeHandler}
-          className="bg-white ms-2 me-4 w-16 scrollHide border-[1px] border-gray-400 rounded"
-        />
+      <div className="ms-5 mt-5 flex">
+        <div>
+          <label>Number of Questions:</label>
+          <input
+            type="number"
+            value={String(currentTotal)}
+            onChange={totalChangeHandler}
+            className="bg-white ms-2 me-4 w-16 scrollHide border-[1px] border-gray-400 rounded"
+          />
+        </div>
+        {false && (
+          <p className="width-full text-red-600 font-semibold mb-3"></p>
+        )}
       </div>
 
       {/**  Difficulty Levels */}

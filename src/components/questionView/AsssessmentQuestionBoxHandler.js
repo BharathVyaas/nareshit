@@ -389,7 +389,9 @@ export function Tbody({
   // used to change count
   function handler(present, previous, flag) {
     if ((element?.includes?.[type]?.includes?.length || 0) > present) {
-      window.alert("Must remove 1 question before reducing count");
+      // if user already in 0
+      if (previous != 0)
+        window.alert("Must remove 1 question before reducing count");
     } else {
       // returns array of combination objects
       const allElements = Object.values(combination);
@@ -419,6 +421,8 @@ export function Tbody({
             return obj;
           });
         }
+      } else {
+        window.alert("You have reached maximum limit!");
       }
     }
   }
@@ -431,7 +435,7 @@ export function Tbody({
     content = (
       <td
         onClick={(e) => e.stopPropagation()}
-        className="text-center border-[1.2px]"
+        className="text-center border-[1.2px] w-[7rem]"
         {...props}
       >
         <div className="flex justify-between items-center">

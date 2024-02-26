@@ -23,6 +23,7 @@ function DifficultyLevel({
     styles =
       "bg-gray-300 text-gray-800 ms-2 me-4 w-16 scrollHide border-[1px] border-gray-400 rounded";
   }
+  console.log(difficultyLevels);
 
   return (
     <div className="p-5 flex">
@@ -34,7 +35,7 @@ function DifficultyLevel({
           id={id}
           name={id}
           disabled={maxCount == 0}
-          value={difficultyLevels[questionType][difficultyLevel]}
+          value={difficultyLevels?.[questionType]?.[difficultyLevel]}
           onChange={changeHandler}
         />
       </div>

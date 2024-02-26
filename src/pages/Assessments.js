@@ -13,6 +13,7 @@ export function AssessmentsV2() {
    */
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const TestID = queryParams.get("TestID") || 0;
   const NumOfEasy =
     queryParams.get("NumOfEasy") === "undefined"
       ? 0
@@ -25,6 +26,8 @@ export function AssessmentsV2() {
     queryParams.get("NumOfHard") === "undefined"
       ? 0
       : queryParams.get("NumOfHard");
+  const queryTotal =
+    Number(NumOfEasy) + Number(NumOfMedium) + Number(NumOfHard);
 
   // LoaderData
   const { easyCount, mediumCount, hardCount } = useLoaderData();
@@ -35,6 +38,40 @@ export function AssessmentsV2() {
 
   const [assessment, setAssessment] = useState();
   const [difficultyLevel, setDifficlutyLevel] = useState();
+  const [currentTotal, setCurrentTotal] = useState(
+    Number(NumOfEasy) + Number(NumOfMedium) + Number(NumOfHard)
+  );
+
+  const fetchCounts = async () => {
+    const res = await axios.post(
+      "https://www.nareshit.net/getBasicTestDetailsInfo",
+      {
+        data: { TestID: TestID },
+      }
+    );
+
+    console.log("getBasicTestDetailsInfo response:", res);
+
+    let NumOfEasy = res.data.data[0]?.NumOfEasy || 0;
+    let NumOfMedium = res.data.data[0]?.NumOfMedium || 0;
+    let NumOfHard = res.data.data[0]?.NumOfHard || 0;
+
+    setDifficlutyLevel({
+      MCQ: {
+        Easy: NumOfEasy,
+        Medium: NumOfMedium,
+        Hard: NumOfHard,
+      },
+    });
+
+    setCurrentTotal(
+      Number(NumOfEasy) + Number(NumOfMedium) + Number(NumOfHard)
+    );
+  };
+
+  useEffect(() => {
+    fetchCounts();
+  }, []);
 
   useEffect(() => {
     if (shouldChangeStorage?.current?.value || !LocalStorage?.assessmentPage) {
@@ -79,7 +116,6 @@ export function AssessmentsV2() {
 
       return newObj;
     });
-    console.log(difficultyLevel);
   };
 
   return (
@@ -99,6 +135,9 @@ export function AssessmentsV2() {
               easyCount={easyCount}
               mediumCount={mediumCount}
               hardCount={hardCount}
+              queryTotal={queryTotal}
+              currentTotal={currentTotal}
+              setCurrentTotal={setCurrentTotal}
               difficultyLevels={difficultyLevel}
               warn={warn}
               setWarn={setWarn}

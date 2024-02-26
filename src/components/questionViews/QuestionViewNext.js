@@ -4,10 +4,11 @@ import { redirect, useNavigate } from "react-router";
 function QuestionViewNext({ isFormValid, errMsg, TestID, isTableTotalValid }) {
   const [displayErr, setDisplayErr] = useState("");
   const navigate = useNavigate();
+  const [isAgreed, setIsAgreed] = useState(false);
 
   const clickHandler = (e) => {
     // if user did not select all questions.
-    if (!isTableTotalValid) {
+    if (!isTableTotalValid || !isAgreed) {
       e.preventDefault();
     } else {
       if (!isFormValid) {
@@ -33,21 +34,39 @@ function QuestionViewNext({ isFormValid, errMsg, TestID, isTableTotalValid }) {
         </p>
       )}
       <div className="flex w-full">
-        <div className="mx-auto">
-          <button
-            onClick={previewHandler}
-            className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
-          >
-            Preview
-          </button>
-        </div>
-        <div className="mx-auto" onClick={clickHandler}>
-          <button
-            className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
-          >
-            Next
-          </button>
-        </div>
+        {!isTableTotalValid && (
+          <div className="mx-auto">
+            <button
+              onClick={previewHandler}
+              className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
+            >
+              Preview
+            </button>
+          </div>
+        )}
+        {isTableTotalValid && (
+          <div className="mx-auto grid place-content-center">
+            <label
+              className="flex items-center space-x-2 mx-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <input
+                type="checkbox"
+                className="me-2"
+                onChange={(e) => setIsAgreed(e.target.checked)}
+              />
+              <span>I agreed I choose all questions correctly</span>
+            </label>
+
+            <div className="mx-auto" onClick={clickHandler}>
+              <button
+                className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

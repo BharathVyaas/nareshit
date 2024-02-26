@@ -27,16 +27,6 @@ function NatureOfAssessment({ natureID, setNatureID }) {
           />
           <span className="p-2">Fixed</span>
         </label>
-        <label className="p-5">
-          <input
-            type="radio"
-            name="NatureID"
-            value="3"
-            defaultChecked={natureID == 3}
-            onChange={changeHandler}
-          />
-          <span className="p-2">Fast Track</span>
-        </label>
       </div>
     </div>
   );

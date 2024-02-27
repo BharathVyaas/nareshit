@@ -128,16 +128,16 @@ function ListOfAssessment() {
         initial={{ x: "100%" }}
         animate={{ x: 0, transition: { duration: 0.3 } }}
         exit={{ x: "-100%", transition: { duration: 0.3 } }}
-        className="bg-slate-100 min-h-[70vh] min-w-[80vw]  overflow-scroll py-[20px] shadow-xl mx-auto my-[20px]"
+        className="container bg-slate-100 min-h-[70vh] min-w-[80vw]  overflow-scroll py-[20px] shadow-xl mx-auto my-[20px]"
       >
-        <section>
+        <section className="flex align-middle">
           {/* Hidden heading for accessibility and SEO */}
           <h1 className="absolute left-[-9999px]">Assessments</h1>
 
           {/* NavLink for creating a new assessment */}
-          <div className="flex flex-col">
+          <div className="flex flex-col mx-auto">
             <NavLink
-              className="inline-block ms-[15%] max-w-40 text-center mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
+              className="inline-block max-w-40 text-center mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
               to="/categories/technology"
               onClick={createNewHandler}
             >

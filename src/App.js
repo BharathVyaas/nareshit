@@ -73,6 +73,7 @@ function App() {
     {
       path: "categories",
       element: <Categories />,
+      ErrorEvent: <h1>Reload Page</h1>,
       children: [
         {
           path: "assessmentlist",

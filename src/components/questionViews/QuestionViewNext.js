@@ -6,6 +6,8 @@ function QuestionViewNext({ isFormValid, errMsg, TestID, isTableTotalValid }) {
   const navigate = useNavigate();
   const [isAgreed, setIsAgreed] = useState(false);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const clickHandler = (e) => {
     // if user did not select all questions.
     if (!isTableTotalValid || !isAgreed) {
@@ -19,6 +21,10 @@ function QuestionViewNext({ isFormValid, errMsg, TestID, isTableTotalValid }) {
         let navVar = `/categories/scheduletime?TestID=${TestID}`;
         navigate(navVar);
       }
+    }
+    if (isTableTotalValid && isAgreed) {
+      setIsSubmitting(true);
+      e.preventDefault();
     }
   };
 
@@ -62,7 +68,7 @@ function QuestionViewNext({ isFormValid, errMsg, TestID, isTableTotalValid }) {
               <button
                 className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
               >
-                Next
+                {isSubmitting ? "Loading..." : "Next"}
               </button>
             </div>
           </div>

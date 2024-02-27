@@ -26,8 +26,9 @@ function QuestionType({
       setShowTotalQuestionsWarn(true);
     } */
     setCurrentTotal(e.target.value);
-    if (e.target.value != queryTotal) {
-      setWarn(`You Have Selected ${queryTotal} Questions. Should not decrease
+    if (e.target.value < queryTotal) {
+      if (queryTotal != 0)
+        setWarn(`You Have Selected ${queryTotal} Questions. Should not decrease
       Existing Value`);
     } else {
       setWarn(false);

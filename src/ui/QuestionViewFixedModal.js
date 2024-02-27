@@ -156,15 +156,15 @@ function QuestionViewFixedModal({
     },
   });
 
-  const postIncludes = (obj) => {
+  console.log(data);
+
+  const postIncludes = async (obj) => {
     let includesArr = [];
     Object.values(obj[data.modalData?.id]).map((ele) => {
       if (ele) {
         ele.forEach((item) => includesArr.push(item));
       }
     });
-
-    console.log("data", includesArr);
   };
 
   function modalHandler(flag, question) {
@@ -341,7 +341,70 @@ function QuestionViewFixedModalFooter({
   currentIncludes,
   currentValue,
 }) {
-  const submitHandler = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const TestID = queryParams.get("TestID") || 0;
+  const TestDetailsID = queryParams.get("TestDetailsID");
+  const technologyId = queryParams.get("TechnologyID");
+  const technologyName = queryParams.get("TechnologyName");
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const submitHandler = async () => {
+    if (isSubmitting) return;
+    let includesArr = [];
+    Object.values(includes[data.modalData?.id]).map((ele) => {
+      if (ele) {
+        ele.forEach((item) => includesArr.push(item));
+      }
+    });
+
+    setIsSubmitting(true);
+
+    const res = await axios.post(
+      "https://www.nareshit.net/InsertionQuestionView",
+      {
+        TechnologyId: technologyId,
+        TechnologyName: technologyName,
+        ModuleName: data?.modalData?.selectedModule,
+        ModuleId: data?.modalData?.ModuleID,
+        TopicName: data?.modalData?.selectedSubTopic,
+        TopicId: data?.modalData?.TopicID,
+        SubtopicName: data?.modalData?.selectedTopic,
+        SubtopicId: data?.modalData?.SubTopicID,
+        EasyCount: data?.element?.easy,
+        MediumCount: data?.element?.medium,
+        HardCount: data?.element?.hard,
+        TestId: TestID,
+        TestDetailsId: TestDetailsID,
+        SelectedQuestions: [...new Set(includesArr)].join(","),
+      }
+    );
+
+    console.log(
+      "url",
+      "https://www.nareshit.net/InsertionQuestionView",
+      "data",
+      {
+        TechnologyId: technologyId,
+        TechnologyName: technologyName,
+        ModuleName: data?.modalData?.selectedModule,
+        ModuleId: data?.modalData?.ModuleID,
+        TopicName: data?.modalData?.selectedSubTopic,
+        TopicId: data?.modalData?.TopicID,
+        SubtopicName: data?.modalData?.selectedTopic,
+        SubtopicId: data?.modalData?.SubTopicID,
+        EasyCount: data?.element?.easy,
+        MediumCount: data?.element?.medium,
+        HardCount: data?.element?.hard,
+        TestId: TestID,
+        TestDetailsId: TestDetailsID,
+        SelectedQuestions: [...new Set(includesArr)].join(","),
+      },
+      "res",
+      res
+    );
+
     handler(includes, data.type);
     setter(false);
   };
@@ -355,7 +418,7 @@ function QuestionViewFixedModalFooter({
         onClick={submitHandler}
         className="inline-block max-h-10 px-14 py-2 mx-auto bg-green-300 hover:bg-green-400"
       >
-        Submit
+        {isSubmitting ? "Loading..." : "Submit"}
       </button>
     </div>
   );

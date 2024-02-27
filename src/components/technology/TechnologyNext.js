@@ -2,13 +2,18 @@ import React, { useState } from "react";
 
 function TechnologyNext({ isFormValid, errMsg }) {
   const [displayErr, setDisplayErr] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState();
 
   const clickHandler = (e) => {
+    if (isSubmitting) return;
     if (!isFormValid) {
       setDisplayErr(errMsg || "Must Select A Valid Technology");
       e.preventDefault();
     } else {
       setDisplayErr("");
+    }
+    if (isFormValid) {
+      setIsSubmitting(true);
     }
   };
 
@@ -24,7 +29,7 @@ function TechnologyNext({ isFormValid, errMsg }) {
           onClick={clickHandler}
           className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
         >
-          Next
+          {isSubmitting ? "Loading..." : "Next"}
         </button>
       </div>
     </div>

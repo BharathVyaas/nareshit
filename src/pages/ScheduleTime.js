@@ -38,9 +38,11 @@ function ScheduleTime() {
   const [endTime, setEndTime] = useState("");
 
   const [isValid, setIsValid] = useState(false);
-  const [isDateValid, setIsDateValid] = useState(false);
+  const [isDateValid, setIsDateValid] = useState();
   const [isTimeValid, setIsTimeValid] = useState(true);
-  const [isTestValid, setIsTestValid] = useState(false);
+  const [isTestValid, setIsTestValid] = useState();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (startDate && endDate) {
@@ -56,12 +58,36 @@ function ScheduleTime() {
   }, [startDate, endDate]);
 
   useEffect(() => {
-    setIsTestValid(testName && testDescription);
+    setIsTestValid(testName);
   }, [testName, testDescription]);
 
   useEffect(() => {
     setIsValid(isTestValid && isDateValid && isTimeValid);
   }, [isTimeValid, isDateValid, isTestValid]);
+
+  const submitHandler = (e) => {
+    if (isSubmitting) {
+      e.preventDefault();
+      return;
+    }
+
+    if (isValid) {
+      console.log("yes");
+      setIsSubmitting(true);
+    }
+
+    if (!isValid) {
+      console.log(isTestValid, isDateValid, isTimeValid);
+      e.preventDefault();
+    }
+
+    if (!(testName || testDescription)) {
+      setIsTestValid(false);
+    }
+    if (!(startDate || endDate)) {
+      setIsDateValid(false);
+    }
+  };
 
   console.log(
     "time\n",
@@ -163,12 +189,12 @@ function ScheduleTime() {
           {/* Warning message for invalid fields */}
 
           <div className="mt-3">
-            {!isDateValid && (
+            {isDateValid === false && (
               <p className="text-red-500 text-sm mt-1 text-center">
                 Invalid date range
               </p>
             )}
-            {!isTestValid && (
+            {isTestValid === false && (
               <p className="text-red-500 text-sm mt-1 text-center">
                 Test name and description are required
               </p>
@@ -176,10 +202,10 @@ function ScheduleTime() {
           </div>
 
           <button
-            disabled={!isValid}
+            onClick={submitHandler}
             className="px-8 py-2 mx-auto mt-4 bg-green-300 hover:bg-green-400"
           >
-            Test Prepared
+            {isSubmitting ? "Loading..." : "Test Prepared"}
           </button>
         </Form>
       </motion.main>
@@ -190,6 +216,7 @@ function ScheduleTime() {
 export default ScheduleTime;
 
 export async function action({ request, params }) {
+  console.log("action");
   const url = new URL(request.url);
 
   const queryTestID =

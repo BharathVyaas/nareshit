@@ -53,10 +53,12 @@ function CombinationRenderer({
 
   return (
     <div className="p-5">
-      <p className="text-lg font-semibold mb-4">
-        Please select an <span className="bg-red-100">underlined value</span> to
-        fetch questions:
-      </p>
+      {natureID == 2 && (
+        <p className="text-lg font-semibold mb-4">
+          Please select an <span className="bg-red-100">underlined value</span>{" "}
+          to fetch questions:
+        </p>
+      )}
       <div className="">
         <table className="w-full overflow-clip">
           <thead>

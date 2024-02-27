@@ -26,8 +26,9 @@ export function AssessmentsV2() {
     queryParams.get("NumOfHard") === "undefined"
       ? 0
       : queryParams.get("NumOfHard");
-  const queryTotal =
-    Number(NumOfEasy) + Number(NumOfMedium) + Number(NumOfHard);
+  const [queryTotal, setQueryTotal] = useState(
+    Number(NumOfEasy) + Number(NumOfMedium) + Number(NumOfHard)
+  );
 
   // LoaderData
   const { easyCount, mediumCount, hardCount } = useLoaderData();
@@ -55,6 +56,8 @@ export function AssessmentsV2() {
     let NumOfEasy = res.data.data[0]?.NumOfEasy || 0;
     let NumOfMedium = res.data.data[0]?.NumOfMedium || 0;
     let NumOfHard = res.data.data[0]?.NumOfHard || 0;
+
+    setQueryTotal(Number(NumOfEasy) + Number(NumOfMedium) + Number(NumOfHard));
 
     setDifficlutyLevel({
       MCQ: {
@@ -191,7 +194,15 @@ export async function AssessmentActionV2({ request }) {
         ModifiedBy,
       },
     });
-  } catch (err) {}
+  } catch (err) {
+    console.log(
+      "err",
+      "url",
+      "https://www.nareshit.net/createTestAssessment",
+      "error",
+      err
+    );
+  }
 
   console.log(
     "url",
@@ -236,11 +247,13 @@ export async function AssessmentActionV2({ request }) {
 export async function AssessmentLoaderV2({ request }) {
   const url = new URL(request.url);
 
+  const TestID = url.searchParams.get("TestID") || 0;
   const TechnologyID = url.searchParams.get("TechnologyID") || 0;
 
   const res = await axios.post(
     "https://www.nareshit.net/FetchAvailableQuestionsByCount",
     {
+      TestId: TestID,
       TechnologyId: TechnologyID,
     }
   );

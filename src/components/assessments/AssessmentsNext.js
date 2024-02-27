@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 export function AssessmentsNext({
   assessment,
@@ -15,11 +15,19 @@ export function AssessmentsNext({
   if (hard == undefined) hard = true;
 
   let disabled = easy && medium && hard;
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const nextHandler = (e) => {
+    if (isSubmitting) {
+      e.preventDefault();
+      return;
+    }
     if (disabled || warn) {
       setWarn(true);
       e.preventDefault();
     } else {
+      setIsSubmitting(true);
       setWarn(false);
     }
   };
@@ -46,10 +54,11 @@ export function AssessmentsNext({
 
         <div className="w-full flex">
           <button
+            type="submit"
             onClick={nextHandler}
             className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
           >
-            Next
+            {isSubmitting ? "Loading..." : "Next"}
           </button>
         </div>
       </div>

@@ -116,6 +116,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
     mediumCount: "",
     hardCount: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   let result = getResult(data, id);
 
@@ -200,7 +201,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
   async function submiteHandler() {
     let go = 0;
     // if we are creating new Combination
-
+    if (isSubmitting) return;
     if (
       Number(easyRef.current.value) > 0 ||
       Number(mediumRef.current.value) > 0 ||
@@ -220,6 +221,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
           result.easy = Number(easyRef.current.value);
           result.medium = Number(mediumRef.current.value);
           result.hard = Number(hardRef.current.value);
+          setIsSubmitting(true);
 
           if (data.DataObj) {
             const res = await axios.post(
@@ -238,7 +240,6 @@ function QuestionViewEditModal({ data, handler, setter }) {
                 EasyCount: easyRef?.current?.value || 0,
                 TestId: TestID,
                 TestDetailsId: TestDetailsID,
-                Combinations: JSON.stringify(data?.combination),
               }
             );
 
@@ -260,7 +261,6 @@ function QuestionViewEditModal({ data, handler, setter }) {
                 EasyCount: easyRef?.current?.value || 0,
                 TestId: TestID,
                 TestDetailsId: TestDetailsID,
-                Combinations: JSON.stringify(data?.combination),
               },
               "res",
               res
@@ -393,7 +393,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
             onClick={submiteHandler}
             className={`text-white font-semibold inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
           >
-            Submit
+            {isSubmitting ? "Loading..." : "Submit"}
           </button>
         </div>
       </section>

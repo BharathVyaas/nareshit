@@ -1,7 +1,5 @@
 import React from "react";
 import { createPortal } from "react-dom";
-import QuestionModal from "./QuestionModal";
-import { QuestionViewProvider } from "../context/questionView";
 import { AnimatePresence, motion } from "framer-motion";
 
 function Modal({ data, setter, ModalParam, handler, styles }) {
@@ -15,7 +13,6 @@ function Modal({ data, setter, ModalParam, handler, styles }) {
         initial={{ y: "100vh", opacity: 0.5 }}
         animate={{ y: "0", opacity: 1 }}
         end={{ y: "100vh", opacity: 0.5 }}
-        onClick={() => setter(false)}
         className="fixed top-0 left-0 w-full h-full bg-sky-200 bg-opacity-50 z-10 flex justify-center items-center"
       >
         <div className={style}>

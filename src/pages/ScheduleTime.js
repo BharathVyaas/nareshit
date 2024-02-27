@@ -1,19 +1,8 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Form, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 import AuthCtx from "../context/auth.context";
-
-function getTime(time) {
-  const timeString = time;
-  const [hours, minutes, seconds] = timeString.split(":");
-  const date = new Date();
-  date.setHours(hours);
-  date.setMinutes(minutes);
-  date.setSeconds(seconds);
-
-  return date;
-}
 
 function ScheduleTime() {
   const navigate = useNavigate();
@@ -21,14 +10,7 @@ function ScheduleTime() {
 
   useEffect(() => {
     if (!isLoggedIn) navigate("/login?page=/categories/scheduletime");
-  }, []);
-
-  const testNameRef = useRef();
-  const testDescriptionRef = useRef();
-  const startDateRef = useRef();
-  const endDateRef = useRef();
-  const startTimeRef = useRef();
-  const endTimeRef = useRef();
+  }, [isLoggedIn, navigate]);
 
   const [testName, setTestName] = useState("");
   const [testDescription, setTestDescription] = useState("");
@@ -60,6 +42,10 @@ function ScheduleTime() {
   useEffect(() => {
     setIsTestValid(testName);
   }, [testName, testDescription]);
+
+  useEffect(() => {
+    setIsTimeValid(true);
+  }, [startTime, endTime]);
 
   useEffect(() => {
     setIsValid(isTestValid && isDateValid && isTimeValid);
@@ -220,7 +206,7 @@ export async function action({ request, params }) {
   const url = new URL(request.url);
 
   const queryTestID =
-    url.searchParams.get("TestID") == undefined
+    url.searchParams.get("TestID") === "undefined"
       ? 0
       : url.searchParams.get("TestID");
 

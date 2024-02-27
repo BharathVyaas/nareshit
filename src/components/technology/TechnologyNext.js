@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 function TechnologyNext({ isFormValid, errMsg }) {
   const [displayErr, setDisplayErr] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const clickHandler = (e) => {
     if (isSubmitting) return;

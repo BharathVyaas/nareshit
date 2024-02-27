@@ -5,277 +5,18 @@ import React, {
   useRef,
   useState,
 } from "react";
-import QusetionViewTechnlogy from "../components/questionView/QuestionView";
-import { getModuleNames, getQuestions, queryClient } from "../util/http";
 import BuilderService from "../services/builder";
-import Button from "../ui/Button";
-import AssessmentQuestionBox from "../components/AssessmentQuestionbox";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { LocalStorage } from "../services/LocalStorage";
-import UpdateQuestions from "../context/updateQuestions";
-import { useLoaderData, useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { DifficultySubescribeService } from "../services/difficultySubescribe";
 import axios from "axios";
-import Modal from "../ui/Modal";
 import QuestionModelHandler from "../ui/QuestionModelHandler";
-import ExcelImport from "../components/ExcelImport";
-import TechnologyService from "../services/technologyService";
-import AsssessmentQuestionBoxHandler from "../components/questionView/AsssessmentQuestionBoxHandler";
-import { QuestionViewProvider } from "../context/questionView";
-import QuestionViewCtx from "../context/questionView";
 import QuestionViewHandler from "../ui/QuestionViewHandler";
-import AuthCtx from "../context/auth.context";
-import SubTopicNameRenderer from "../components/questionViews/SubTopicNameRenderer";
-import TopicNameRenderer from "../components/questionViews/TopicNameRenderer";
-import ModuleNameRenderer from "../components/questionViews/ModuleNameRenderer";
 import Topics from "../components/questionViews/Topics";
 import CombinationRenderer from "../components/questionViews/CombinationRenderer";
 import QuestionViewNext from "../components/questionViews/QuestionViewNext";
 import _debounce from "lodash/debounce";
-import { includes } from "lodash";
-
-const Titles = ["MCQ"];
-
-function QuestionView() {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const TechnologyID = queryParams.get("TechnologyID");
-  const [technology, setTechnology] = useState();
-
-  useEffect(() => {
-    async function techHandler() {
-      const res = await axios.get("https://www.nareshit.net/FetchTechnologies");
-
-      if (TechnologyID) {
-        setTechnology(
-          res?.data?.find((ele) => ele.TechnologyID === Number(TechnologyID))
-        );
-      }
-    }
-    techHandler();
-  }, []);
-
-  const navigate = useNavigate();
-  const { isLoggedIn } = useContext(AuthCtx);
-
-  useEffect(() => {
-    if (!isLoggedIn) navigate("/login?page=/categories/questionview");
-  }, []);
-
-  const linkToNext =
-    BuilderService.technologyService._technology.natureOfAssessment === "fixed";
-
-  const { data, setData } = useContext(QuestionViewCtx);
-  const [stale, setStale] = useState(false);
-  const [questions, setQuestions] = useState();
-  const [showPopupWarn, setShowPopupWarn] = useState(false);
-  useEffect(() => {
-    setQuestions(data);
-    let easy = 0;
-    let medium = 0;
-    let hard = 0;
-
-    if (data)
-      data.forEach((element) => {
-        if (element.DifficultyLevelID === 1) {
-          easy = easy + 1;
-        } else if (element.DifficultyLevelID === 2) {
-          medium += 1;
-        } else if (element.DifficultyLevelID === 3) {
-          hard += 1;
-        }
-      });
-
-    BuilderService.questionCount.easy = easy;
-    BuilderService.questionCount.medium = medium;
-    BuilderService.questionCount.hard = hard;
-
-    BuilderService.questionCount.total = easy + medium + hard;
-  }, [data]);
-
-  function handler(data) {
-    const prevs = [];
-
-    setQuestionView((prev) => {
-      if (!prev || prev.length === 0) return [data];
-      return [...prev, data];
-    });
-  }
-
-  let topicData = {
-    selectedSubTopic: LocalStorage?.subTopicData,
-    selectedTopic: LocalStorage?.topicData,
-    selectedModule: LocalStorage?.moduleData,
-  };
-
-  const [questionView, setQuestionView] = useState([]);
-
-  // Make Sure to destroy previous subescriptions.
-  DifficultySubescribeService.source();
-
-  const [selectedModule, setSelectedModule] = useState({});
-  const [selectedTopic, setSelectedTopic] = useState({});
-  const [selectedSubTopic, setSelectedSubTopic] = useState({});
-
-  const searchRef = useRef();
-
-  LocalStorage.data = BuilderService.getData();
-
-  const [popup, setPopup] = useState(false);
-
-  const MCQDifficulty = BuilderService.getDifficultyByTitle(Titles[0]);
-
-  let totalEasy = 0;
-  let totalMedium = 0;
-  let totalHard = 0;
-
-  LocalStorage.questionView.forEach((element) => (totalEasy += element.easy));
-  LocalStorage.questionView.forEach(
-    (element) => (totalMedium += element.medium)
-  );
-  LocalStorage.questionView.forEach((element) => (totalHard += element.hard));
-  let subTopicId = LocalStorage.subTopicData?.subTopicId;
-
-  const selectTechnology = TechnologyService.technology?.programmingLanguage;
-  /* console.log(LocalStorage.questionView); */
-
-  /*useEffect(() => {
-    console.log("i");
-    setTotal(totalEasy + totalMedium + totalHard);
-  }, [totalEasy, totalMedium, totalHard]); */
-
-  function nextButtonHandler(type, data) {
-    /* setTotal((prev) => {
-      return { ...prev, [type]: data };
-    }); */
-  }
-
-  const setDataHandler = () => {
-    if (selectedModule.module) {
-      setShowPopupWarn(false);
-      setPopup(true);
-    } else {
-      setShowPopupWarn(true);
-    }
-  };
-
-  const [isValid, setIsValid] = useState(false);
-
-  return (
-    <AnimatePresence>
-      <motion.main
-        initial={{ x: "100%", transition: { duration: 0.3 } }}
-        animate={{ x: 0, transition: { duration: 0.3 } }}
-        exit={{ x: "100%", transition: { duration: 0.3 } }}
-        className="bg-gray-50 min-h-[70vh]"
-      >
-        {/* <section className=" pt-3">
-            <div className="ms-[58%] flex">
-              <div>
-                <input
-                  name="search"
-                  className="ps-2 text-start border-2 border-[gray] rounded-s"
-                  placeholder="Enter Search Term"
-                  type="text"
-                  ref={searchRef}
-                />
-                <button className="bg-[gray] px-3 text-white border-2 border-[gray] font-medium">
-                  Search
-                </button>
-              </div>
-              <div className="ms-[1px] bg-[gray] px-3 text-white border-2 border-[gray] rounded-e font-medium">
-                <ExcelImport />
-              </div>
-            </div>
-          </section> */}
-        <div className="flex justify-between">
-          <h1 className="ms-[20px] pt-5 text-lg font-semibold">
-            Selected Technology: {technology?.TechnologyName}
-          </h1>
-          <div>
-            {showPopupWarn && (
-              <span className="mt-5 px-6 bg-transparent  text-red-400 font-semibold">
-                Must select a module
-              </span>
-            )}
-            <button
-              className="mr-[20px] mt-5 px-6 max-h-8 min-h-8 bg-[gray] text-white font-semibold rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:bg-gray-500 focus:ring-opacity-50"
-              onClick={setDataHandler}
-            >
-              Set Question Template
-            </button>
-          </div>
-
-          {popup && (
-            <QuestionViewHandler
-              technology={technology}
-              topicData={topicData}
-              setPopup={setPopup}
-              handler={handler}
-            />
-          )}
-        </div>
-        <div>
-          <section className="flex m-[20px]">
-            <QusetionViewTechnlogy
-              technology={technology}
-              questionView={questionView}
-              setQuestionView={setQuestionView}
-              selectedModule={selectedModule}
-              setSelectedModule={setSelectedModule}
-              selectedTopic={selectedTopic}
-              data={data}
-              setData={setData}
-              setSelectedTopic={setSelectedTopic}
-              selectedSubTopic={selectedSubTopic}
-              setSelectedSubTopic={setSelectedSubTopic}
-            />
-          </section>
-          <div className="p-5">
-            {BuilderService.technologyService._technology.natureOfAssessment ===
-              "fixed" && (
-              <div className="text-lg font-semibold mb-4">
-                <h2 className="">
-                  Please select an{" "}
-                  <span className="bg-red-100 rounded">underlined value</span>{" "}
-                  to fetch questions:
-                </h2>
-              </div>
-            )}
-            <section className="flex justify-center">
-              {/* <h2 className="max-w-[20%]">
-                <span>{selectTechnology}</span>
-              </h2> */}
-              <QuestionViewProvider>
-                <AsssessmentQuestionBoxHandler
-                  nextButtonHandler={nextButtonHandler}
-                  setStale={setStale}
-                  setIsValid={setIsValid}
-                  isValid={isValid}
-                  data={data}
-                  setData={setData}
-                  selectTechnology={selectTechnology}
-                  stale={stale}
-                  questionView={questionView}
-                  setQuestionView={setQuestionView}
-                />
-              </QuestionViewProvider>
-            </section>
-          </div>
-        </div>
-        {/* <section className="flex my-4 justify-between items-center">
-          <FetchData setStale={setStale} />
-        </section> */}
-        {/** grid grid-cols-2 */}
-
-        <Button disabled={!isValid} link={"/categories/scheduletime"} />
-      </motion.main>
-    </AnimatePresence>
-  );
-}
-
-export default QuestionView;
 
 export function Questions({
   questions,
@@ -526,39 +267,42 @@ export function QuestionViewV2() {
   const queryHard = queryParams.get("hard") || 0;
 
   // for optimize
-  const getCombinations = _debounce(async (natureID) => {
-    console.log(natureID);
-    const res = await axios.post(
-      "https://www.nareshit.net/SelectQuestionCombination",
-      {
-        TestId: TestID,
-        TestDetailsId: TestDetailsID,
-      }
-    );
+  const getCombinations = useCallback(
+    _debounce(async (natureID) => {
+      console.log(natureID);
+      const res = await axios.post(
+        "https://www.nareshit.net/SelectQuestionCombination",
+        {
+          TestId: TestID,
+          TestDetailsId: TestDetailsID,
+        }
+      );
 
-    const fetchedCombinations = JSON.parse(
-      res?.data?.dbresult?.[0]?.combinations || "{}"
-    );
+      const fetchedCombinations = JSON.parse(
+        res?.data?.dbresult?.[0]?.combinations || "{}"
+      );
 
-    if (natureID === 1) {
-      // Iterate over the properties of fetchedCombinations
-      for (const prop in fetchedCombinations) {
-        if (Object.hasOwnProperty.call(fetchedCombinations, prop)) {
-          const value = fetchedCombinations[prop];
-          // Check if the value is an object and has an 'includes' property
-          if (typeof value === "object" && value.hasOwnProperty("includes")) {
-            // Set the 'includes' property to an empty object
-            value.includes = {};
+      if (natureID === 1) {
+        // Iterate over the properties of fetchedCombinations
+        for (const prop in fetchedCombinations) {
+          if (Object.hasOwnProperty.call(fetchedCombinations, prop)) {
+            const value = fetchedCombinations[prop];
+            // Check if the value is an object and has an 'includes' property
+            if (typeof value === "object" && value.hasOwnProperty("includes")) {
+              // Set the 'includes' property to an empty object
+              value.includes = {};
+            }
           }
         }
       }
-    }
 
-    setCombination(fetchedCombinations);
+      setCombination(fetchedCombinations);
 
-    // Return the updated fetchedCombinations
-    return fetchedCombinations;
-  }, 100);
+      // Return the updated fetchedCombinations
+      return fetchedCombinations;
+    }, 100),
+    []
+  );
 
   const postCombinations = _debounce(async () => {
     const res = await axios.post(
@@ -569,37 +313,23 @@ export function QuestionViewV2() {
         Combinations: JSON.stringify(combination),
       }
     );
-    /* console.log(res.data.dbresult[0].combinations); */
   }, 100);
 
   useEffect(() => {
     if (Object.keys(combination).length > 0) postCombinations();
-    /* console.log(
-      "combo",
-      Object.values(combination).map((ele) =>
-        Object.values(ele.includes).map((ele) => ele.includes)
-      )[0][0]
-    ); */
   }, [combination]);
 
-  const fetchCombonations = async () => {
-    /* const res = await axios.post("https://www.nareshit.net/CreateDynamicTest", {
-      TestId: 34,
-    });
-    setCombination(JSON.parse(res.data.dbresult)); */
-  };
-
-  const fetchNatureID = async (getCombinations) => {
+  const fetchNatureID = useCallback(async (getCombinations) => {
     let res = await axios.post("https://www.nareshit.net/getBasicTestInfo", {
       data: { TestID: TestID },
     });
     setNatureID(res.data?.data[0].NatureID || 0);
     getCombinations(res.data?.data[0].NatureID || 0);
-  };
+  }, []);
 
   useEffect(() => {
     fetchNatureID(getCombinations);
-  }, []);
+  }, [fetchNatureID, getCombinations]);
 
   const setEditModalHandler = (ModuleID, TopicID, SubTopicID, DataObj) => {
     setEditModal({
@@ -664,9 +394,7 @@ export function QuestionViewV2() {
     if (combination) {
       Object.values(combination).forEach((ele) => {
         // if Nature is not dynamic
-        if (natureID == 2) {
-          const includesObj = ele.includes;
-
+        if (natureID === 2 || natureID === "2") {
           for (let key in ele.includes) {
             const value = ele.includes[key];
 
@@ -696,7 +424,7 @@ export function QuestionViewV2() {
             }
           }
         }
-        if (natureID == 1) {
+        if (natureID === 1 || natureID === "1") {
           let totalTableEasy = 0;
           let totalTableMedium = 0;
           let totalTableHard = 0;
@@ -705,7 +433,7 @@ export function QuestionViewV2() {
             totalTableMedium += ele?.medium || 0;
             totalTableHard += ele?.hard || 0;
           });
-          console.log(tableTotal, totalTableEasy);
+
           setTableTotal((prev) => {
             if (!prev) return prev;
             let obj = { ...prev };
@@ -719,8 +447,11 @@ export function QuestionViewV2() {
         }
       });
     }
-    console.log(combination);
-  }, [combination]);
+  }, [combination, natureID]);
+
+  useEffect(() => {
+    console.log("hi");
+  }, []);
 
   return (
     <AnimatePresence>
@@ -769,6 +500,8 @@ export function QuestionViewV2() {
             isFormValid={isFormValid}
             errMsg={errMsg}
             TestID={TestID}
+            combination={combination}
+            natureID={natureID}
             isTableTotalValid={
               tableTotal.easy >= queryEasy &&
               tableTotal.medium >= queryMedium &&

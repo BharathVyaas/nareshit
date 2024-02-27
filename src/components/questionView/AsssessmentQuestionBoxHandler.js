@@ -240,11 +240,23 @@ export default AsssessmentQuestionBoxHandler;
 export function TableHead({ titles }) {
   return (
     <tr className="border-[2px] border-black">
-      {titles.map(({ title, id }) => (
-        <th className="px-0 border-x-2 border-black" key={id}>
-          {title}
-        </th>
-      ))}
+      {titles.map(({ title, id }, index) =>
+        index < 3 ? (
+          <th
+            className="px-0 border-x-2 text-left ps-2 text-nowrap border-black"
+            key={id}
+          >
+            {title}
+          </th>
+        ) : (
+          <th
+            className="px-0 border-x-2 text-center text-nowrap border-black"
+            key={id}
+          >
+            {title}
+          </th>
+        )
+      )}
     </tr>
   );
 }
@@ -363,7 +375,7 @@ export function Tbody({
 
   let content = (
     <td
-      className="md:px-5 text-center py-1 border-[1.2px]"
+      className="md:ps-2 text-start py-1 border-[1.2px]"
       {...props}
       onClick={() => {
         /* console.log("edit", {
@@ -435,7 +447,7 @@ export function Tbody({
     content = (
       <td
         onClick={(e) => e.stopPropagation()}
-        className="text-center border-[1.2px] w-[7rem]"
+        className="text-center border-[1.2px]"
         {...props}
       >
         <div className="flex justify-between items-center">

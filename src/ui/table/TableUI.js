@@ -1,6 +1,3 @@
-import { Navigate } from "react-router";
-import { NavLink } from "react-router-dom";
-
 /**
  * Component for rendering the table head.
  * @param {Object} props - The component props.
@@ -26,14 +23,7 @@ export function TableHead({ titles }) {
  * @returns {JSX.Element} The TableBodyRenderer component.
  */
 export function TableBodyRenderer({ element, index, handler }) {
-  const {
-    TestName,
-    IsActive,
-    TestStartDate,
-    TestEndDate,
-    TestStartTime,
-    TestEndTime,
-  } = element;
+  const { TestName, IsActive, TestStartDate, TestEndDate } = element;
 
   const styles =
     index % 2 === 0
@@ -118,7 +108,7 @@ export function TableBodyRenderer({ element, index, handler }) {
 export function Tbody({ data, ...props }) {
   return (
     <td
-      className="pencil md:px-5 text-center max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px]"
+      className="pencil md:px-5 max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px]"
       {...props}
     >
       {data}

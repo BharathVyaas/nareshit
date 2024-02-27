@@ -13,10 +13,7 @@ import {
   AssessmentLoaderV2,
   AssessmentsV2,
 } from "./pages/Assessments";
-import QuestionView, {
-  loader as QuestionLoader,
-  QuestionViewV2,
-} from "./pages/QuestionView";
+import { QuestionViewV2 } from "./pages/QuestionView";
 import ScheduleTime, {
   action as ScheduleTimeAction,
 } from "./pages/ScheduleTime";

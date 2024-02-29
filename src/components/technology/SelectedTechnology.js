@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 
 function getCurrentValue(id, arr) {
@@ -11,26 +11,16 @@ function getCurrentValue(id, arr) {
     throw new Error("must pass array as second paraem");
   }
 
-  const currentArr = arr.find((ele) => ele?.TechnologyID == Number(id));
+  const currentArr = arr.find(
+    (ele) =>
+      Number(ele?.TechnologyID) === Number(id) ||
+      ele?.TechnologyID === Number(id)
+  );
 
   return currentArr?.TechnologyID;
 }
 
-function getCurrentTechnology(id, arr) {
-  if (!(id || arr)) {
-    throw new Error("must pass valid data to getCurrentTechnology");
-  }
-
-  if (typeof arr !== "object") {
-    throw new Error("must pass array as second paraem");
-  }
-
-  const currentArr = arr.find((ele) => ele?.TechnologyID == Number(id));
-
-  return currentArr;
-}
-
-function SelectedTechnology({ technologyID, setTechnologyID }) {
+function SelectedTechnology({ setTechnologyID }) {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const technologyId = queryParams.get("technologyId");
@@ -66,8 +56,11 @@ function SelectedTechnology({ technologyID, setTechnologyID }) {
       <input
         className="hidden"
         value={String(
-          programmingLanguages?.find((ele) => ele.TechnologyID == selectedValue)
-            ?.TechnologyName
+          programmingLanguages?.find(
+            (ele) =>
+              ele.TechnologyID === selectedValue ||
+              Number(ele.TechnologyID) === Number(selectedValue)
+          )?.TechnologyName
         )}
         onChange={() => {}}
         name="TechnologyName"

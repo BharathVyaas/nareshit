@@ -12,7 +12,7 @@ function NatureOfAssessment({ natureID, setNatureID }) {
             type="radio"
             name="NatureID"
             value="1"
-            defaultChecked={natureID == 1}
+            defaultChecked={Number(natureID) === 1 || natureID === 1}
             onChange={changeHandler}
           />
           <span className="p-2">Dynamic</span>
@@ -22,7 +22,7 @@ function NatureOfAssessment({ natureID, setNatureID }) {
             type="radio"
             name="NatureID"
             value="2"
-            defaultChecked={natureID == 2}
+            defaultChecked={Number(natureID) === 2 || natureID === 2}
             onChange={changeHandler}
           />
           <span className="p-2">Fixed</span>

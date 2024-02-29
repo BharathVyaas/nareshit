@@ -1,15 +1,7 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import BuilderService from "../services/builder";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "react-router";
-import { DifficultySubescribeService } from "../services/difficultySubescribe";
 import axios from "axios";
 import QuestionModelHandler from "../ui/QuestionModelHandler";
 import QuestionViewHandler from "../ui/QuestionViewHandler";
@@ -24,7 +16,6 @@ export function Questions({
   currentIncludes,
   type,
   currentValue,
-  setCurrentValue,
   currentCombination,
 }) {
   const includeHandler = (flag, question, e) => {
@@ -122,123 +113,6 @@ function Question({ question, handler, includeHandler, includeArr }) {
   );
 }
 
-function Option({ option, question, questionKey }) {
-  return (
-    <article className="max-w-[20%] min-w-[20%] overflow-hidden">
-      <h3>{option}</h3>
-      <label htmlFor={question.QuestionID} className="overflow-clip ">
-        <input
-          id={question.QuestionID}
-          type="radio"
-          name={question.QuestionID}
-        />
-        {question[questionKey]}
-      </label>
-    </article>
-  );
-}
-
-function FetchData({ setStale }) {
-  const difficulty = BuilderService.getDifficulty();
-  const easy = difficulty
-    .map((element) => element.easy)
-    .reduce((data, acc) => Number(data) + acc, 0);
-  const medium = difficulty
-    .map((element) => element.medium)
-    .reduce((data, acc) => Number(data) + acc, 0);
-  const hard = difficulty
-    .map((element) => element.hard)
-    .reduce((data, acc) => Number(data) + acc, 0);
-  const total = easy + medium + hard;
-
-  let updatedEasy = BuilderService.questionCount.easy;
-
-  const [fetchCount, setFetchCount] = useState(0);
-
-  return (
-    <>
-      <div className="flex">
-        <aside className="mx-4">
-          <h2>
-            Easy Count:<span>{BuilderService.questionCount.easy}</span>
-          </h2>
-
-          <button
-            onClick={() => {
-              setFetchCount(easy);
-              setStale(true);
-              DifficultySubescribeService.notify("1", easy);
-            }}
-            className="bg-green-200 px-6 py-[.6px] rounded border-2 border-green-400"
-          >
-            Easy
-          </button>
-        </aside>
-
-        <aside className="mx-4">
-          <h2>
-            Medium Count:<span>{BuilderService.questionCount.medium}</span>
-          </h2>
-
-          <button
-            onClick={() => {
-              setFetchCount(medium);
-              setStale(true);
-              DifficultySubescribeService.notify("2", medium);
-            }}
-            className="bg-rose-200 px-6 py-[.6px] rounded border-2 border-rose-400"
-          >
-            Medium
-          </button>
-        </aside>
-        <aside className="mx-4">
-          <h2>
-            Hard Count: <span>{BuilderService.questionCount.hard}</span>
-          </h2>
-
-          <button
-            onClick={() => {
-              setFetchCount(hard);
-              setStale(true);
-              DifficultySubescribeService.notify("3", hard);
-            }}
-            className="bg-red-400 px-6 py-[.6px] rounded border-2 border-red-600"
-          >
-            Hard
-          </button>
-        </aside>
-        <aside className="mx-4">
-          <h2>
-            Fetched Questions:<span>{BuilderService.questionCount.total}</span>
-          </h2>
-          <button
-            className="bg-sky-400 border-2 border-sky-800 px-6 py-[.8px] rounded"
-            onClick={() => {
-              setFetchCount(total);
-              DifficultySubescribeService.notify("all", total);
-            }}
-          >
-            Show All
-          </button>
-        </aside>
-      </div>
-      <div>
-        <aside className="flex me-10 text-white">
-          <button className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded">
-            Include
-          </button>
-          <button
-            className="bg-sky-400 mx-4 px-12 font-medium py-[7px] rounded"
-            onClick={() => DifficultySubescribeService.notify("exclude")}
-          >
-            Exclude
-          </button>
-        </aside>
-      </div>
-    </>
-  );
-}
-
 export async function loader() {
   return 1;
 }
@@ -259,16 +133,45 @@ export function QuestionViewV2() {
   const [editModal, setEditModal] = useState(false);
   const [viewModal, setViewModal] = useState(false);
 
-  const [isFormValid, setFormIsValid] = useState(true);
-  const [errMsg, setErrMsg] = useState(false);
+  const isFormValid = true;
+  const errMsg = false;
+
+  /* const [isFormValid, setFormIsValid] = useState(true);
+  const [errMsg, setErrMsg] = useState(false); */
 
   const queryEasy = queryParams.get("easy") || 0;
   const queryMedium = queryParams.get("medium") || 0;
   const queryHard = queryParams.get("hard") || 0;
 
-  // for optimize
-  const getCombinations = useCallback(
-    _debounce(async (natureID) => {
+  /*   useEffect(() => {
+    const postCombinations = _debounce(async () => {
+      await axios.post(
+        "https://www.nareshit.net/Insert_Update_QuestionCombination",
+        {
+          TestId: TestID,
+          TestDetailsId: TestDetailsID,
+          Combinations: JSON.stringify(combination),
+        }
+      );
+    }, 100);
+
+    if (Object.keys(combination).length > 0) postCombinations();
+  }, [combination, TestID, TestDetailsID]); */
+
+  const fetchNatureID = useCallback(
+    async (getCombinations) => {
+      let res = await axios.post("https://www.nareshit.net/getBasicTestInfo", {
+        data: { TestID: TestID },
+      });
+      setNatureID(res.data?.data[0].NatureID || 0);
+      getCombinations(res.data?.data[0].NatureID || 0);
+    },
+    [TestID]
+  );
+
+  useEffect(() => {
+    // for optimize
+    const getCombinations = _debounce(async (natureID) => {
       console.log(natureID);
       const res = await axios.post(
         "https://www.nareshit.net/SelectQuestionCombination",
@@ -300,36 +203,10 @@ export function QuestionViewV2() {
 
       // Return the updated fetchedCombinations
       return fetchedCombinations;
-    }, 100),
-    []
-  );
+    }, 100);
 
-  const postCombinations = _debounce(async () => {
-    const res = await axios.post(
-      "https://www.nareshit.net/Insert_Update_QuestionCombination",
-      {
-        TestId: TestID,
-        TestDetailsId: TestDetailsID,
-        Combinations: JSON.stringify(combination),
-      }
-    );
-  }, 100);
-
-  useEffect(() => {
-    if (Object.keys(combination).length > 0) postCombinations();
-  }, [combination]);
-
-  const fetchNatureID = useCallback(async (getCombinations) => {
-    let res = await axios.post("https://www.nareshit.net/getBasicTestInfo", {
-      data: { TestID: TestID },
-    });
-    setNatureID(res.data?.data[0].NatureID || 0);
-    getCombinations(res.data?.data[0].NatureID || 0);
-  }, []);
-
-  useEffect(() => {
     fetchNatureID(getCombinations);
-  }, [fetchNatureID, getCombinations]);
+  }, [fetchNatureID, TestID, TestDetailsID]);
 
   const setEditModalHandler = (ModuleID, TopicID, SubTopicID, DataObj) => {
     setEditModal({

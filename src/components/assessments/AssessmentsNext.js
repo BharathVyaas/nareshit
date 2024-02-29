@@ -6,13 +6,13 @@ export function AssessmentsNext({
   warn,
   setWarn,
 }) {
-  let easy = difficultyLevel?.[assessment]?.Easy == 0;
-  let medium = difficultyLevel?.[assessment]?.Medium == 0;
-  let hard = difficultyLevel?.[assessment]?.Hard == 0;
+  let easy = Number(difficultyLevel?.[assessment]?.Easy) === 0;
+  let medium = Number(difficultyLevel?.[assessment]?.Medium) === 0;
+  let hard = Number(difficultyLevel?.[assessment]?.Hard) === 0;
 
-  if (easy == undefined) easy = true;
-  if (medium == undefined) medium = true;
-  if (hard == undefined) hard = true;
+  if (easy === undefined || easy === "undefined") easy = true;
+  if (medium === undefined || medium === "undefined") medium = true;
+  if (hard === undefined || hard === "undefined") hard = true;
 
   let disabled = easy && medium && hard;
 
@@ -41,7 +41,7 @@ export function AssessmentsNext({
               {typeof warn == "string"
                 ? warn
                 : disabled
-                ? "Number of Questins must be grater then 0"
+                ? "Number of Questions must be greater then 0"
                 : "Total Questions must match easy + medium + hard"}
             </p>
           )}

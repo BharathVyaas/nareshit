@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom";
-import { LocalStorage } from "../services/LocalStorage";
 
 function MainNavigation() {
   return (

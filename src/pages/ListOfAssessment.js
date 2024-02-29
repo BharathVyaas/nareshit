@@ -1,77 +1,26 @@
 import DataHandler from "../util/fetchHandler";
-import {
-  NavLink,
-  useLoaderData,
-  useNavigate,
-  useSubmit,
-} from "react-router-dom";
-import { getAllAssessments, queryClient } from "../util/http";
+import { NavLink, useLoaderData, useNavigate } from "react-router-dom";
+import { getAllAssessments } from "../util/http";
 import AssessmentTable from "../components/AssessmentTable";
 
 import { AnimatePresence, motion } from "framer-motion";
-import BuilderService from "../services/builder";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { AssessmentClass } from "../services/assessmentsService";
-import { QueryViewClass } from "../services/questionViewService";
-import { TechnologyClass } from "../services/technologyService";
-import { ScheduleTimeClass } from "../services/scheduleTimeService";
 import { LocalStorage } from "../services/LocalStorage";
 import AuthCtx from "../context/auth.context";
-import { InitUserDataService, UserDataService } from "./UserDataService";
-import { UserDataCtx } from "../context/userData.context";
-
-import SHA256 from "crypto-js/sha256";
-
-/**
- * Technology Page Main Api Submit Data
- */
-const technologyPage = {
-  TestID: 0,
-  TechnologyID: -1,
-  AssessmentID: 1,
-  NatureID: 1,
-  RandomID: 1,
-  CreatedBy: "Admin",
-  ModifiedBy: "Admin",
-};
-
-/**
- * Assessment Page Main Api Submit Data
- */
-const assessmentPage = {
-  TestID: 0,
-  TestDetailsID: 0,
-  QuestionTypeID: 0,
-  NumOfEasy: 0,
-  NumOfMedium: 0,
-  NumOfHard: 0,
-  CreatedBy: "Admin",
-  ModifiedBy: "Admin",
-};
-
-/**
- * Random ID
- */
-const generateUniqueId = (input) => {
-  const hash = SHA256(input).toString();
-  return hash.substring(0, 10);
-};
 
 /**
  * Component for displaying a list of assessments created by other users.
  * @returns {JSX.Element} The ListOfAssessment component.
  */
 function ListOfAssessment() {
-  const { setUserData } = useContext(UserDataCtx);
-
   const navigate = useNavigate();
   const { isLoggedIn } = useContext(AuthCtx);
 
   useEffect(() => {
     if (!isLoggedIn) navigate("/login?page=categories/assessmentlist");
-  }, []);
+  }, [isLoggedIn, navigate]);
 
   const [titleData, setTitleData] = useState([]);
   const { data } = useQuery({
@@ -90,7 +39,6 @@ function ListOfAssessment() {
 
   // Fetch assessments using react-query's useLoaderData
   const { assessments } = useLoaderData();
-  let updatedData = assessments;
 
   function createNewHandler(e) {
     LocalStorage.clear();
@@ -119,8 +67,8 @@ function ListOfAssessment() {
   }
 
   useEffect(() => {
-    setTitleData(updatedData);
-  }, [titleData]);
+    setTitleData(assessments);
+  }, [titleData, assessments]);
 
   return (
     <AnimatePresence>
@@ -146,7 +94,7 @@ function ListOfAssessment() {
             {/* Render the AssessmentTable component */}
             <AssessmentTable
               titles={titles}
-              assessments={updatedData}
+              assessments={assessments}
               handler={handler}
             />
           </div>

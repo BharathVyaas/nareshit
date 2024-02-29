@@ -43,38 +43,40 @@ export function AssessmentsV2() {
     Number(NumOfEasy) + Number(NumOfMedium) + Number(NumOfHard)
   );
 
-  const fetchCounts = async () => {
-    const res = await axios.post(
-      "https://www.nareshit.net/getBasicTestDetailsInfo",
-      {
-        data: { TestID: TestID },
-      }
-    );
-
-    console.log("getBasicTestDetailsInfo response:", res);
-
-    let NumOfEasy = res.data.data[0]?.NumOfEasy || 0;
-    let NumOfMedium = res.data.data[0]?.NumOfMedium || 0;
-    let NumOfHard = res.data.data[0]?.NumOfHard || 0;
-
-    setQueryTotal(Number(NumOfEasy) + Number(NumOfMedium) + Number(NumOfHard));
-
-    setDifficlutyLevel({
-      MCQ: {
-        Easy: NumOfEasy,
-        Medium: NumOfMedium,
-        Hard: NumOfHard,
-      },
-    });
-
-    setCurrentTotal(
-      Number(NumOfEasy) + Number(NumOfMedium) + Number(NumOfHard)
-    );
-  };
-
   useEffect(() => {
+    const fetchCounts = async () => {
+      const res = await axios.post(
+        "https://www.nareshit.net/getBasicTestDetailsInfo",
+        {
+          data: { TestID: TestID },
+        }
+      );
+
+      console.log("getBasicTestDetailsInfo response:", res);
+
+      let NumOfEasy = res.data.data[0]?.NumOfEasy || 0;
+      let NumOfMedium = res.data.data[0]?.NumOfMedium || 0;
+      let NumOfHard = res.data.data[0]?.NumOfHard || 0;
+
+      setQueryTotal(
+        Number(NumOfEasy) + Number(NumOfMedium) + Number(NumOfHard)
+      );
+
+      setDifficlutyLevel({
+        MCQ: {
+          Easy: NumOfEasy,
+          Medium: NumOfMedium,
+          Hard: NumOfHard,
+        },
+      });
+
+      setCurrentTotal(
+        Number(NumOfEasy) + Number(NumOfMedium) + Number(NumOfHard)
+      );
+    };
+
     fetchCounts();
-  }, []);
+  }, [TestID]);
 
   useEffect(() => {
     if (shouldChangeStorage?.current?.value || !LocalStorage?.assessmentPage) {
@@ -86,7 +88,7 @@ export function AssessmentsV2() {
         shouldChangeStorage.current.value = false;
       }
     }
-  }, []);
+  }, [difficultyLevel]);
 
   useEffect(() => {
     if (difficultyLevel) {
@@ -110,7 +112,7 @@ export function AssessmentsV2() {
 
     setAssessment(keys);
     setDifficlutyLevel(difficultyLevels);
-  }, []);
+  }, [NumOfEasy, NumOfMedium, NumOfHard]);
 
   const handler = (questionType, level, handler) => {
     setDifficlutyLevel((prev) => {

@@ -1,11 +1,10 @@
 import { Form } from "react-router-dom";
 import { redirect, useLocation } from "react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import SelectedTechnologyV2 from "../components/technology/SelectedTechnology";
 import NatureOfAssessmentV2 from "../components/technology/NatureOfAssessment";
 
-import BuilderService from "../services/builder";
 import axios from "axios";
 import AssessmentV2 from "../components/technology/Assessment";
 import RandomV2 from "../components/technology/Random";
@@ -48,9 +47,14 @@ export function TechnologyV2() {
 
     // must be true to enable next button
     setIsFormValid(
-      technologyID && assessmentID && natureID && randomID && technologyID != -1
+      technologyID &&
+        assessmentID &&
+        natureID &&
+        randomID &&
+        technologyID !== -1 &&
+        technologyID !== "-1"
     );
-  }, [technologyID, natureID, randomID]);
+  }, [technologyID, natureID, randomID, assessmentID, errMsg, setIsFormValid]);
 
   return (
     <AnimatePresence>
@@ -90,7 +94,8 @@ export async function TechnologyActionV2({ request, params }) {
   const url = new URL(request.url);
 
   const queryTestID =
-    url.searchParams.get("TestID") == undefined
+    url.searchParams.get("TestID") === undefined ||
+    url.searchParams.get("TestID") === "undefined"
       ? 0
       : url.searchParams.get("TestID");
 
@@ -158,7 +163,8 @@ export async function TechnologyActionV2({ request, params }) {
     redirectVar = `/categories/assessments?edit=true&TestID=${TestID}&TestDetailsID=${TestDetailsID}&TechnologyName=${TechnologyName}&TechnologyID=${TechnologyID}&NumOfEasy=${NumOfEasy}&NumOfMedium=${NumOfMedium}&NumOfHard=${NumOfHard}`;
   }
 
-  if (NatureID == 3) redirectVar = "/questiondb/uploadTopic";
+  if (NatureID === 3 || NatureID === "3")
+    redirectVar = "/questiondb/uploadTopic";
 
   return redirect(redirectVar);
 }

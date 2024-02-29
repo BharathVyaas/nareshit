@@ -15,7 +15,7 @@ function AdminHomePage() {
 
   useEffect(() => {
     if (!isLoggedIn) navigate("/login");
-  }, []);
+  }, [isLoggedIn, navigate]);
 
   return (
     <>

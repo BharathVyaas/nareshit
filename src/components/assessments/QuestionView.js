@@ -1,4 +1,3 @@
-import { useState } from "react";
 import DifficultyLevel from "./DifficultyLevel";
 
 function QuestionType({
@@ -27,7 +26,7 @@ function QuestionType({
     } */
     setCurrentTotal(e.target.value);
     if (e.target.value < queryTotal) {
-      if (queryTotal != 0)
+      if (Number(queryTotal) !== 0)
         setWarn(`You Have Selected ${queryTotal} Questions. Should not decrease
       Existing Value`);
     } else {
@@ -55,19 +54,19 @@ function QuestionType({
       Number(difficultyLevels[questionType]["Easy"]) +
         Number(difficultyLevels[questionType]["Medium"]) +
         Number(difficultyLevels[questionType]["Hard"]) -
-        prevValue +
-        newValue !=
-      currentTotal
+        Number(prevValue) +
+        Number(newValue) !==
+      Number(currentTotal)
     ) {
-      setWarn(currentTotal != 0 && true);
+      setWarn(Number(currentTotal) !== 0 && true);
     }
     if (
       Number(difficultyLevels[questionType]["Easy"]) +
         Number(difficultyLevels[questionType]["Medium"]) +
         Number(difficultyLevels[questionType]["Hard"]) -
-        prevValue +
-        newValue !=
-      currentTotal
+        Number(prevValue) +
+        Number(newValue) !==
+      Number(currentTotal)
     ) {
       setWarn(true);
     } else {

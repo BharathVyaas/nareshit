@@ -1,6 +1,4 @@
 import React from "react";
-import AdminLogin from "../components/login/AdminLogin";
-import UserLogin from "../components/login/UserLogin";
 import { Outlet } from "react-router";
 import { NavLink } from "react-router-dom";
 

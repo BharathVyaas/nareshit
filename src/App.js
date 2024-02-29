@@ -19,7 +19,6 @@ import ScheduleTime, {
 } from "./pages/ScheduleTime";
 
 import { queryClient } from "./util/http";
-import BuilderService from "./services/builder";
 import UploadTopic from "./pages/UploadTopic";
 import Questiondb from "./pages/Questiondb";
 import { QuestionViewProvider } from "./context/questionView";
@@ -34,22 +33,10 @@ import EnrollStudent from "./pages/enrollStudent/EnrollStudent";
 import UserManagement from "./pages/userManagement/UserManagement";
 
 /**
- * Initializes the Builder service.
- *
- * Builder Service is Necessary to run this application,
- * initializing it in App ensure that all the user interaction is recorded.
- */
-function initializeBuilderService() {
-  BuilderService.init();
-}
-
-/**
  *
  * Main App component that sets up routing and provides QueryClient for React Query.
  */
 function App() {
-  initializeBuilderService();
-
   // Define the routing configuration
   const appRoutes = [
     {

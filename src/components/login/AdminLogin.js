@@ -10,8 +10,7 @@ function UserLogin() {
   const userNameRef = useRef();
   const passwordRef = useRef();
 
-  const { isLoggedIn, setIsLoggedIn, setLoginData, loginData } =
-    useContext(AuthCtx);
+  const { setIsLoggedIn, setLoginData } = useContext(AuthCtx);
 
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");

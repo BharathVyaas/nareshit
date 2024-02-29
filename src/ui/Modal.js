@@ -14,6 +14,7 @@ function Modal({ data, setter, ModalParam, handler, styles }) {
         animate={{ y: "0", opacity: 1 }}
         end={{ y: "100vh", opacity: 0.5 }}
         className="fixed top-0 left-0 w-full h-full bg-sky-200 bg-opacity-50 z-10 flex justify-center items-center"
+        onClick={() => setter(false)}
       >
         <div className={style}>
           <div className="p-3">

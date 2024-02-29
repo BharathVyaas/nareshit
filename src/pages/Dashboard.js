@@ -8,7 +8,7 @@ function Dashboard() {
 
   useEffect(() => {
     if (!isLoggedIn) navigate("/login?page=/dashboard");
-  }, []);
+  }, [isLoggedIn, navigate]);
 
   const { loginData } = useContext(AuthCtx);
   return (

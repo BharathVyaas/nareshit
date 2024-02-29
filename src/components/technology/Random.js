@@ -13,7 +13,7 @@ function RandomV2({ randomID, setRandomID }) {
             name="RandomID"
             value="1"
             onChange={changeHandler}
-            defaultChecked={randomID == 1}
+            defaultChecked={Number(randomID) === 1 || randomID === 1}
           />
           <span className="ps-2">Complete Test</span>
         </label>
@@ -23,7 +23,7 @@ function RandomV2({ randomID, setRandomID }) {
             name="RandomID"
             value="2"
             onChange={changeHandler}
-            defaultChecked={randomID == 2}
+            defaultChecked={Number(randomID) === 2 || randomID === 2}
           />
           <span className="ps-2">Module Wise Random</span>
         </label>
@@ -34,7 +34,7 @@ function RandomV2({ randomID, setRandomID }) {
             name="RandomID"
             value="3"
             onChange={changeHandler}
-            defaultChecked={randomID == 3}
+            defaultChecked={Number(randomID) === 3 || randomID === 3}
           />
           <span className="ps-2">No Random</span>
         </label>

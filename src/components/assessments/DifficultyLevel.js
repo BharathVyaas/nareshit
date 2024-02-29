@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 function DifficultyLevel({
   handler,
@@ -19,7 +19,7 @@ function DifficultyLevel({
 
   let styles =
     "bg-white ms-2 me-4 w-16 scrollHide border-[1px] border-gray-400 rounded";
-  if (maxCount == 0) {
+  if (Number(maxCount) === 0) {
     styles =
       "bg-gray-300 text-gray-800 ms-2 me-4 w-16 scrollHide border-[1px] border-gray-400 rounded";
   }
@@ -34,7 +34,7 @@ function DifficultyLevel({
           type="number"
           id={id}
           name={id}
-          disabled={maxCount == 0}
+          disabled={Number(maxCount) === 0}
           value={difficultyLevels?.[questionType]?.[difficultyLevel]}
           onChange={changeHandler}
         />

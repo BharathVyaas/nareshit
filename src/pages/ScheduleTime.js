@@ -19,6 +19,8 @@ function ScheduleTime() {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
 
+  const [scheduleLater, setScheduleLater] = useState(false);
+
   const [isValid, setIsValid] = useState(false);
   const [isDateValid, setIsDateValid] = useState();
   const [isTimeValid, setIsTimeValid] = useState(true);
@@ -31,6 +33,8 @@ function ScheduleTime() {
       const today = new Date();
       const startDateObj = new Date(startDate);
       const endDateObj = new Date(endDate);
+
+      console.log(new Date(startDate), startDate);
 
       const isStartDateValid = startDateObj >= today;
       const isEndDateValid = startDateObj <= endDateObj;
@@ -48,8 +52,15 @@ function ScheduleTime() {
   }, [startTime, endTime]);
 
   useEffect(() => {
-    setIsValid(isTestValid && isDateValid && isTimeValid);
-  }, [isTimeValid, isDateValid, isTestValid]);
+    setIsValid(isTestValid && (scheduleLater || (isDateValid && isTimeValid)));
+  }, [isTimeValid, scheduleLater, isDateValid, isTestValid]);
+
+  useEffect(() => {
+    if (scheduleLater) {
+      if (!isTimeValid) setIsTestValid(true);
+      if (!isDateValid) setIsDateValid(true);
+    }
+  }, [scheduleLater, isDateValid, isTimeValid]);
 
   const submitHandler = (e) => {
     if (isSubmitting) {
@@ -58,7 +69,6 @@ function ScheduleTime() {
     }
 
     if (isValid) {
-      console.log("yes");
       setIsSubmitting(true);
     }
 
@@ -70,18 +80,21 @@ function ScheduleTime() {
     if (!(testName || testDescription)) {
       setIsTestValid(false);
     }
-    if (!(startDate || endDate)) {
-      setIsDateValid(false);
+
+    if (!scheduleLater) {
+      if (!(startDate || endDate)) {
+        setIsDateValid(false);
+      }
     }
   };
 
-  console.log(
+  /*   console.log(
     "time\n",
     isTimeValid,
     "\ndate\n",
     isDateValid,
-    isTestValid && isTimeValid && isDateValid
-  );
+    isTestValid && (scheduleLater || (isTimeValid && isDateValid))
+  ); */
 
   return (
     <AnimatePresence>
@@ -116,60 +129,74 @@ function ScheduleTime() {
             className="w-full border-[1.2px]  _text-start border-black h-[2.2rem] p-2"
           />
 
-          <div className="flex justify-between">
-            <div className="w-full sm:w-[8rem] flex flex-col">
-              <label htmlFor="startTime" className="block p-1">
-                Start Time
-              </label>
+          <div className="mt-4">
+            <label>
               <input
-                type="time"
-                name="TestStartTime"
-                id="startTime"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="border border-black text-left h-10 px-3"
+                type="checkbox"
+                className="me-2"
+                onChange={(e) => {
+                  setScheduleLater(e.target.checked);
+                }}
               />
-            </div>
-            <div className="w-full sm:w-[8rem] flex flex-col">
-              <label htmlFor="endTime" className="block p-1">
-                End Time
-              </label>
-              <input
-                type="time"
-                name="TestEndTime"
-                id="endTime"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                className="border border-black text-left h-10 px-3"
-              />
-            </div>
+              I'll Schedule later
+            </label>
+            {!scheduleLater && (
+              <div className="flex justify-between">
+                <div className="w-full sm:w-[8rem] flex flex-col">
+                  <label htmlFor="startTime" className="block p-1">
+                    Start Time
+                  </label>
+                  <input
+                    type="time"
+                    name="TestStartTime"
+                    id="startTime"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    className="border border-black text-left h-10 px-3"
+                  />
+                </div>
+                <div className="w-full sm:w-[8rem] flex flex-col">
+                  <label htmlFor="endTime" className="block p-1">
+                    End Time
+                  </label>
+                  <input
+                    type="time"
+                    name="TestEndTime"
+                    id="endTime"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                    className="border border-black text-left h-10 px-3"
+                  />
+                </div>
 
-            <div className="w-full sm:w-[10rem] flex flex-col">
-              <label htmlFor="startDate" className="block p-1">
-                Start Date
-              </label>
-              <input
-                type="date"
-                name="TestStartDate"
-                id="startDate"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="border border-black h-10 text-left px-3"
-              />
-            </div>
-            <div className="w-full sm:w-[10rem] flex flex-col">
-              <label htmlFor="endDate" className="block p-1">
-                End Date
-              </label>
-              <input
-                type="date"
-                name="TestEndDate"
-                id="endDate"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="border border-black text-left h-10 px-3"
-              />
-            </div>
+                <div className="w-full sm:w-[10rem] flex flex-col">
+                  <label htmlFor="startDate" className="block p-1">
+                    Start Date
+                  </label>
+                  <input
+                    type="date"
+                    name="TestStartDate"
+                    id="startDate"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="border border-black h-10 text-left px-3"
+                  />
+                </div>
+                <div className="w-full sm:w-[10rem] flex flex-col">
+                  <label htmlFor="endDate" className="block p-1">
+                    End Date
+                  </label>
+                  <input
+                    type="date"
+                    name="TestEndDate"
+                    id="endDate"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="border border-black text-left h-10 px-3"
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Warning message for invalid fields */}
@@ -191,7 +218,7 @@ function ScheduleTime() {
             onClick={submitHandler}
             className="px-8 py-2 mx-auto mt-4 bg-green-300 hover:bg-green-400"
           >
-            {isSubmitting ? "Loading..." : "Test Prepared"}
+            {isSubmitting ? "Loading..." : "Schedule Assessment"}
           </button>
         </Form>
       </motion.main>

@@ -1,8 +1,5 @@
-import React, { useContext, useId, useRef, useState } from "react";
-import { LocalStorage } from "../services/LocalStorage";
-import BuilderService from "../services/builder";
-import QuestionViewCtx from "../context/questionView";
-import { useLocation } from "react-router";
+import React from "react";
+
 import QuestionViewEditModal from "./questionViews/QuestionViewEditModal";
 import QuestionViewModalView from "./questionViews/QuestionViewModalView";
 

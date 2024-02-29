@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { redirect, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 function QuestionViewNext({
   isFormValid,
@@ -19,9 +19,7 @@ function QuestionViewNext({
     if (combination) {
       Object.values(combination).forEach((ele) => {
         // if Nature is not dynamic
-        if (natureID == 2) {
-          const includesObj = ele.includes;
-
+        if (Number(natureID) === 2) {
           for (let key in ele.includes) {
             const value = ele.includes[key];
 
@@ -51,7 +49,7 @@ function QuestionViewNext({
             }
           }
         }
-        if (natureID == 1) {
+        if (Number(natureID) === 1) {
           let totalTableEasy = 0;
           let totalTableMedium = 0;
           let totalTableHard = 0;
@@ -60,7 +58,7 @@ function QuestionViewNext({
             totalTableMedium += ele?.medium || 0;
             totalTableHard += ele?.hard || 0;
           });
-          console.log(tableTotal, totalTableEasy);
+
           setTableTotal((prev) => {
             if (!prev) return prev;
             let obj = { ...prev };
@@ -74,8 +72,7 @@ function QuestionViewNext({
         }
       });
     }
-    console.log(combination);
-  }, [combination]);
+  }, [combination, natureID]);
 
   const clickHandler = (e) => {
     // if user did not select all questions.
@@ -102,49 +99,48 @@ function QuestionViewNext({
   };
 
   return (
-    (tableTotal.easy != 0 ||
-      tableTotal.medium != 0 ||
-      tableTotal.hard != 0) && (
+    (Number(tableTotal.easy) !== 0 ||
+      Number(tableTotal.medium) !== 0 ||
+      Number(tableTotal.hard) !== 0) && (
       <div className="h-20 relative">
         {displayErr && (
           <p className="text-red-900 font-bold text-center -top-8 px-14  absolute w-full">
             {displayErr}
           </p>
         )}
-        <div className="flex w-full">
-          {!isTableTotalValid && (
-            <div className="mx-auto">
+        <div className="flex flex-col w-full mt-5">
+          <label
+            className="flex items-center space-x-2 mx-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <input
+              type="checkbox"
+              className="me-2"
+              onChange={(e) => setIsAgreed(e.target.checked)}
+            />
+            <span>I agreed I choose all questions correctly</span>
+          </label>
+
+          <div className="flex justify-center">
+            <div className="me-6">
               <button
                 onClick={previewHandler}
-                className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
+                className={`inline-block w-40 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
               >
                 Preview
               </button>
             </div>
-          )}
-          {isTableTotalValid && (
-            <div className="mx-auto grid place-content-center">
-              <label
-                className="flex items-center space-x-2 mx-auto"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <input
-                  type="checkbox"
-                  className="me-2"
-                  onChange={(e) => setIsAgreed(e.target.checked)}
-                />
-                <span>I agreed I choose all questions correctly</span>
-              </label>
 
-              <div className="mx-auto" onClick={clickHandler}>
+            {isTableTotalValid && isAgreed ? (
+              <div className="" onClick={clickHandler}>
                 <button
-                  className={`inline-block px-14 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
+                  className={`inline-block w-40 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
                 >
                   {isSubmitting ? "Loading..." : "Next"}
                 </button>
               </div>
-            </div>
-          )}
+            ) : null}
+          </div>
         </div>
       </div>
     )

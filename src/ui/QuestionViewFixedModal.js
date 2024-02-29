@@ -1,13 +1,8 @@
 import axios from "axios";
-import React, { useEffect, useId, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Questions } from "../pages/QuestionView";
 import { AnimatePresence, motion } from "framer-motion";
-import { LocalStorage } from "../services/LocalStorage";
-import BuilderService from "../services/builder";
 import { useLocation } from "react-router";
-
-let COUNT = 0;
-let CURRENT_COUNT = 0;
 
 function getURL(type, currentCombination) {
   let DifficultyLevelID = 1;
@@ -16,90 +11,19 @@ function getURL(type, currentCombination) {
     DifficultyLevelID = 1;
   } else if (type === "medium") {
     DifficultyLevelID = 2;
-  } else if (type == "hard") {
+  } else if (type === "hard") {
     DifficultyLevelID = 3;
   }
 
   return `https://www.nareshit.net/fetchFixedQuestions?DifficultyLevelID=${DifficultyLevelID}&ModuleID=${
     currentCombination.ModuleID
   }&TopicID=${
-    currentCombination.TopicID == 0 ? null : currentCombination.TopicID
+    Number(currentCombination.TopicID) === 0 ? null : currentCombination.TopicID
   }&SubTopicID=${
-    currentCombination.SubTopicID == 0 ? null : currentCombination.SubTopicID
+    Number(currentCombination.SubTopicID) === 0
+      ? null
+      : currentCombination.SubTopicID
   }`;
-}
-
-// Returns Result Object
-function getResult(data, id) {
-  let result = {
-    id: data?.element?.id || id,
-    selectedModule: data?.element?.selectedModule,
-    ModuleID: data?.element?.ModuleID,
-    selectedTopic: data?.element?.selectedTopic,
-    TopicID: data?.element?.TopicID,
-    selectedSubTopic: data?.element?.selectedTopic,
-    SubTopicID: data?.element?.SubTopicID,
-    easy: Number(data?.element?.easy),
-    medium: Number(data?.element?.medium),
-    hard: Number(data?.element?.hard),
-  };
-
-  // when creating new Combination data object is different
-  if (data.DataObj) {
-    result = {
-      id: data?.DataObj?.id || id,
-      selectedModule: data?.DataObj?.Module?.ModuleName,
-      ModuleID: data?.ModuleID,
-      selectedTopic: data?.DataObj?.Topic?.TopicName,
-      TopicID: data?.TopicID,
-      selectedSubTopic: data?.DataObj?.SubTopic?.SubTopicName,
-      SubTopicID: data?.SubTopicID,
-      easy: Number(data?.easy),
-      medium: Number(data?.medium),
-      hard: Number(data?.hard),
-    };
-  }
-
-  return result;
-}
-
-// Returns Total from reducing all combonations.
-function getTotal(data) {
-  const combinationArr = Object.values(data.combination);
-
-  let easyTotal = combinationArr.reduce(
-    (acc, ele) => Number(ele.easy) + acc,
-    0
-  );
-  let mediumTotal = combinationArr.reduce(
-    (acc, ele) => Number(ele.medium) + acc,
-    0
-  );
-  let hardTotal = combinationArr.reduce(
-    (acc, ele) => Number(ele.hard) + acc,
-    0
-  );
-
-  // total - current element
-  if (
-    data.element &&
-    (data.element.easy || data.element.medium || data.element.hard)
-  ) {
-    easyTotal -= Number(data.element.easy);
-    mediumTotal -= Number(data.element.medium);
-    hardTotal -= Number(data.element.hard);
-  }
-
-  if (
-    data.DataObj &&
-    (data.DataObj.easy || data.DataObj.medium || data.DataObj.hard)
-  ) {
-    easyTotal -= Number(data.DataObj.easy);
-    mediumTotal -= Number(data.DataObj.medium);
-    hardTotal -= Number(data.DataObj.hard);
-  }
-
-  return { easyTotal, mediumTotal, hardTotal };
 }
 
 function QuestionViewFixedModal({
@@ -115,36 +39,39 @@ function QuestionViewFixedModal({
   const queryMedium = queryParams.get("medium") || 0;
   const queryHard = queryParams.get("hard") || 0;
 
-  const id = useId();
-
-  const { easyTotal, mediumTotal, hardTotal } = getTotal(data);
-  let result = getResult(data, id);
-
   const currentEasy = currentCombination?.easy;
   const currentMedium = currentCombination?.medium;
   const currentHard = currentCombination?.hard;
 
-  let currentTotal;
+  const [currentTotal, setCurrentTotal] = useState(null);
 
   // used to update current include value in modal
   const [currentValue, setCurrentValue] = useState();
 
   useEffect(() => {
     if (data.type === "easy") {
-      currentTotal = queryEasy;
+      setCurrentTotal(queryEasy);
       setCurrentValue(currentEasy);
     }
 
     if (data.type === "medium") {
-      currentTotal = queryMedium;
+      setCurrentTotal(queryMedium);
       setCurrentValue(currentMedium);
     }
 
     if (data.type === "hard") {
-      currentTotal = queryHard;
+      setCurrentTotal(queryHard);
       setCurrentValue(currentHard);
     }
-  }, [data.type]);
+  }, [
+    data.type,
+    currentEasy,
+    currentHard,
+    currentMedium,
+    queryEasy,
+    queryMedium,
+    queryHard,
+  ]);
 
   // ...
   const key = currentCombination.id;
@@ -160,7 +87,7 @@ function QuestionViewFixedModal({
 
   const postIncludes = async (obj) => {
     let includesArr = [];
-    Object.values(obj[data.modalData?.id]).map((ele) => {
+    Object.values(obj[data.modalData?.id]).forEach((ele) => {
       if (ele) {
         ele.forEach((item) => includesArr.push(item));
       }
@@ -308,7 +235,7 @@ function QuestionViewFixedModalBody({
       console.log("res", res);
       setQuestions(res.data);
     });
-  }, []);
+  }, [currentCombination, type]);
 
   return (
     <motion.div
@@ -337,7 +264,6 @@ function QuestionViewFixedModalFooter({
   includes,
   handler,
   setter,
-  currentTotal,
   currentIncludes,
   currentValue,
 }) {
@@ -353,7 +279,7 @@ function QuestionViewFixedModalFooter({
   const submitHandler = async () => {
     if (isSubmitting) return;
     let includesArr = [];
-    Object.values(includes[data.modalData?.id]).map((ele) => {
+    Object.values(includes[data.modalData?.id]).forEach((ele) => {
       if (ele) {
         ele.forEach((item) => includesArr.push(item));
       }

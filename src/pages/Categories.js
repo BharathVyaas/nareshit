@@ -18,7 +18,7 @@ function Categories() {
 
   useEffect(() => {
     if (!isLoggedIn) navigate("/login?page=/categories/assessmentlist");
-  }, []);
+  }, [isLoggedIn, navigate]);
 
   return (
     <>

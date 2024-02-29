@@ -1,9 +1,6 @@
 import axios from "axios";
-import { includes } from "lodash";
 import { useEffect, useId, useRef, useState } from "react";
 import { useLocation } from "react-router";
-
-import CryptoJS from "crypto-js";
 
 // Returns Result Object
 function getResult(data, id) {
@@ -102,9 +99,10 @@ function QuestionViewEditModal({ data, handler, setter }) {
   const hardRef = useRef();
   const id = useId();
   const [isValid, setIsValid] = useState(true);
+  const [warn, setWarn] = useState(false);
 
   const getDisabledInputStyles = (n) => {
-    if (n == 0) {
+    if (Number(n) === 0) {
       return "bg-gray-200 text-gray-700 border rounded-md w-10 px-2 py-1 ml-2";
     }
     return "border rounded-md w-10 px-2 py-1 ml-2";
@@ -118,72 +116,51 @@ function QuestionViewEditModal({ data, handler, setter }) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // from table
+  let availableEasyTotal = queryEasy - easyTotal;
+  let availableMediumTotal = queryMedium - mediumTotal;
+  let availableHardTotal = queryHard - hardTotal;
+
   let result = getResult(data, id);
-
-  const fetchMaxCount = async () => {
-    let ModuleId = data?.ModuleID;
-    ModuleId = ModuleId == 0 || ModuleId == -1 ? null : ModuleId;
-    let TopicId = data?.TopicID;
-    TopicId = TopicId == 0 || TopicId == -1 ? null : TopicId;
-    let SubTopicId = data?.SubTopicID;
-    SubTopicId = SubTopicId == 0 || SubTopicId == -1 ? null : SubTopicId;
-
-    const reqData = {
-      TechnologyId: technologyId,
-      ModuleId,
-      TopicId,
-      SubTopicId,
-    };
-    const res = await axios.post(
-      "https://www.nareshit.net/FetchAvailableQuestionsByCount",
-      reqData
-    );
-
-    setMaxCount({
-      easyCount: res?.data?.dbresult[0]?.EasyCount || "",
-      mediumCount: res?.data?.dbresult[0]?.MediumCount || "",
-      hardCount: res?.data?.dbresult[0]?.HardCount || "",
-    });
-  };
 
   // Easy Cal
   const [correctEasy, setCorrectEasy] = useState(0);
   useEffect(() => {
     const maxEasyCount = maxCount?.easyCount || 0;
-    const availableEasyTotal = easyTotal == 0 ? 0 : queryEasy - easyTotal;
-    if (maxEasyCount == 0) setCorrectEasy(0);
+    const availableEasyTotal =
+      Number(easyTotal) === 0 ? 0 : queryEasy - easyTotal;
+    if (Number(maxEasyCount) === 0) setCorrectEasy(0);
     else {
       setCorrectEasy(
         maxEasyCount > availableEasyTotal ? queryEasy - easyTotal : maxEasyCount
       );
     }
-  }, [maxCount]);
+  }, [maxCount, easyTotal, queryEasy]);
 
   // Medium Cal
   const [correctMedium, setCorrectMedium] = useState(0);
   useEffect(() => {
-    {
-      const maxMediumCount = maxCount?.mediumCount || 0;
-      const availableMediumTotal =
-        mediumTotal == 0 ? 0 : queryMedium - mediumTotal;
-      if (maxMediumCount == 0) {
-        setCorrectMedium(0);
-      } else {
-        setCorrectMedium(
-          maxMediumCount > availableMediumTotal
-            ? queryMedium - mediumTotal
-            : availableMediumTotal
-        );
-      }
+    const maxMediumCount = maxCount?.mediumCount || 0;
+    const availableMediumTotal =
+      Number(mediumTotal) === 0 ? 0 : queryMedium - mediumTotal;
+    if (Number(maxMediumCount) === 0) {
+      setCorrectMedium(0);
+    } else {
+      setCorrectMedium(
+        maxMediumCount > availableMediumTotal
+          ? queryMedium - mediumTotal
+          : availableMediumTotal
+      );
     }
-  }, [maxCount]);
+  }, [maxCount, mediumTotal, queryMedium]);
 
   // Hard Cal
   const [correctHard, setCurrentHard] = useState(0);
   useEffect(() => {
     const maxHardCount = maxCount?.hardCount || 0;
-    const availableHardTotal = hardTotal == 0 ? 0 : queryHard - hardTotal;
-    if (maxHardCount == 0) {
+    const availableHardTotal =
+      Number(hardTotal) === 0 ? 0 : queryHard - hardTotal;
+    if (Number(maxHardCount) === 0) {
       setCurrentHard(0);
     } else {
       setCurrentHard(
@@ -192,11 +169,44 @@ function QuestionViewEditModal({ data, handler, setter }) {
           : availableHardTotal
       );
     }
-  }, [maxCount]);
+  }, [maxCount, hardTotal, queryHard]);
 
   useEffect(() => {
+    const fetchMaxCount = async () => {
+      let ModuleId = data?.ModuleID;
+      ModuleId =
+        Number(ModuleId) === 0 || Number(ModuleId) === -1 ? null : ModuleId;
+
+      let TopicId = data?.TopicID;
+      TopicId =
+        Number(TopicId) === 0 || Number(TopicId) === -1 ? null : TopicId;
+
+      let SubTopicId = data?.SubTopicID;
+      SubTopicId =
+        Number(SubTopicId) === 0 || Number(SubTopicId) === -1
+          ? null
+          : SubTopicId;
+
+      const reqData = {
+        TechnologyId: technologyId,
+        ModuleId,
+        TopicId,
+        SubTopicId,
+      };
+      const res = await axios.post(
+        "https://www.nareshit.net/FetchAvailableQuestionsByCount",
+        reqData
+      );
+
+      setMaxCount({
+        easyCount: res?.data?.dbresult[0]?.EasyCount || "",
+        mediumCount: res?.data?.dbresult[0]?.MediumCount || "",
+        hardCount: res?.data?.dbresult[0]?.HardCount || "",
+      });
+    };
+
     fetchMaxCount();
-  }, []);
+  }, [data?.ModuleID, data?.SubTopicID, data?.TopicID, technologyId]);
 
   async function submiteHandler() {
     let go = 0;
@@ -283,6 +293,15 @@ function QuestionViewEditModal({ data, handler, setter }) {
 
     if (!(go > 2)) {
       setIsValid(false);
+      setWarn(
+        ((hardRef.current?.value === "" || hardRef.current?.value === "0") &&
+          (mediumRef.current?.value === "" ||
+            mediumRef.current?.value === "0") &&
+          easyRef.current?.value === "") ||
+          easyRef.current?.value === "0"
+          ? "Must Add Atleast One Question"
+          : "Try Entering Smaller Values!"
+      );
     } else {
       setIsValid(true);
     }
@@ -305,24 +324,77 @@ function QuestionViewEditModal({ data, handler, setter }) {
             &times;
           </span>
         </div>
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold">Module Name</h2>
-          <p className="text-gray-600">
-            {result.selectedModule || "None Selected"}
-          </p>
+
+        <div className="grid grid-cols-2">
+          <div>
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">Module Name</h2>
+              <p className="text-gray-600">
+                {result.selectedModule || "None Selected"}
+              </p>
+            </div>
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">Topic Name</h2>
+              <p className="text-gray-600">
+                {result.selectedTopic || "None Selected"}
+              </p>
+            </div>
+            <div className="mb-4 overflow-hidden">
+              <h2 className="text-lg font-semibold">SubTopic Name</h2>
+              <p className="text-gray-600">
+                {result.selectedSubTopic || "None Selected"}
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <div className="mt-3">
+              <table>
+                <thead>
+                  <tr className="border-b-[2px] border-dashed border-[#00000070]">
+                    <th className="border-e-[2px] border-[#00000070]"></th>
+                    <th className="px-1  border-e-[.1rem] border-dashed border-[#00000020]">
+                      Requested
+                    </th>
+                    <th className="px-1">DBCount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b-[.1rem] border-dashed  border-[#00000020]">
+                    <th className="text-start border-e-[2px] border-[#00000070]">
+                      easy
+                    </th>
+                    <td className="text-end pe-3 border-e-[.1rem] border-dashed border-[#00000020]">
+                      {availableEasyTotal || 0}
+                    </td>
+                    <td className="text-end pe-3">{maxCount.easyCount || 0}</td>
+                  </tr>
+                  <tr className="border-b-[.1rem] border-dashed  border-[#00000020]">
+                    <th className="text-start border-e-[2px] border-[#00000070]">
+                      medium
+                    </th>
+                    <td className="text-end pe-3 border-e-[.1rem] border-dashed border-[#00000020]">
+                      {availableMediumTotal || 0}
+                    </td>
+                    <td className="text-end pe-3">
+                      {maxCount.mediumCount || 0}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th className="text-start border-e-[2px] border-[#00000070]">
+                      hard
+                    </th>
+                    <td className="text-end pe-3 border-e-[.1rem] border-dashed border-[#00000020]">
+                      {availableHardTotal || 0}
+                    </td>
+                    <td className="text-end pe-3">{maxCount.hardCount || 0}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold">Topic Name</h2>
-          <p className="text-gray-600">
-            {result.selectedTopic || "None Selected"}
-          </p>
-        </div>
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold">SubTopic Name</h2>
-          <p className="text-gray-600">
-            {result.selectedSubTopic || "None Selected"}
-          </p>
-        </div>
+
         <div className="flex space-x-4">
           <div className="flex content-center">
             <label className="flex items-center" htmlFor="topiceasy">
@@ -331,7 +403,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
                 ref={easyRef}
                 id="topiceasy"
                 type="number"
-                disabled={(correctEasy || 0) == 0}
+                disabled={(Number(correctEasy) || 0) === 0}
                 className={getDisabledInputStyles(correctEasy)}
                 defaultValue={result.easy}
               />
@@ -350,7 +422,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
                 ref={mediumRef}
                 id="topicmedium"
                 type="number"
-                disabled={(correctMedium || 0) == 0}
+                disabled={(Number(correctMedium) || 0) === 0}
                 className={getDisabledInputStyles(correctMedium || 0)}
                 defaultValue={result.medium}
               />
@@ -369,7 +441,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
                 ref={hardRef}
                 id="topichard"
                 type="number"
-                disabled={(correctHard || 0) == 0}
+                disabled={(Number(correctHard) || 0) === 0}
                 className={getDisabledInputStyles(correctHard || 0)}
                 defaultValue={result.hard}
               />
@@ -384,9 +456,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
         </div>
         <div className="grid place-content-center mt-2">
           {!isValid && (
-            <p className="text-red-800 font-semibold absloute">
-              Try Entering Smaller Values!
-            </p>
+            <p className="text-red-800 font-semibold absloute">{warn}</p>
           )}
 
           <button
@@ -402,3 +472,12 @@ function QuestionViewEditModal({ data, handler, setter }) {
 }
 
 export default QuestionViewEditModal;
+
+/**
+ * hardRef.current?.value !== "" ||
+            hardRef.current?.value !== "0" ||
+            mediumRef.current?.value !== "" ||
+            mediumRef.current?.value !== "0" ||
+            easyRef.current?.value !== "" ||
+            easyRef.current?.value !== "0"
+ */

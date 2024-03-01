@@ -10,6 +10,7 @@ function Topics({ setDataHandler, combination }) {
   const queryParams = new URLSearchParams(location.search);
   const technologyName = queryParams.get("TechnologyName") || 0;
   const technologyId = queryParams.get("TechnologyID") || 0;
+  const testDetailsId = queryParams.get("TestDetailsID") || 0;
 
   const [modules, setModules] = useState();
   const [topics, setTopics] = useState();
@@ -52,7 +53,24 @@ function Topics({ setDataHandler, combination }) {
     const res = await axios.post(
       "https://www.nareshit.net/InsertionQuestionView",
       {
-        Combinations: JSON.stringify(combination),
+        data: [
+          ...Object.values(combination).map((ele) => {
+            return {
+              EasyCount: ele?.easy,
+              MediumCount: ele?.medium,
+              HardCount: ele?.hard,
+              ModuleId: ele?.ModuleID,
+              TopicId: ele?.TopicID,
+              SubtopicId: ele.SubtopicID,
+              TechnologyName: technologyName,
+              TechnologyId: technologyId,
+              ModuleName: ele?.selectedModule,
+              TopicName: ele?.selectedTopic,
+              SubtopicName: ele?.selectedSubTopic,
+              TestDetailsID: testDetailsId,
+            };
+          }),
+        ],
       }
     );
 
@@ -61,7 +79,24 @@ function Topics({ setDataHandler, combination }) {
       "https://www.nareshit.net/InsertionQuestionView",
       "data",
       {
-        Combinations: JSON.stringify(combination),
+        data: [
+          ...Object.values(combination).map((ele) => {
+            return {
+              EasyCount: ele?.easy,
+              MediumCount: ele?.medium,
+              HardCount: ele?.hard,
+              ModuleId: ele?.ModuleID,
+              TopicId: ele?.TopicID,
+              SubtopicId: ele.SubtopicID,
+              TechnologyName: technologyName,
+              TechnologyId: technologyId,
+              ModuleName: ele?.selectedModule,
+              TopicName: ele?.selectedTopic,
+              SubtopicName: ele?.selectedSubTopic,
+              TestDetailsID: testDetailsId,
+            };
+          }),
+        ],
       },
       "res",
       res

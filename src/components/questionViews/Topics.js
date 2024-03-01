@@ -10,6 +10,7 @@ function Topics({ setDataHandler, combination }) {
   const queryParams = new URLSearchParams(location.search);
   const technologyName = queryParams.get("TechnologyName") || 0;
   const technologyId = queryParams.get("TechnologyID") || 0;
+  const testID = queryParams.get("TestID") || 0;
   const testDetailsId = queryParams.get("TestDetailsID") || 0;
 
   const [modules, setModules] = useState();
@@ -50,24 +51,47 @@ function Topics({ setDataHandler, combination }) {
   };
 
   const saveHandler = async () => {
+    console.log({
+      data: [
+        ...Object.values(combination).map((ele) => {
+          return {
+            EasyCount: ele?.easy || 0,
+            MediumCount: ele?.medium || 0,
+            HardCount: ele?.hard || 0,
+            ModuleId: ele?.ModuleID || null,
+            TopicId: ele?.TopicID || null,
+            SubtopicId: ele.SubtopicID || null,
+            TechnologyName: technologyName || null,
+            TechnologyId: technologyId || null,
+            ModuleName: ele?.selectedModule || null,
+            TopicName: ele?.selectedTopic || null,
+            SubtopicName: ele?.selectedSubTopic || null,
+            TestDetailsID: testDetailsId || 0,
+            TestID: testID || 0,
+          };
+        }),
+      ],
+    });
+
     const res = await axios.post(
-      "https://www.nareshit.net/InsertionQuestionView",
+      "https://www.nareshit.net/UpdateCombinations",
       {
         data: [
           ...Object.values(combination).map((ele) => {
             return {
-              EasyCount: ele?.easy,
-              MediumCount: ele?.medium,
-              HardCount: ele?.hard,
-              ModuleId: ele?.ModuleID,
-              TopicId: ele?.TopicID,
-              SubtopicId: ele.SubtopicID,
-              TechnologyName: technologyName,
-              TechnologyId: technologyId,
-              ModuleName: ele?.selectedModule,
-              TopicName: ele?.selectedTopic,
-              SubtopicName: ele?.selectedSubTopic,
-              TestDetailsID: testDetailsId,
+              EasyCount: ele?.easy || 0,
+              MediumCount: ele?.medium || 0,
+              HardCount: ele?.hard || 0,
+              ModuleId: ele?.ModuleID || null,
+              TopicId: ele?.TopicID || null,
+              SubtopicId: ele.SubtopicID || null,
+              TechnologyName: technologyName || null,
+              TechnologyId: technologyId || null,
+              ModuleName: ele?.selectedModule || null,
+              TopicName: ele?.selectedTopic || null,
+              SubtopicName: ele?.selectedSubTopic || null,
+              TestDetailsID: testDetailsId || 0,
+              TestID: testID || 0,
             };
           }),
         ],
@@ -76,24 +100,25 @@ function Topics({ setDataHandler, combination }) {
 
     console.log(
       "url",
-      "https://www.nareshit.net/InsertionQuestionView",
+      "https://www.nareshit.net/UpdateCombinations",
       "data",
       {
         data: [
           ...Object.values(combination).map((ele) => {
             return {
-              EasyCount: ele?.easy,
-              MediumCount: ele?.medium,
-              HardCount: ele?.hard,
-              ModuleId: ele?.ModuleID,
-              TopicId: ele?.TopicID,
-              SubtopicId: ele.SubtopicID,
-              TechnologyName: technologyName,
-              TechnologyId: technologyId,
-              ModuleName: ele?.selectedModule,
-              TopicName: ele?.selectedTopic,
-              SubtopicName: ele?.selectedSubTopic,
-              TestDetailsID: testDetailsId,
+              EasyCount: ele?.easy || 0,
+              MediumCount: ele?.medium || 0,
+              HardCount: ele?.hard || 0,
+              ModuleId: ele?.ModuleID || null,
+              TopicId: ele?.TopicID || null,
+              SubtopicId: ele.SubtopicID || null,
+              TechnologyName: technologyName || null,
+              TechnologyId: technologyId || null,
+              ModuleName: ele?.selectedModule || null,
+              TopicName: ele?.selectedTopic || null,
+              SubtopicName: ele?.selectedSubTopic || null,
+              TestDetailsID: testDetailsId || 0,
+              TestID: testID || 0,
             };
           }),
         ],
@@ -101,6 +126,21 @@ function Topics({ setDataHandler, combination }) {
       "res",
       res
     );
+
+    // Post Combinations to Custome table
+
+    const postCombinations = async () => {
+      await axios.post(
+        "https://www.nareshit.net/Insert_Update_QuestionCombination",
+        {
+          TestId: testID,
+          TestDetailsId: testDetailsId,
+          Combinations: JSON.stringify(combination),
+        }
+      );
+    };
+
+    if (Object.keys(combination).length > 0) postCombinations();
   };
 
   // Modules

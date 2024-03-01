@@ -233,45 +233,64 @@ function QuestionViewEditModal({ data, handler, setter }) {
           result.hard = Number(hardRef.current.value);
           setIsSubmitting(true);
 
-          if (data.DataObj) {
-            const res = await axios.post(
-              "https://www.nareshit.net/InsertionQuestionView",
-              {
+          /**
+           * {
                 data: [
                   ...Object.values(
                     data?.combination || { combination: [] }
                   ).map((ele) => {
                     return {
-                      EasyCount: ele?.easy,
-                      MediumCount: ele?.medium,
-                      HardCount: ele?.hard,
-                      ModuleId: ele?.ModuleID,
-                      TopicId: ele?.TopicID,
-                      SubtopicId: ele.SubtopicID,
-                      TechnologyName: technologyName,
-                      TechnologyId: technologyId,
-                      ModuleName: ele?.selectedModule,
-                      TopicName: ele?.selectedTopic,
-                      SubtopicName: ele?.selectedSubTopic,
-                      TestDetailsID: TestDetailsID,
+                      EasyCount: ele?.easy || 0,
+                      MediumCount: ele?.medium || 0,
+                      HardCount: ele?.hard || 0,
+                      ModuleId: ele?.ModuleID || null,
+                      TopicId: ele?.TopicID || null,
+                      SubtopicId: ele.SubtopicID || null,
+                      TechnologyName: technologyName || null,
+                      TechnologyId: technologyId || null,
+                      ModuleName: ele?.selectedModule || null,
+                      TopicName: ele?.selectedTopic || null,
+                      SubtopicName: ele?.selectedSubTopic || null,
+                      TestId: TestID || 0,
+                      TestDetailsID: TestDetailsID || 0,
                     };
                   }),
                   {
-                    TechnologyId: technologyId,
-                    TechnologyName: technologyName,
-                    ModuleName: data?.DataObj?.Module?.ModuleName,
-                    ModuleId: data?.ModuleID,
-                    TopicName: data?.DataObj?.Topic?.TopicName,
-                    TopicId: data?.TopicID,
-                    SubtopicName: data?.DataObj?.SubTopic?.SubTopicName,
-                    SubtopicId: data?.SubTopicID,
-                    MediumCount: mediumRef?.current?.value || 0,
-                    HardCount: hardRef?.current?.value || 0,
-                    EasyCount: easyRef?.current?.value || 0,
-                    TestId: TestID,
-                    TestDetailsId: TestDetailsID,
+                    TechnologyId: technologyId || 0,
+                    TechnologyName: technologyName || 0,
+                    ModuleName: data?.DataObj?.Module?.ModuleName || 0,
+                    ModuleId: data?.ModuleID || null,
+                    TopicName: data?.DataObj?.Topic?.TopicName || null,
+                    TopicId: data?.TopicID || null,
+                    SubtopicName: data?.DataObj?.SubTopic?.SubTopicName || null,
+                    SubtopicId: data?.SubTopicID || null,
+                    MediumCount: mediumRef?.current?.value || null,
+                    HardCount: hardRef?.current?.value || null,
+                    EasyCount: easyRef?.current?.value || null,
+                    TestId: TestID || 0,
+                    TestDetailsId: TestDetailsID || 0,
                   },
                 ],
+              }
+           */
+
+          if (data.DataObj) {
+            const res = await axios.post(
+              "https://www.nareshit.net/InsertionQuestionView",
+              {
+                TechnologyId: technologyId || 0,
+                TechnologyName: technologyName || 0,
+                ModuleName: data?.DataObj?.Module?.ModuleName || 0,
+                ModuleId: data?.ModuleID || null,
+                TopicName: data?.DataObj?.Topic?.TopicName || null,
+                TopicId: data?.TopicID || null,
+                SubtopicName: data?.DataObj?.SubTopic?.SubTopicName || null,
+                SubtopicId: data?.SubTopicID || null,
+                MediumCount: mediumRef?.current?.value || null,
+                HardCount: hardRef?.current?.value || null,
+                EasyCount: easyRef?.current?.value || null,
+                TestId: TestID || 0,
+                TestDetailsId: TestDetailsID || 0,
               }
             );
 
@@ -280,41 +299,19 @@ function QuestionViewEditModal({ data, handler, setter }) {
               "https://www.nareshit.net/InsertionQuestionView",
               "data",
               {
-                data: [
-                  ...Object.values(
-                    data?.combination || { combination: [] }
-                  ).map((ele) => {
-                    return {
-                      EasyCount: ele?.easy,
-                      MediumCount: ele?.medium,
-                      HardCount: ele?.hard,
-                      ModuleId: ele?.ModuleID,
-                      TopicId: ele?.TopicID,
-                      SubtopicId: ele.SubtopicID,
-                      TechnologyName: technologyName,
-                      TechnologyId: technologyId,
-                      ModuleName: ele?.selectedModule,
-                      TopicName: ele?.selectedTopic,
-                      SubtopicName: ele?.selectedSubTopic,
-                      TestDetailsID: TestDetailsID,
-                    };
-                  }),
-                  {
-                    TechnologyId: technologyId,
-                    TechnologyName: technologyName,
-                    ModuleName: data?.DataObj?.Module?.ModuleName,
-                    ModuleId: data?.ModuleID,
-                    TopicName: data?.DataObj?.Topic?.TopicName,
-                    TopicId: data?.TopicID,
-                    SubtopicName: data?.DataObj?.SubTopic?.SubTopicName,
-                    SubtopicId: data?.SubTopicID,
-                    MediumCount: mediumRef?.current?.value || 0,
-                    HardCount: hardRef?.current?.value || 0,
-                    EasyCount: easyRef?.current?.value || 0,
-                    TestId: TestID,
-                    TestDetailsId: TestDetailsID,
-                  },
-                ],
+                TechnologyId: technologyId || 0,
+                TechnologyName: technologyName || 0,
+                ModuleName: data?.DataObj?.Module?.ModuleName || 0,
+                ModuleId: data?.ModuleID || null,
+                TopicName: data?.DataObj?.Topic?.TopicName || null,
+                TopicId: data?.TopicID || null,
+                SubtopicName: data?.DataObj?.SubTopic?.SubTopicName || null,
+                SubtopicId: data?.SubTopicID || null,
+                MediumCount: mediumRef?.current?.value || null,
+                HardCount: hardRef?.current?.value || null,
+                EasyCount: easyRef?.current?.value || null,
+                TestId: TestID || 0,
+                TestDetailsId: TestDetailsID || 0,
               },
               "res",
               res

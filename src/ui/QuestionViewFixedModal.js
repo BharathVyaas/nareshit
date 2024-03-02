@@ -44,6 +44,7 @@ function QuestionViewFixedModal({
   const currentHard = currentCombination?.hard;
 
   const [currentTotal, setCurrentTotal] = useState(null);
+  const [filter, setFilter] = useState("all");
 
   // used to update current include value in modal
   const [currentValue, setCurrentValue] = useState();
@@ -82,8 +83,6 @@ function QuestionViewFixedModal({
       hard: currentCombination?.includes?.hard?.includes || [],
     },
   });
-
-  console.log(data);
 
   const postIncludes = async (obj) => {
     let includesArr = [];
@@ -163,12 +162,18 @@ function QuestionViewFixedModal({
           e.stopPropagation();
         }}
       >
-        <QuestionViewFixedModalHeader data={data} setter={setter} />
+        <QuestionViewFixedModalHeader
+          data={data}
+          setter={setter}
+          filter={filter}
+          setFilter={setFilter}
+        />
 
         <QuestionViewFixedModalBody
           modalHandler={modalHandler}
           currentCombination={currentCombination}
           type={data?.type}
+          filter={filter}
           currentValue={currentValue}
           currentIncludes={includes[key][data.type]?.length}
           setCurrentValue={setCurrentValue}
@@ -190,23 +195,33 @@ function QuestionViewFixedModal({
 
 export default QuestionViewFixedModal;
 
-function QuestionViewFixedModalHeader({ data, setter }) {
+function QuestionViewFixedModalHeader({ data, setter, filter, setFilter }) {
   return (
     <div
       className="flex justify-between text-nowrap w-[50vw]"
       onClick={(e) => e.preventDefault()}
     >
       <h2 className="text-blue-700 flex flex-wrap">
-        <span className="px-4 pt-4 underline underline-offset-2">
+        <span className="px-4 pt-4">
           {data?.element?.selectedModule || "None Selected"}
         </span>
-        <span className="px-4 pt-4  underline underline-offset-2">
+        <span className="px-4 pt-4">
           {data?.element?.selectedTopic || "None Selected"}
         </span>
-        <span className="px-4  pt-4 underline underline-offset-2">
+        <span className="px-4  pt-4">
           {data?.element?.selectedSubTopic || "None Selected"}
         </span>
       </h2>
+      <div className="relative w-[7rem] h-6 mt-4">
+        <select
+          defaultValue={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="absolute right-0"
+        >
+          <option value="all">All Questions</option>
+          <option value="included">Included</option>
+        </select>
+      </div>
       <button
         className="cursor-pointer font-bold text-pretty me-4 text-[2rem]"
         onClick={() => setter(false)}
@@ -221,13 +236,27 @@ function QuestionViewFixedModalBody({
   modalHandler,
   currentValue,
   type,
+  filter,
   setCurrentValue,
   currentCombination,
   currentIncludes,
 }) {
   const [questions, setQuestions] = useState([]);
 
-  console.log(currentCombination);
+  const included = currentCombination.includes?.[type]?.includes || [];
+
+  const includedQuestions = [];
+
+  included.forEach((include) => {
+    const includedQuestion = questions.find(
+      (ele) => ele.QuestionID === include
+    );
+    if (includedQuestion) {
+      includedQuestions.push(includedQuestion);
+    }
+  });
+
+  console.log("inc", includedQuestions);
 
   useEffect(() => {
     console.log(getURL(type, currentCombination));
@@ -247,7 +276,7 @@ function QuestionViewFixedModalBody({
       {questions && (
         <Questions
           modalHandler={modalHandler}
-          questions={questions}
+          questions={filter === "all" ? questions : includedQuestions}
           type={type}
           currentCombination={currentCombination}
           currentValue={currentValue}

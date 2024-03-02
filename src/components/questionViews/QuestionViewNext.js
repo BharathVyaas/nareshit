@@ -1,5 +1,6 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 function QuestionViewNext({
   isFormValid,
@@ -9,6 +10,13 @@ function QuestionViewNext({
   combination,
   natureID,
 }) {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  const TestDetailsID = queryParams.get("TestDetailsID");
+  const TechnologyName = queryParams.get("TechnologyName");
+  const TechnologyID = queryParams.get("TechnologyID");
+
   const [displayErr, setDisplayErr] = useState("");
   const navigate = useNavigate();
   const [isAgreed, setIsAgreed] = useState(false);
@@ -94,7 +102,76 @@ function QuestionViewNext({
     }
   };
 
-  const previewHandler = () => {
+  const previewHandler = async () => {
+    const res = await axios.post(
+      "https://www.nareshit.net/UpdateCombinations",
+      {
+        data: [
+          ...Object.values(combination).map((ele) => {
+            return {
+              EasyCount: ele?.easy || 0,
+              MediumCount: ele?.medium || 0,
+              HardCount: ele?.hard || 0,
+              ModuleId: ele?.ModuleID || null,
+              TopicId: ele?.TopicID || null,
+              SubtopicId: ele?.SubTopicID || null,
+              TechnologyName: TechnologyName || null,
+              TechnologyId: TechnologyID || null,
+              ModuleName: ele?.selectedModule || null,
+              TopicName: ele?.selectedTopic || null,
+              SubtopicName: ele?.selectedSubTopic || null,
+              TestDetailsID: TestDetailsID || 0,
+              TestID: TestID || 0,
+            };
+          }),
+        ],
+      }
+    );
+
+    console.log(
+      "url",
+      "https://www.nareshit.net/UpdateCombinations",
+      "data",
+      {
+        data: [
+          ...Object.values(combination).map((ele) => {
+            return {
+              EasyCount: ele?.easy || 0,
+              MediumCount: ele?.medium || 0,
+              HardCount: ele?.hard || 0,
+              ModuleId: ele?.ModuleID || null,
+              TopicId: ele?.TopicID || null,
+              SubtopicId: ele?.SubTopicID || null,
+              TechnologyName: TechnologyName || null,
+              TechnologyId: TechnologyID || null,
+              ModuleName: ele?.selectedModule || null,
+              TopicName: ele?.selectedTopic || null,
+              SubtopicName: ele?.selectedSubTopic || null,
+              TestDetailsID: TestDetailsID || 0,
+              TestID: TestID || 0,
+            };
+          }),
+        ],
+      },
+      "res",
+      res
+    );
+
+    console.log(combination);
+
+    const postCombinations = async () => {
+      await axios.post(
+        "https://www.nareshit.net/Insert_Update_QuestionCombination",
+        {
+          TestId: TestID,
+          TestDetailsId: TestDetailsID,
+          Combinations: JSON.stringify(combination),
+        }
+      );
+    };
+
+    if (Object.keys(combination).length > 0) postCombinations();
+
     window.location.href = `https://www.nareshit.net/previewexampage?testID=${TestID}`;
   };
 

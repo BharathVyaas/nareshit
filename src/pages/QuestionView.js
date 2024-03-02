@@ -9,6 +9,7 @@ import Topics from "../components/questionViews/Topics";
 import CombinationRenderer from "../components/questionViews/CombinationRenderer";
 import QuestionViewNext from "../components/questionViews/QuestionViewNext";
 import _debounce from "lodash/debounce";
+import Includes from "../components/questionViews/Includes";
 
 export function Questions({
   questions,

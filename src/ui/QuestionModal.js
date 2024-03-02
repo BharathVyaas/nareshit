@@ -50,6 +50,11 @@ function QuestionModal({ data: questionData, setter: setQuestionData }) {
           <h2 className="text-lg font-semibold mb-2">Answer:</h2>
           <p className="pl-3 text-lg">{CorrectAnswer}</p>
         </article>
+
+        <div>
+          <button>Include</button>
+          <button>Close</button>
+        </div>
       </section>
     </div>
   );

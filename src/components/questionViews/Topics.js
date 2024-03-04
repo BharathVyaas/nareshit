@@ -26,7 +26,9 @@ function Topics({ setDataHandler, combination }) {
 
   // Modules
   const fetchModules = async () => {
-    const res = await axios.get(`https://www.nareshit.net/fetchModules/2`);
+    const res = await axios.get(
+      `https://www.nareshit.net/fetchModules/${technologyId}`
+    );
 
     setModules(res.data);
   };

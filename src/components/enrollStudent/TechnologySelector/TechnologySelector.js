@@ -57,11 +57,17 @@ function TechnologySelector() {
 
   return (
     <>
-      <TechnologyDropDown dispatcher={dispatcher} />
-      <ModuleDropDown dispatcher={dispatcher} />
-      <TopicDropDown dispatcher={dispatcher} />
-      <SubTopicDropDown dispatcher={dispatcher} />
-      <DateDropDown dispatcher={dispatcher} />
+      <TechnologyDropDown
+        technologyData={technologyData}
+        dispatcher={dispatcher}
+      />
+      <ModuleDropDown technologyData={technologyData} dispatcher={dispatcher} />
+      <TopicDropDown technologyData={technologyData} dispatcher={dispatcher} />
+      <SubTopicDropDown
+        technologyData={technologyData}
+        dispatcher={dispatcher}
+      />
+      <DateDropDown technologyData={technologyData} dispatcher={dispatcher} />
     </>
   );
 }

@@ -1,8 +1,33 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import Select from "../../../ui/EnrollStudent/Select";
 
-function SubTopicDropDown({ dispatcher }) {
+const fetchHandler = async (setter, id) => {
+  const res = await axios.get(`https://www.nareshit.net/fetchSubTopics/${id}`);
+
+  setter([
+    { key: "0", value: "0", option: "Select A SubTopic" },
+    ...res.data.map((ele) => {
+      return {
+        id: ele.SubTopicID,
+        value: ele.SubTopicID,
+        option: ele.SubTopicName,
+      };
+    }),
+  ]);
+};
+
+function SubTopicDropDown({ technologyData, dispatcher }) {
   const [subTopicId, setSubTopicId] = useState("0");
+
+  const [options, setOptions] = useState([
+    { key: "0", value: "0", option: "Select A SubTopic" },
+  ]);
+
+  useEffect(() => {
+    if (technologyData.topicId)
+      fetchHandler(setOptions, technologyData.topicId);
+  }, [technologyData.topicId]);
 
   useEffect(() => {
     // updates technologyData in TechnologySelector.js
@@ -13,10 +38,7 @@ function SubTopicDropDown({ dispatcher }) {
     <Select
       defaultValue={subTopicId}
       setter={setSubTopicId}
-      options={[
-        { id: 1, value: 1, option: "DotNet" },
-        { id: 2, value: 2, option: "Java" },
-      ]}
+      options={options}
     />
   );
 }

@@ -29,6 +29,8 @@ function Tbody() {
       <Td />
       <Td />
       <Td />
+      <Td />
+      <Td />
     </tbody>
   );
 }
@@ -37,7 +39,7 @@ function Td() {
   return (
     <tr className="border-b-2 border-dotted border-gray-600">
       <td className="py-2 ps-2">100</td>
-      <td className="py-2 ps-2">My Test 100</td>
+      <td className="py-2 ps-2">Table Testing 101.web</td>
       <td className="py-2 ps-2">26-2-2024</td>
       <td className="py-2 ps-2">27-2-2024</td>
     </tr>

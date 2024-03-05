@@ -1,8 +1,34 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import Select from "../../../ui/EnrollStudent/Select";
 
-function TopicDropDown({ dispatcher }) {
+const fetchHandler = async (setter, id) => {
+  const res = await axios.get(`https://www.nareshit.net/fetchTopics/${id}`);
+
+  setter([
+    { key: "0", value: "0", option: "Select A Topic" },
+    ,
+    ...res.data.map((ele) => {
+      return {
+        id: ele.TopicID,
+        value: ele.TopicID,
+        option: ele.TopicName,
+      };
+    }),
+  ]);
+};
+
+function TopicDropDown({ technologyData, dispatcher }) {
   const [topicId, setTopicId] = useState("0");
+
+  const [options, setOptions] = useState([
+    { key: "0", value: "0", option: "Select A Topic" },
+  ]);
+
+  useEffect(() => {
+    if (technologyData.moduleId)
+      fetchHandler(setOptions, technologyData.moduleId);
+  }, [technologyData.moduleId]);
 
   useEffect(() => {
     // updates technologyData in TechnologySelector.js
@@ -10,14 +36,7 @@ function TopicDropDown({ dispatcher }) {
   }, [topicId]);
 
   return (
-    <Select
-      defaultValue={topicId}
-      setter={setTopicId}
-      options={[
-        { id: 1, value: 1, option: "DotNet" },
-        { id: 2, value: 2, option: "Java" },
-      ]}
-    />
+    <Select defaultValue={topicId} setter={setTopicId} options={options} />
   );
 }
 

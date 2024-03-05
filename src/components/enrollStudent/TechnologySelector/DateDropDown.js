@@ -6,12 +6,12 @@ function DateDropDown({ dispatcher }) {
 
   useEffect(() => {
     // updates technologyData in TechnologySelector.js
-    dispatcher({ type: "startDate", payload: Number(startDate) });
+    dispatcher({ type: "startDate", payload: new Date(startDate) });
   }, [startDate]);
 
   useEffect(() => {
     // updates technologyData in TechnologySelector.js
-    dispatcher({ type: "endDate", payload: Number(endDate) });
+    dispatcher({ type: "endDate", payload: new Date(endDate) });
   }, [endDate]);
 
   return (
@@ -37,7 +37,7 @@ function DateRenderer({ title, value, setter }) {
   return (
     <label>
       {title}
-      <input onChange={changeHandler} value={value} />
+      <input onChange={changeHandler} type="date" value={value} />
     </label>
   );
 }

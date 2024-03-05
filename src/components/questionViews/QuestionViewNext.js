@@ -186,27 +186,31 @@ function QuestionViewNext({
           </p>
         )}
         <div className="flex flex-col w-full mt-5">
-          <label
-            className="flex items-center space-x-2 mx-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <input
-              type="checkbox"
-              className="me-2"
-              onChange={(e) => setIsAgreed(e.target.checked)}
-            />
-            <span>I agreed I choose all questions correctly</span>
-          </label>
+          {isTableTotalValid && (
+            <label
+              className="flex items-center space-x-2 mx-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <input
+                type="checkbox"
+                className="me-2"
+                onChange={(e) => setIsAgreed(e.target.checked)}
+              />
+              <span>I agreed I choose all questions correctly</span>
+            </label>
+          )}
 
           <div className="flex justify-center">
-            <div className="me-6">
-              <button
-                onClick={previewHandler}
-                className={`inline-block w-40 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
-              >
-                Preview
-              </button>
-            </div>
+            {isTableTotalValid && (
+              <div className="me-6">
+                <button
+                  onClick={previewHandler}
+                  className={`inline-block w-40 py-2 mx-auto mt-3 bg-green-300 hover:bg-green-400`}
+                >
+                  Preview
+                </button>
+              </div>
+            )}
 
             {isTableTotalValid && isAgreed ? (
               <div className="" onClick={clickHandler}>

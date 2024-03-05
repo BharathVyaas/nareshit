@@ -44,7 +44,11 @@ function AdminHomePage() {
                   </Link>
                 </li>
                 <li className="text-white mx-2 bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
-                  <Link to="questiondb/uploadTopic">Question's DB</Link>
+                  <Link
+                    onClick={() => (window.location.href = "www.google.com")}
+                  >
+                    Question's DB
+                  </Link>
                 </li>
                 <li className="text-white mx-2 bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
                   <Link to="user-management">User Management</Link>

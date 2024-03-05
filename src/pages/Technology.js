@@ -111,6 +111,16 @@ export async function TechnologyActionV2({ request, params }) {
   let NatureID = formData.get("NatureID") || "1";
   let RandomID = formData.get("RandomID") || "1";
 
+  console.log("data", {
+    TestID,
+    AssessmentID,
+    TechnologyID,
+    NatureID,
+    RandomID,
+    CreatedBy: "Admin",
+    ModifiedBy: "Admin",
+  });
+
   let res = await axios.post("https://www.nareshit.net/createEditTest", {
     data: {
       TestID,

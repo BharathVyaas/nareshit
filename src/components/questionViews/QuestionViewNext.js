@@ -172,6 +172,13 @@ function QuestionViewNext({
 
     if (Object.keys(combination).length > 0) postCombinations();
 
+    const final_preview_res = await axios.post(
+      "https://www.nareshit.net/Final_Preview",
+      { TestID: TestID, BatchID: 1, MappingStudents: null }
+    );
+
+    console.log(final_preview_res.data);
+
     window.location.href = `https://www.nareshit.net/previewexampage?testID=${TestID}`;
   };
 

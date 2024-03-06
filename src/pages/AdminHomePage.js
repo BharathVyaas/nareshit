@@ -45,7 +45,9 @@ function AdminHomePage() {
                 </li>
                 <li className="text-white mx-2 bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
                   <Link
-                    onClick={() => (window.location.href = "www.google.com")}
+                    onClick={() =>
+                      (window.location.href = "http://49.207.10.13:3003")
+                    }
                   >
                     Question's DB
                   </Link>

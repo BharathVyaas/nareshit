@@ -7,7 +7,7 @@ export const queryClient = new QueryClient();
 
 export const getAllAssessments = async () => {
   const res = await axios.get("https://www.nareshit.net/getAllTests");
-
+  console.log(res.data);
   return await { assessments: res.data };
 };
 

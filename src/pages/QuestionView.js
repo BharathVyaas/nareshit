@@ -173,7 +173,6 @@ export function QuestionViewV2() {
   useEffect(() => {
     // for optimize
     const getCombinations = _debounce(async (natureID) => {
-      console.log(natureID);
       const res = await axios.post(
         "https://www.nareshit.net/SelectQuestionCombination",
         {
@@ -326,10 +325,6 @@ export function QuestionViewV2() {
       });
     }
   }, [combination, natureID]);
-
-  useEffect(() => {
-    console.log("hi");
-  }, []);
 
   return (
     <AnimatePresence>

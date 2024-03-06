@@ -23,7 +23,14 @@ export function TableHead({ titles }) {
  * @returns {JSX.Element} The TableBodyRenderer component.
  */
 export function TableBodyRenderer({ element, index, handler }) {
-  const { TestName, IsActive, TestStartDate, TestEndDate } = element;
+  const {
+    TestName,
+    IsActive,
+    TestStartDate,
+    TestEndDate,
+    CreatedAt,
+    CreatedBy,
+  } = element;
 
   const styles =
     index % 2 === 0
@@ -86,6 +93,8 @@ export function TableBodyRenderer({ element, index, handler }) {
       <Tbody data={fullEndDate} />
       <Tbody data={fullStartTime} />
       <Tbody data={fullEndTime} />
+      <Tbody data={CreatedBy} />
+      <Tbody data={CreatedAt} />
     </tr>
   );
 }

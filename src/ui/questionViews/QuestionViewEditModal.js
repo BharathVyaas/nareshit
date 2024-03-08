@@ -11,7 +11,7 @@ function getResult(data, id) {
   const smallerId = encoded.substring(0, 8) + id; // Take the first 8 characters
 
   let result = {
-    id: data?.element?.id || smallerId,
+    id: data.flag ? data.id || '' : data?.element?.id || smallerId,
     selectedModule: data?.element?.selectedModule,
     ModuleID: data?.element?.ModuleID,
     selectedTopic: data?.element?.selectedTopic,
@@ -26,7 +26,7 @@ function getResult(data, id) {
   // when creating new Combination data object is different
   if (data.DataObj) {
     result = {
-      id: data?.DataObj?.id || smallerId,
+      id: data.flag ? data.id || 0: data?.DataObj?.id || smallerId,
       selectedModule: data?.DataObj?.Module?.ModuleName,
       ModuleID: data?.ModuleID,
       selectedTopic: data?.DataObj?.Topic?.TopicName,
@@ -47,15 +47,25 @@ function getTotal(data) {
   const combinationArr = Object.values(data.combination);
 
   let easyTotal = combinationArr.reduce(
-    (acc, ele) => Number(ele.easy) + acc,
+    (acc, ele) => {let value = Number(ele.easy) + acc; if(data.id){
+      console.log('jjsdfsfd')
+      value -= Number(data.easy)
+    }
+      return value},
     0
   );
   let mediumTotal = combinationArr.reduce(
-    (acc, ele) => Number(ele.medium) + acc,
+    (acc, ele) => {let value = Number(ele.medium) + acc; if(data.id){
+      value -= Number(data.medium)
+    }
+      return value},
     0
   );
   let hardTotal = combinationArr.reduce(
-    (acc, ele) => Number(ele.hard) + acc,
+    (acc, ele) => {let value = Number(ele.hard) + acc; if(data.id){
+      value -= Number(data.hard)
+    }
+      return value},
     0
   );
 
@@ -82,7 +92,7 @@ function getTotal(data) {
 }
 
 function QuestionViewEditModal({ data, handler, setter }) {
-  /* console.log("data", data); */
+  console.log("data", data); 
   // max total values
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -97,7 +107,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
   const easyRef = useRef();
   const mediumRef = useRef();
   const hardRef = useRef();
-  const id = useId();
+  const _id = useId();
   const [isValid, setIsValid] = useState(true);
   const [warn, setWarn] = useState(false);
 
@@ -108,7 +118,8 @@ function QuestionViewEditModal({ data, handler, setter }) {
     return "border rounded-md w-10 px-2 py-1 ml-2";
   };
 
-  const { easyTotal, mediumTotal, hardTotal } = getTotal(data);
+  let { easyTotal, mediumTotal, hardTotal } = getTotal(data);
+  
   const [maxCount, setMaxCount] = useState({
     easyCount: "",
     mediumCount: "",
@@ -118,15 +129,18 @@ function QuestionViewEditModal({ data, handler, setter }) {
 
   // from table
   let availableEasyTotal = queryEasy - easyTotal;
+  if(data.id)availableEasyTotal += Number(data.easy)
   let availableMediumTotal = queryMedium - mediumTotal;
+  if(data.id)availableMediumTotal += Number(data.medium)
   let availableHardTotal = queryHard - hardTotal;
+  if(data.id)availableHardTotal += Number(data.hard)
 
-  let result = getResult(data, id);
+  let result = getResult(data, _id, data.id);
 
   // Easy Cal
   const [correctEasy, setCorrectEasy] = useState(0);
   useEffect(() => {
-    const maxEasyCount = maxCount?.easyCount || 0;
+    let maxEasyCount = maxCount?.easyCount || 0;
     const availableEasyTotal =
       Number(easyTotal) === 0 ? 0 : queryEasy - easyTotal;
     if (Number(maxEasyCount) === 0) setCorrectEasy(0);
@@ -274,7 +288,6 @@ function QuestionViewEditModal({ data, handler, setter }) {
               }
            */
 
-          if (data.DataObj) {
             const res = await axios.post(
               "https://www.nareshit.net/InsertionQuestionView",
               {
@@ -316,9 +329,46 @@ function QuestionViewEditModal({ data, handler, setter }) {
               "res",
               res
             );
-          }
 
-          handler(result, "edit");
+            
+    // Post Combinations to Custome table
+
+    let updatedCombination = (prev) => {
+        const obj = {...prev}
+        const id = data.id
+
+        if(obj[id]){
+        obj[id].easy = Number(result.easy) === NaN ? 0 : Number(result.easy)
+        obj[id].medium = Number(result.medium) === NaN ? 0 : Number(result.medium) 
+        obj[id].hard = Number(result.hard) === NaN ?  0 : Number(result.hard)
+        }
+        
+        return obj
+      }
+
+    const postCombinations = async () => {
+      const res = await axios.post(
+        "https://www.nareshit.net/Insert_Update_QuestionCombination",
+        {
+          TestId: TestID,
+          TestDetailsId: TestDetailsID,
+          Combinations: JSON.stringify(updatedCombination(data.combination)),
+        }
+      );
+      return res
+    };
+
+    let insertRes;
+    
+    if (Object.keys(data.combination).length > 0) insertRes = postCombinations();
+
+    console.log('url',"https://www.nareshit.net/Insert_Update_QuestionCombination", {
+      TestId: TestID,
+      TestDetailsId: TestDetailsID,
+      Combinations: JSON.stringify(updatedCombination(data.combination)),
+    }, 'res', insertRes)
+
+          handler(result, "edit", data.id, data.flag);
           setter(false);
           setIsValid(true);
         }

@@ -177,9 +177,9 @@ function QuestionViewNext({
       { TestID: TestID, BatchID: 1, MappingStudents: null }
     );
 
-    console.log(final_preview_res.data);
+    const transactionID = final_preview_res?.data?.dbresult?.[0]?.TransactionId || 0
 
-    window.location.href = `https://www.nareshit.net/previewexampage?testID=${TestID}`;
+    window.location.href = `https://www.nareshit.net/previewexampage?testID=${TestID}&transactionId=${transactionID}`;
   };
 
   return (

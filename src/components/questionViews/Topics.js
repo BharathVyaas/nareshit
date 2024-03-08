@@ -42,6 +42,20 @@ function Topics({ setDataHandler, combination }) {
     setTopics(res.data);
   };
 
+
+  useEffect(() => {
+    if(selectedTopic){
+    for(let key in combination){
+      if(combination[key].ModuleID === selectedModule &&  combination[key].TopicID === selectedTopic){
+        const userRes = window.confirm("Combination with the same topic already exists do you want to continue.")
+        
+        if(!userRes){
+          setSelectedTopic('-1')
+        }
+      }
+    }}
+  }, [selectedTopic])
+
   // SubTopics
   const fetchSubTopics = async () => {
     console.log("fetch");
@@ -132,7 +146,7 @@ function Topics({ setDataHandler, combination }) {
     // Post Combinations to Custome table
 
     const postCombinations = async () => {
-      await axios.post(
+      const res = await axios.post(
         "https://www.nareshit.net/Insert_Update_QuestionCombination",
         {
           TestId: testID,
@@ -140,9 +154,18 @@ function Topics({ setDataHandler, combination }) {
           Combinations: JSON.stringify(combination),
         }
       );
+      return res
     };
 
-    if (Object.keys(combination).length > 0) postCombinations();
+    let insertRes;
+    
+    if (Object.keys(combination).length > 0) insertRes = postCombinations();
+    console.log('url',"https://www.nareshit.net/Insert_Update_QuestionCombination", {
+      TestId: testID,
+      TestDetailsId: testDetailsId,
+      Combinations: JSON.stringify(combination),
+    }, 'res', insertRes)
+    
   };
 
   // Modules

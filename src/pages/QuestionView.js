@@ -209,24 +209,56 @@ export function QuestionViewV2() {
   }, [fetchNatureID, TestID, TestDetailsID]);
 
   const setEditModalHandler = (ModuleID, TopicID, SubTopicID, DataObj) => {
+
+    let easy = 0;
+    let medium = 0;
+    let hard = 0;
+    let flag = false;
+    let id = '';
+
+      for(let key in combination){
+        if(combination[key].ModuleID === ModuleID &&  combination[key].TopicID === TopicID && combination[key].SubTopicID === SubTopicID){
+          easy = combination[key].easy;
+          medium = combination[key].medium;
+          hard = combination[key].hard;
+          flag = true;
+          id= combination[key].id
+        }
+      }
+
     setEditModal({
       ModuleID,
       TopicID,
       SubTopicID,
       DataObj,
-      easy: 0,
-      medium: 0,
-      hard: 0,
+      easy,
+      medium,
+      hard,
       combination,
       popupType: "edit",
+      flag,
+      id
     });
   };
 
   // type if we include new question type refers to the modal difficulty type
-  const handler = (resultObj, type) => {
+  const handler = (resultObj, type, id, setDataFlag) => {
     console.log("combination", combination);
     console.log("resultObj", resultObj);
     console.log("type", type);
+
+    // user have selected same combination in create tamplate
+    if(setDataFlag){
+      setCombination((prev) => {
+        const obj = {...combination}
+
+        obj[id].easy = Number(resultObj.easy) === NaN ? 0 : Number(resultObj.easy)
+        obj[id].medium = Number(resultObj.medium) === NaN ? 0 : Number(resultObj.medium) 
+        obj[id].hard = Number(resultObj.hard) === NaN ?  0 : Number(resultObj.hard)
+
+        return obj
+      })
+    }else{
 
     if (resultObj.id) {
       const key = resultObj.id;
@@ -262,7 +294,7 @@ export function QuestionViewV2() {
         obj[key].includes[type] = data;
       }
       setCombination(obj);
-    }
+    }}
   };
 
   const [tableTotal, setTableTotal] = useState({ easy: 0, medium: 0, hard: 0 });

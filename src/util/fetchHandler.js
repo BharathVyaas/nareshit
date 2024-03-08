@@ -5,8 +5,8 @@ const titles = [
   { id: 4, title: "End Date" },
   { id: 5, title: "State Time" },
   { id: 6, title: "End Time" },
-  { id: 8, title: "CreatedBy" },
   { id: 7, title: "CreatedAt" },
+  { id: 8, title: "CreatedBy" },
 ];
 
 const progLangs = [

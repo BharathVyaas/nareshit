@@ -6,6 +6,7 @@ function TopicNameRenderer({ topics, selectedTopic, setSelectedTopic }) {
       <select
         id="TopicID"
         name="TopicID"
+        value={selectedTopic}
         onChange={(e) => setSelectedTopic(e.target.value)}
       >
         {/**  Default */}

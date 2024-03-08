@@ -56,19 +56,18 @@ function TechnologySelector() {
   console.log(technologyData);
 
   return (
-    <>
-      <TechnologyDropDown
-        technologyData={technologyData}
-        dispatcher={dispatcher}
-      />
-      <ModuleDropDown technologyData={technologyData} dispatcher={dispatcher} />
-      <TopicDropDown technologyData={technologyData} dispatcher={dispatcher} />
-      <SubTopicDropDown
-        technologyData={technologyData}
-        dispatcher={dispatcher}
-      />
-      <DateDropDown technologyData={technologyData} dispatcher={dispatcher} />
-    </>
+    <div>
+      <div className="mx-auto">
+        <TechnologyDropDown
+          technologyData={technologyData}
+          dispatcher={dispatcher}
+        />
+        <ModuleDropDown
+          technologyData={technologyData}
+          dispatcher={dispatcher}
+        />
+      </div>
+    </div>
   );
 }
 

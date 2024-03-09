@@ -383,6 +383,7 @@ function Topics({ setDataHandler, combination }) {
               (selectedTopic != 0 || selectedTopic != -1) &&
               !subTopicArr.includes(selectedSubTopic)
           );
+          valid = true;
         }
       });
     }

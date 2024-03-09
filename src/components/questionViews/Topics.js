@@ -18,9 +18,9 @@ function Topics({ setDataHandler, combination }) {
   const [subTopics, setSubTopics] = useState();
 
   // selected Data
-  const [selectedModule, setSelectedModule] = useState(0);
-  const [selectedTopic, setSelectedTopic] = useState(0);
-  const [selectedSubTopic, setSelectedSubTopic] = useState(0);
+  const [selectedModule, setSelectedModule] = useState("-1");
+  const [selectedTopic, setSelectedTopic] = useState("-1");
+  const [selectedSubTopic, setSelectedSubTopic] = useState("-1");
 
   const [warn, setWarn] = useState(false);
 
@@ -42,33 +42,6 @@ function Topics({ setDataHandler, combination }) {
     setTopics(res.data);
   };
 
-
-  useEffect(() => {
-    
-          if( selectedSubTopic !== '-1'){
-    let subTopicArr = combination
-    subTopicArr = Object.values(combination).map(ele => ele.SubTopicID)
-
-    if(subTopicArr.includes(selectedSubTopic)){
-      const userRes = window.confirm("Combination with the same topic already exists do you want to continue.")
-            
-        if(!userRes){
-          setSelectedSubTopic('-1')
-        }
-    }else{
-      if(selectedTopic){
-    for(let key in combination){
-      if(combination[key].ModuleID === selectedModule &&  combination[key].TopicID === selectedTopic){
-        const userRes = window.confirm("a row with this Topic already exists in the table do you still wish to continue.")
-        console.log(selectedSubTopic)
-        if(!userRes){
-          setSelectedSubTopic('-1')
-        }
-      }
-    }}
-    }}
-  }, [selectedSubTopic])
-
   // SubTopics
   const fetchSubTopics = async () => {
     console.log("fetch");
@@ -81,6 +54,8 @@ function Topics({ setDataHandler, combination }) {
 
   const saveHandler = async () => {
     console.log({
+      TestId: testID,
+      TestDetailsId: testDetailsId,
       data: [
         ...Object.values(combination).map((ele) => {
           return {
@@ -105,6 +80,8 @@ function Topics({ setDataHandler, combination }) {
     const res = await axios.post(
       "https://www.nareshit.net/UpdateCombinations",
       {
+        TestId: testID,
+        TestDetailsId: testDetailsId,
         data: [
           ...Object.values(combination).map((ele) => {
             return {
@@ -167,18 +144,23 @@ function Topics({ setDataHandler, combination }) {
           Combinations: JSON.stringify(combination),
         }
       );
-      return res
+      return res;
     };
 
     let insertRes;
-    
+
     if (Object.keys(combination).length > 0) insertRes = postCombinations();
-    console.log('url',"https://www.nareshit.net/Insert_Update_QuestionCombination", {
-      TestId: testID,
-      TestDetailsId: testDetailsId,
-      Combinations: JSON.stringify(combination),
-    }, 'res', insertRes)
-    
+    console.log(
+      "url",
+      "https://www.nareshit.net/Insert_Update_QuestionCombination",
+      {
+        TestId: testID,
+        TestDetailsId: testDetailsId,
+        Combinations: JSON.stringify(combination),
+      },
+      "res",
+      insertRes
+    );
   };
 
   // Modules
@@ -220,6 +202,24 @@ function Topics({ setDataHandler, combination }) {
 
   // handler for set Data button
   const onSetData = () => {
+    /* let subTopicArr = combination;
+    subTopicArr = Object.values(combination).map((ele) => ele.SubTopicID);
+
+    let topicArr = combination;
+    topicArr = Object.values(combination).map((ele) => ele.TopicID);
+
+    let moduleArr = combination;
+    moduleArr = Object.values(combination).map((ele) => ele.ModuleID);
+
+    console.log(moduleArr, selectedModule, moduleArr.includes(selectedModule));
+    console.log(topicArr, selectedTopic, topicArr.includes(selectedTopic));
+    console.log(
+      subTopicArr,
+      selectedSubTopic,
+      subTopicArr.includes(selectedSubTopic)
+    );
+
+    // Validation 1
     if (selectedModule && selectedModule != -1) {
       let Module;
       if (selectedModule)
@@ -231,13 +231,160 @@ function Topics({ setDataHandler, combination }) {
       if (selectedSubTopic)
         SubTopic = subTopics.find((ele) => ele.SubTopicID == selectedSubTopic);
 
+      const callModal = () => {
+        setDataHandler(selectedModule, selectedTopic, selectedSubTopic, {
+          Module,
+          Topic,
+          SubTopic,
+        });
+      };
+
+      // Validation 2
+      if (!topicArr.includes(selectedTopic)) {
+        callModal();
+      } else {
+        if (
+          (subTopicArr.includes(selectedSubTopic) &&
+            topicArr.includes(selectedTopic) &&
+            moduleArr.includes(selectedModule)) ||
+          ((selectedTopic == -1 || selectedTopic == 0) &&
+            moduleArr.includes(selectedModule))
+        ) {
+          window.alert(
+            "A row with this combination already exists in the table, if you wish to edit values go through table."
+          );
+        } else {
+          console.log(selectedTopic);
+
+          let userResponse = true;
+
+          // Validation 3
+          if (selectedTopic == 0 || selectedTopic == -1) {
+          } else {
+            userResponse = window.confirm(
+              `Combination with the same ${
+                selectedTopic == -1 || selectedTopic == 0 ? "module" : "topic"
+              } already exists. still want to create new question template`
+            );
+          }
+
+          if (userResponse) {
+            callModal();
+          }
+        }
+      }
+    } else {
+      setWarn(true);
+    } */
+    test();
+  };
+
+  const test = () => {
+    let valid = false;
+    const obj = Object.values(combination);
+
+    let Module;
+    let Topic;
+    let SubTopic;
+
+    let moduleArr = combination;
+    moduleArr = Object.values(combination).map((ele) => ele.ModuleID);
+
+    let topicArr = combination;
+    topicArr = Object.values(combination).map((ele) => ele.TopicID);
+
+    let subTopicArr = combination;
+    subTopicArr = Object.values(combination).map((ele) => ele.SubTopicID);
+
+    if (selectedModule && selectedModule != -1) {
+      if (selectedModule)
+        Module = modules.find((ele) => ele.ModuleID == selectedModule);
+
+      if (selectedTopic)
+        Topic = topics.find((ele) => ele.TopicID == selectedTopic);
+
+      if (selectedSubTopic)
+        SubTopic = subTopics.find((ele) => ele.SubTopicID == selectedSubTopic);
+    }
+    const callModal = () => {
       setDataHandler(selectedModule, selectedTopic, selectedSubTopic, {
         Module,
         Topic,
         SubTopic,
       });
+      valid = true;
+    };
+
+    if (obj.length == 0) {
+      callModal();
     } else {
-      setWarn(true);
+      obj.forEach((ele) => {
+        if (!valid) {
+          if (
+            selectedModule == ele.ModuleID &&
+            selectedTopic == ele.TopicID &&
+            selectedSubTopic == ele.SubTopicID
+          ) {
+            console.log("cought");
+            window.alert(
+              "A row with this combination already exists in the table, if you wish to edit values go through table."
+            );
+            valid = true;
+          } else if (
+            selectedModule == ele.ModuleID &&
+            selectedTopic == ele.TopicID &&
+            subTopicArr.includes(selectedSubTopic)
+          ) {
+            console.log("cought");
+            window.alert(
+              "A row with this combination already exists in the table, if you wish to edit values go through table."
+            );
+            valid = true;
+          } else if (
+            selectedModule == ele.ModuleID &&
+            selectedTopic == ele.TopicID
+          ) {
+            let userResponse = false;
+            console.log(selectedSubTopic, ele.SubTopicID);
+            if (selectedSubTopic != ele.SubTopicID) {
+              console.log("cought");
+              userResponse = window.confirm(
+                `Combination with the same topic already exists. still want to create new question template`
+              );
+              valid = true;
+            }
+
+            if (userResponse) {
+              callModal();
+            }
+          } else if (
+            selectedModule == ele.ModuleID &&
+            !topicArr.includes(selectedTopic) &&
+            (selectedSubTopic == 0 || selectedSubTopic == 1)
+          ) {
+            console.log("cought");
+            callModal();
+            valid = true;
+          } else if (
+            selectedModule != ele.ModuleID &&
+            !moduleArr.includes(selectedModule) &&
+            (selectedTopic == 0 || selectedTopic == -1)
+          ) {
+            console.log("cought");
+            callModal();
+            valid = true;
+          }
+        }
+
+        // Validation 2
+        if (!valid) {
+          console.log(
+            (selectedModule != 0 || selectedModule != -1) &&
+              (selectedTopic != 0 || selectedTopic != -1) &&
+              !subTopicArr.includes(selectedSubTopic)
+          );
+        }
+      });
     }
   };
 

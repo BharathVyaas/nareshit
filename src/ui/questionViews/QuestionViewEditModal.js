@@ -11,7 +11,7 @@ function getResult(data, id) {
   const smallerId = encoded.substring(0, 8) + id; // Take the first 8 characters
 
   let result = {
-    id: data.flag ? data.id || '' : data?.element?.id || smallerId,
+    id: data.flag ? data.id || "" : data?.element?.id || smallerId,
     selectedModule: data?.element?.selectedModule,
     ModuleID: data?.element?.ModuleID,
     selectedTopic: data?.element?.selectedTopic,
@@ -26,7 +26,7 @@ function getResult(data, id) {
   // when creating new Combination data object is different
   if (data.DataObj) {
     result = {
-      id: data.flag ? data.id || 0: data?.DataObj?.id || smallerId,
+      id: data.flag ? data.id || 0 : data?.DataObj?.id || smallerId,
       selectedModule: data?.DataObj?.Module?.ModuleName,
       ModuleID: data?.ModuleID,
       selectedTopic: data?.DataObj?.Topic?.TopicName,
@@ -46,28 +46,27 @@ function getResult(data, id) {
 function getTotal(data) {
   const combinationArr = Object.values(data.combination);
 
-  let easyTotal = combinationArr.reduce(
-    (acc, ele) => {let value = Number(ele.easy) + acc; if(data.id){
-      console.log('jjsdfsfd')
-      value -= Number(data.easy)
+  let easyTotal = combinationArr.reduce((acc, ele) => {
+    let value = Number(ele.easy) + acc;
+    if (data.id) {
+      value -= Number(data.easy);
     }
-      return value},
-    0
-  );
-  let mediumTotal = combinationArr.reduce(
-    (acc, ele) => {let value = Number(ele.medium) + acc; if(data.id){
-      value -= Number(data.medium)
+    return value;
+  }, 0);
+  let mediumTotal = combinationArr.reduce((acc, ele) => {
+    let value = Number(ele.medium) + acc;
+    if (data.id) {
+      value -= Number(data.medium);
     }
-      return value},
-    0
-  );
-  let hardTotal = combinationArr.reduce(
-    (acc, ele) => {let value = Number(ele.hard) + acc; if(data.id){
-      value -= Number(data.hard)
+    return value;
+  }, 0);
+  let hardTotal = combinationArr.reduce((acc, ele) => {
+    let value = Number(ele.hard) + acc;
+    if (data.id) {
+      value -= Number(data.hard);
     }
-      return value},
-    0
-  );
+    return value;
+  }, 0);
 
   // total - current element
   if (
@@ -92,7 +91,7 @@ function getTotal(data) {
 }
 
 function QuestionViewEditModal({ data, handler, setter }) {
-  console.log("data", data); 
+  console.log("data", data);
   // max total values
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -119,7 +118,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
   };
 
   let { easyTotal, mediumTotal, hardTotal } = getTotal(data);
-  
+
   const [maxCount, setMaxCount] = useState({
     easyCount: "",
     mediumCount: "",
@@ -129,11 +128,11 @@ function QuestionViewEditModal({ data, handler, setter }) {
 
   // from table
   let availableEasyTotal = queryEasy - easyTotal;
-  if(data.id)availableEasyTotal += Number(data.easy)
+  if (data.id) availableEasyTotal += Number(data.easy);
   let availableMediumTotal = queryMedium - mediumTotal;
-  if(data.id)availableMediumTotal += Number(data.medium)
+  if (data.id) availableMediumTotal += Number(data.medium);
   let availableHardTotal = queryHard - hardTotal;
-  if(data.id)availableHardTotal += Number(data.hard)
+  if (data.id) availableHardTotal += Number(data.hard);
 
   let result = getResult(data, _id, data.id);
 
@@ -247,126 +246,106 @@ function QuestionViewEditModal({ data, handler, setter }) {
           result.hard = Number(hardRef.current.value);
           setIsSubmitting(true);
 
-          /**
-           * {
-                data: [
-                  ...Object.values(
-                    data?.combination || { combination: [] }
-                  ).map((ele) => {
-                    return {
-                      EasyCount: ele?.easy || 0,
-                      MediumCount: ele?.medium || 0,
-                      HardCount: ele?.hard || 0,
-                      ModuleId: ele?.ModuleID || null,
-                      TopicId: ele?.TopicID || null,
-                      SubtopicId: ele.SubtopicID || null,
-                      TechnologyName: technologyName || null,
-                      TechnologyId: technologyId || null,
-                      ModuleName: ele?.selectedModule || null,
-                      TopicName: ele?.selectedTopic || null,
-                      SubtopicName: ele?.selectedSubTopic || null,
-                      TestId: TestID || 0,
-                      TestDetailsID: TestDetailsID || 0,
-                    };
-                  }),
-                  {
-                    TechnologyId: technologyId || 0,
-                    TechnologyName: technologyName || 0,
-                    ModuleName: data?.DataObj?.Module?.ModuleName || 0,
-                    ModuleId: data?.ModuleID || null,
-                    TopicName: data?.DataObj?.Topic?.TopicName || null,
-                    TopicId: data?.TopicID || null,
-                    SubtopicName: data?.DataObj?.SubTopic?.SubTopicName || null,
-                    SubtopicId: data?.SubTopicID || null,
-                    MediumCount: mediumRef?.current?.value || null,
-                    HardCount: hardRef?.current?.value || null,
-                    EasyCount: easyRef?.current?.value || null,
-                    TestId: TestID || 0,
-                    TestDetailsId: TestDetailsID || 0,
-                  },
-                ],
-              }
-           */
+          const res = await axios.post(
+            "https://www.nareshit.net/InsertionQuestionView",
+            {
+              TechnologyId: technologyId || 0,
+              TechnologyName: technologyName || 0,
+              ModuleName: data?.DataObj?.Module?.ModuleName || 0,
+              ModuleId: data?.ModuleID || null,
+              TopicName: data?.DataObj?.Topic?.TopicName || null,
+              TopicId: data?.TopicID || null,
+              SubtopicName: data?.DataObj?.SubTopic?.SubTopicName || null,
+              SubtopicId: data?.SubTopicID || null,
+              MediumCount: mediumRef?.current?.value || null,
+              HardCount: hardRef?.current?.value || null,
+              EasyCount: easyRef?.current?.value || null,
+              TestId: TestID || 0,
+              TestDetailsId: TestDetailsID || 0,
+            }
+          );
 
+          console.log(
+            "url",
+            "https://www.nareshit.net/InsertionQuestionView",
+            "data",
+            {
+              TechnologyId: technologyId || 0,
+              TechnologyName: technologyName || 0,
+              ModuleName: data?.DataObj?.Module?.ModuleName || 0,
+              ModuleId: data?.ModuleID || null,
+              TopicName: data?.DataObj?.Topic?.TopicName || null,
+              TopicId: data?.TopicID || null,
+              SubtopicName: data?.DataObj?.SubTopic?.SubTopicName || null,
+              SubtopicId: data?.SubTopicID || null,
+              MediumCount: mediumRef?.current?.value || null,
+              HardCount: hardRef?.current?.value || null,
+              EasyCount: easyRef?.current?.value || null,
+              TestId: TestID || 0,
+              TestDetailsId: TestDetailsID || 0,
+            },
+            "res",
+            res
+          );
+
+          // Post Combinations to Custome table
+
+          let updatedCombination = (prev) => {
+            const obj = { ...prev };
+            if (data.id) {
+              const id = data.id;
+
+              if (obj[id]) {
+                obj[id].easy =
+                  Number(result.easy) === NaN ? 0 : Number(result.easy);
+                obj[id].medium =
+                  Number(result.medium) === NaN ? 0 : Number(result.medium);
+                obj[id].hard =
+                  Number(result.hard) === NaN ? 0 : Number(result.hard);
+              }
+            } else {
+              obj[result.id] = result;
+            }
+            return obj;
+          };
+
+          console.log(
+            "updatedCombination",
+            updatedCombination(data.combination)
+          );
+
+          const postCombinations = async () => {
             const res = await axios.post(
-              "https://www.nareshit.net/InsertionQuestionView",
+              "https://www.nareshit.net/Insert_Update_QuestionCombination",
               {
-                TechnologyId: technologyId || 0,
-                TechnologyName: technologyName || 0,
-                ModuleName: data?.DataObj?.Module?.ModuleName || 0,
-                ModuleId: data?.ModuleID || null,
-                TopicName: data?.DataObj?.Topic?.TopicName || null,
-                TopicId: data?.TopicID || null,
-                SubtopicName: data?.DataObj?.SubTopic?.SubTopicName || null,
-                SubtopicId: data?.SubTopicID || null,
-                MediumCount: mediumRef?.current?.value || null,
-                HardCount: hardRef?.current?.value || null,
-                EasyCount: easyRef?.current?.value || null,
-                TestId: TestID || 0,
-                TestDetailsId: TestDetailsID || 0,
+                TestId: TestID,
+                TestDetailsId: TestDetailsID,
+                Combinations: JSON.stringify(
+                  updatedCombination(data.combination)
+                ),
               }
             );
+            return res;
+          };
 
-            console.log(
-              "url",
-              "https://www.nareshit.net/InsertionQuestionView",
-              "data",
-              {
-                TechnologyId: technologyId || 0,
-                TechnologyName: technologyName || 0,
-                ModuleName: data?.DataObj?.Module?.ModuleName || 0,
-                ModuleId: data?.ModuleID || null,
-                TopicName: data?.DataObj?.Topic?.TopicName || null,
-                TopicId: data?.TopicID || null,
-                SubtopicName: data?.DataObj?.SubTopic?.SubTopicName || null,
-                SubtopicId: data?.SubTopicID || null,
-                MediumCount: mediumRef?.current?.value || null,
-                HardCount: hardRef?.current?.value || null,
-                EasyCount: easyRef?.current?.value || null,
-                TestId: TestID || 0,
-                TestDetailsId: TestDetailsID || 0,
-              },
-              "res",
-              res
-            );
+          let insertRes;
 
-            
-    // Post Combinations to Custome table
+          if (Object.keys(data.combination).length > 0)
+            insertRes = postCombinations();
 
-    let updatedCombination = (prev) => {
-        const obj = {...prev}
-        const id = data.id
-
-        if(obj[id]){
-        obj[id].easy = Number(result.easy) === NaN ? 0 : Number(result.easy)
-        obj[id].medium = Number(result.medium) === NaN ? 0 : Number(result.medium) 
-        obj[id].hard = Number(result.hard) === NaN ?  0 : Number(result.hard)
-        }
-        
-        return obj
-      }
-
-    const postCombinations = async () => {
-      const res = await axios.post(
-        "https://www.nareshit.net/Insert_Update_QuestionCombination",
-        {
-          TestId: TestID,
-          TestDetailsId: TestDetailsID,
-          Combinations: JSON.stringify(updatedCombination(data.combination)),
-        }
-      );
-      return res
-    };
-
-    let insertRes;
-    
-    if (Object.keys(data.combination).length > 0) insertRes = postCombinations();
-
-    console.log('url',"https://www.nareshit.net/Insert_Update_QuestionCombination", {
-      TestId: TestID,
-      TestDetailsId: TestDetailsID,
-      Combinations: JSON.stringify(updatedCombination(data.combination)),
-    }, 'res', insertRes)
+          console.log(
+            "url",
+            "https://www.nareshit.net/Insert_Update_QuestionCombination",
+            {
+              TestId: TestID,
+              TestDetailsId: TestDetailsID,
+              Combinations: JSON.stringify(
+                updatedCombination(data.combination)
+              ),
+            },
+            "res",
+            insertRes
+          );
 
           handler(result, "edit", data.id, data.flag);
           setter(false);

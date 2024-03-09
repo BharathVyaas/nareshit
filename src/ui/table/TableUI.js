@@ -34,8 +34,8 @@ export function TableBodyRenderer({ element, index, handler }) {
 
   const styles =
     index % 2 === 0
-      ? "bg-gray-100 hover:cursor-pointer hover:bg-gray-200 max-w-[80vw] overflow-scroll"
-      : "bg-white hover:cursor-pointer hover:bg-gray-300  max-w-[80vw] overflow-scroll";
+      ? "bg-gray-100 hover:bg-gray-200 max-w-[80vw] overflow-scroll"
+      : "bg-white hover:bg-gray-300  max-w-[80vw] overflow-scroll";
   const dateStart = new Date(TestStartDate);
   const dateEnd = new Date(TestEndDate);
 
@@ -91,7 +91,7 @@ export function TableBodyRenderer({ element, index, handler }) {
         data={TestName}
         onClick={() => handler(element)}
         key={element.id}
-        className="md:px-5 max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px] underline text-blue-800"
+        className="hover:cursor-pointer md:px-5 max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px] underline text-blue-800"
       />
       <Tbody
         data={IsActive ? 1 : 0}

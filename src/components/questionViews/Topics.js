@@ -315,72 +315,132 @@ function Topics({ setDataHandler, combination }) {
       valid = true;
     };
 
-    if (obj.length == 0) {
-      callModal();
+    if (selectedModule == "-1" || selectedModule == 0) {
+      setWarn(true);
     } else {
-      obj.forEach((ele) => {
-        if (!valid) {
-          if (
-            selectedModule == ele.ModuleID &&
-            selectedTopic == ele.TopicID &&
-            selectedSubTopic == ele.SubTopicID
-          ) {
-            console.log("cought");
-            window.alert(
-              "A row with this combination already exists in the table, if you wish to edit values go through table."
-            );
-            valid = true;
-          } else if (
-            selectedModule == ele.ModuleID &&
-            selectedTopic == ele.TopicID &&
-            subTopicArr.includes(selectedSubTopic)
-          ) {
-            console.log("cought");
-            window.alert(
-              "A row with this combination already exists in the table, if you wish to edit values go through table."
-            );
-            valid = true;
-          } else if (
-            selectedModule == ele.ModuleID &&
-            selectedTopic == ele.TopicID
-          ) {
-            let userResponse = false;
-            console.log(selectedSubTopic, ele.SubTopicID);
-            if (selectedSubTopic != ele.SubTopicID) {
-              userResponse = window.confirm(
-                `Combination with the same topic already exists. still want to create new question template`
+      if (obj.length == 0) {
+        callModal();
+      } else {
+        obj.forEach((ele) => {
+          if (!valid) {
+            if (
+              selectedModule == ele.ModuleID &&
+              selectedTopic == ele.TopicID &&
+              selectedSubTopic == ele.SubTopicID
+            ) {
+              console.log("cought");
+              window.alert(
+                "A row with this combination already exists in the table, if you wish to edit values go through table."
               );
               valid = true;
-            }
+              return;
+            } else if (
+              selectedModule == ele.ModuleID &&
+              selectedTopic == ele.TopicID &&
+              !subTopicArr.includes(selectedSubTopic)
+            ) {
+              console.log("cought");
+              window.alert(
+                "A row with this combination already exists in the table, if you wish to edit values go through table."
+              );
+              valid = true;
+              return;
+            } else if (
+              selectedModule == ele.ModuleID &&
+              selectedTopic == ele.TopicID &&
+              !subTopicArr.includes(selectedSubTopic)
+            ) {
+              let userResponse = false;
 
-            if (userResponse) {
+              if (selectedSubTopic != ele.SubTopicID) {
+                userResponse = window.confirm(
+                  `Combination with the same topic already exists. still want to create new question template`
+                );
+                valid = true;
+              }
+              console.log("cought");
+              if (userResponse) {
+                callModal();
+              }
+              return;
+            } else if (
+              selectedModule == ele.ModuleID &&
+              !topicArr.includes(selectedTopic) &&
+              (selectedSubTopic == 0 || selectedSubTopic == -1)
+            ) {
+              console.log("gi");
+            } else if (
+              selectedModule == ele.ModuleID &&
+              !topicArr.includes(selectedTopic) &&
+              (selectedTopic != 0 || selectedSubTopic != -1) &&
+              (selectedSubTopic == 0 || selectedSubTopic == 1)
+            ) {
+              console.log("cought", selectedTopic);
               callModal();
+              valid = true;
+              return;
+            } else if (
+              selectedModule != ele.ModuleID &&
+              !moduleArr.includes(selectedModule) &&
+              (selectedTopic == 0 || selectedTopic == -1)
+            ) {
+              console.log("cought");
+              callModal();
+              valid = true;
+              return;
             }
           } else if (
             selectedModule == ele.ModuleID &&
-            !topicArr.includes(selectedTopic) &&
-            (selectedSubTopic == 0 || selectedSubTopic == 1)
+            selectedTopic == ele.TopicID &&
+            (selectedSubTopic == 0 || selectedSubTopic == -1)
           ) {
             console.log("cought");
             callModal();
-            valid = true;
-          } else if (
-            selectedModule != ele.ModuleID &&
-            !moduleArr.includes(selectedModule) &&
-            (selectedTopic == 0 || selectedTopic == -1)
-          ) {
-            console.log("cought");
-            callModal();
-            valid = true;
+            return;
           }
-        }
 
-        // Validation 2 Exceptions
-        else if (!subTopicArr.includes(selectedSubTopic)) {
-          callModal();
-          valid = true;
-        }
-      });
+          // Ex
+          if (!valid) {
+            if (
+              !topicArr.includes(selectedTopic) &&
+              (selectedSubTopic == 0 || selectedSubTopic == -1)
+            ) {
+              callModal();
+              return;
+            }
+
+            if (!subTopicArr.includes(selectedSubTopic)) {
+              let userResponse = false;
+
+              if (topicArr.includes(selectedTopic)) {
+                userResponse = window.confirm(
+                  `Combination with the same topic already exists. still want to create new question template`
+                );
+
+                console.log("cought");
+                if (userResponse) {
+                  callModal();
+                  return;
+                }
+                valid = true;
+              } else {
+                if (!topicArr.includes(selectedTopic)) {
+                  callModal();
+
+                  if (!userResponse) {
+                    return;
+                  } else {
+                    console.warn("unexpected");
+                  }
+                }
+              }
+              console.log("cought");
+              if (userResponse) {
+              }
+            }
+          }
+        });
+      }
     }
   };
 

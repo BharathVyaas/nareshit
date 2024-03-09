@@ -347,7 +347,6 @@ function Topics({ setDataHandler, combination }) {
             let userResponse = false;
             console.log(selectedSubTopic, ele.SubTopicID);
             if (selectedSubTopic != ele.SubTopicID) {
-              console.log("cought");
               userResponse = window.confirm(
                 `Combination with the same topic already exists. still want to create new question template`
               );
@@ -376,13 +375,9 @@ function Topics({ setDataHandler, combination }) {
           }
         }
 
-        // Validation 2
-        if (!valid) {
-          console.log(
-            (selectedModule != 0 || selectedModule != -1) &&
-              (selectedTopic != 0 || selectedTopic != -1) &&
-              !subTopicArr.includes(selectedSubTopic)
-          );
+        // Validation 2 Exceptions
+        else if (!subTopicArr.includes(selectedSubTopic)) {
+          callModal();
           valid = true;
         }
       });

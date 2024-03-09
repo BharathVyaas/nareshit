@@ -10,6 +10,7 @@ function SubTopicNameRenderer({
       <select
         id="SubTopicID"
         name="SubTopicID"
+        value={selectedSubTopics}
         onChange={(e) => setSelectedSubTopic(e.target.value)}
       >
         {/**  Default */}

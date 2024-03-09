@@ -27,6 +27,10 @@ function ModuleDropDown({ technologyData, dispatcher }) {
   useEffect(() => {
     if (technologyData.technologyId)
       fetchHandler(setOptions, technologyData.technologyId);
+    else{
+      setOptions([{id: '0', value: '0', option: 'Select A Module'}])
+      setModuleId('0')
+    }
   }, [technologyData.technologyId]);
 
   useEffect(() => {
@@ -35,7 +39,8 @@ function ModuleDropDown({ technologyData, dispatcher }) {
   }, [moduleId]);
 
   return (
-    <Select defaultValue={moduleId} setter={setModuleId} options={options} />
+    <div className="px-3 py-2 inline">
+    <Select defaultValue={moduleId} setter={setModuleId} options={options} /></div>
   );
 }
 

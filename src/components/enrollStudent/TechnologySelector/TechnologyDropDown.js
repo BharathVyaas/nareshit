@@ -35,11 +35,12 @@ function TechnologyDropDown({ dispatcher }) {
   }, [technologyId]);
 
   return (
+    <div className="px-3 py-2 inline">
     <Select
       defaultValue={technologyId}
       setter={setTechnologyId}
       options={options}
-    />
+    /></div>
   );
 }
 

@@ -44,17 +44,30 @@ function Topics({ setDataHandler, combination }) {
 
 
   useEffect(() => {
-    if(selectedTopic){
+    
+          if( selectedSubTopic !== '-1'){
+    let subTopicArr = combination
+    subTopicArr = Object.values(combination).map(ele => ele.SubTopicID)
+
+    if(subTopicArr.includes(selectedSubTopic)){
+      const userRes = window.confirm("Combination with the same topic already exists do you want to continue.")
+            
+        if(!userRes){
+          setSelectedSubTopic('-1')
+        }
+    }else{
+      if(selectedTopic){
     for(let key in combination){
       if(combination[key].ModuleID === selectedModule &&  combination[key].TopicID === selectedTopic){
-        const userRes = window.confirm("Combination with the same topic already exists do you want to continue.")
-        
+        const userRes = window.confirm("a row with this Topic already exists in the table do you still wish to continue.")
+        console.log(selectedSubTopic)
         if(!userRes){
-          setSelectedTopic('-1')
+          setSelectedSubTopic('-1')
         }
       }
     }}
-  }, [selectedTopic])
+    }}
+  }, [selectedSubTopic])
 
   // SubTopics
   const fetchSubTopics = async () => {

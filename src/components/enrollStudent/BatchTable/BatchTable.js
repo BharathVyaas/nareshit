@@ -1,5 +1,5 @@
 import { CheckBox, CheckBoxOutlineBlank } from "@mui/icons-material";
-import React from "react";
+import React, { useState } from "react";
 
 function BatchTable() {
   return (
@@ -42,15 +42,17 @@ function Tbody() {
   );
 }
 
-function Td({ flag }) {
+function Td({ flag:parentFlag }) {
+  const [flag, setFlag] = useState(parentFlag)
+
   return (
     <tr className="border-b-2 border-dotted border-gray-600">
       <td className="text-center">
         <button className="cursor-pointer">
           {flag ? (
-            <CheckBox sx={{ fontSize: 16 }} />
+            <CheckBox sx={{ fontSize: 16 }} onClick={() => setFlag(prev => !prev)} />
           ) : (
-            <CheckBoxOutlineBlank sx={{ fontSize: 16 }} />
+            <CheckBoxOutlineBlank sx={{ fontSize: 16 }} onClick={() => setFlag(prev => !prev)} />
           )}
         </button>
       </td>

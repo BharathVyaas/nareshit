@@ -86,15 +86,41 @@ export function TableBodyRenderer({ element, index, handler }) {
   if (endMinute) fullEndTime += endMinute;
 
   return (
-    <tr onClick={() => handler(element)} key={element.id} className={styles}>
-      <Tbody data={TestName} />
-      <Tbody data={IsActive ? 1 : 0} />
-      <Tbody data={fullStartDate} />
-      <Tbody data={fullEndDate} />
-      <Tbody data={fullStartTime} />
-      <Tbody data={fullEndTime} />
-      <Tbody data={CreatedBy} />
-      <Tbody data={CreatedAt} />
+    <tr className={styles}>
+      <Tbody
+        data={TestName}
+        onClick={() => handler(element)}
+        key={element.id}
+        className="md:px-5 max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px] underline text-blue-800"
+      />
+      <Tbody
+        data={IsActive ? 1 : 0}
+        className="md:px-5 max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px]"
+      />
+      <Tbody
+        data={fullStartDate}
+        className="md:px-5 max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px]"
+      />
+      <Tbody
+        data={fullEndDate}
+        className="md:px-5 max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px]"
+      />
+      <Tbody
+        data={fullStartTime}
+        className="md:px-5 max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px]"
+      />
+      <Tbody
+        data={fullEndTime}
+        className="md:px-5 max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px]"
+      />
+      <Tbody
+        data={CreatedBy}
+        className="md:px-5 max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px]"
+      />
+      <Tbody
+        data={CreatedAt}
+        className="md:px-5 max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px]"
+      />
     </tr>
   );
 }
@@ -115,12 +141,5 @@ export function TableBodyRenderer({ element, index, handler }) {
  * @returns {JSX.Element} The Tbody component.
  */
 export function Tbody({ data, ...props }) {
-  return (
-    <td
-      className="pencil md:px-5 max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px]"
-      {...props}
-    >
-      {data}
-    </td>
-  );
+  return <td {...props}>{data}</td>;
 }

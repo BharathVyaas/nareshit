@@ -41,10 +41,6 @@ function technologyDataReducer(state, action) {
 const initialTechnologyData = {
   technologyId: 0,
   moduleId: 0,
-  topicId: 0,
-  subTopicId: 0,
-  startDate: "",
-  endDate: "",
 };
 
 function TechnologySelector() {
@@ -56,17 +52,13 @@ function TechnologySelector() {
   console.log(technologyData);
 
   return (
-    <div>
-      <div className="mx-auto">
-        <TechnologyDropDown
-          technologyData={technologyData}
-          dispatcher={dispatcher}
-        />
-        <ModuleDropDown
-          technologyData={technologyData}
-          dispatcher={dispatcher}
-        />
-      </div>
+    <div className="w-full text-center mb-6 mt-4">
+      <p className="inline me-6">Filter:</p>
+      <TechnologyDropDown
+        technologyData={technologyData}
+        dispatcher={dispatcher}
+      />
+      <ModuleDropDown technologyData={technologyData} dispatcher={dispatcher} />
     </div>
   );
 }

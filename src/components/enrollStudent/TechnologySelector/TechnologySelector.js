@@ -50,4 +50,8 @@ function TechnologySelector() {
   );
 }
 
+<<<<<<< HEAD
 export default TechnologySelector;
+=======
+export default TechnologySelector;
+>>>>>>> a30fca1893a425daee4853497f0f827b3ceead45

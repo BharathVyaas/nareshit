@@ -291,6 +291,7 @@ export function QuestionViewV2() {
           count: resultObj[key][type].length,
         };
 
+<<<<<<< HEAD
         if(obj[key]){
           if(!obj[key].includes){
             obj[key].includes[type] = {}
@@ -301,6 +302,9 @@ export function QuestionViewV2() {
         }
 
         
+=======
+        obj[key].includes[type] = data;
+>>>>>>> a30fca1893a425daee4853497f0f827b3ceead45
       }
       setCombination(obj);
     }}

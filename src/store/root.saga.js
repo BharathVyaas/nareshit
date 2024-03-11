@@ -33,4 +33,8 @@ function* adminWatcher() {
   yield takeLatest(`fetch/${types.TECHNOLOGY_LIST}`, technologySaga);
 }
 
+<<<<<<< HEAD
 export default adminWatcher;
+=======
+export default adminWatcher;
+>>>>>>> a30fca1893a425daee4853497f0f827b3ceead45

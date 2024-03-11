@@ -3,6 +3,7 @@ import TechnologySelector from "../../components/enrollStudent/TechnologySelecto
 import TestTable from "../../components/enrollStudent/TestTable/TestTable";
 import BatchTable from "../../components/enrollStudent/BatchTable/BatchTable";
 import { Button } from "@mui/material";
+<<<<<<< HEAD
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 import PageLoaderModal from "../../components/enrollStudent/Modal/PageLoaderModal";
@@ -76,13 +77,25 @@ function EnrollStudent() {
 
       {/**  DropDowns */}
       <section className="">
+=======
+
+function EnrollStudent() {
+  return (
+    <main>
+      {/**  DropDowns */}
+      <section className="flex">
+>>>>>>> a30fca1893a425daee4853497f0f827b3ceead45
         <TechnologySelector />
       </section>
 
       {/**  Batch */}
       <section className="text-black mt-5">
+<<<<<<< HEAD
         <BatchTable selectedTechnology={selectedTechnology}
         selectedModule={selectedModule} />
+=======
+        <BatchTable />
+>>>>>>> a30fca1893a425daee4853497f0f827b3ceead45
         <div className="mt-10 mx-auto w-4/6">
           <span className="ms-[9%]">
             <Button variant="outlined" color="inherit">
@@ -103,7 +116,11 @@ function EnrollStudent() {
           </span>
         </div>
       </section>
+<<<<<<< HEAD
     </main></>
+=======
+    </main>
+>>>>>>> a30fca1893a425daee4853497f0f827b3ceead45
   );
 }
 

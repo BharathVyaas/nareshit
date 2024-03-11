@@ -7,4 +7,8 @@ const reducersSlice = {
 
 const reducers = combineReducers(reducersSlice);
 
+<<<<<<< HEAD
 export default reducers;
+=======
+export default reducers;
+>>>>>>> a30fca1893a425daee4853497f0f827b3ceead45

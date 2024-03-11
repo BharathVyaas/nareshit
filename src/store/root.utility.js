@@ -65,4 +65,8 @@ function getSlice(name) {
   });
 }
 
+<<<<<<< HEAD
 export default getSlice;
+=======
+export default getSlice;
+>>>>>>> a30fca1893a425daee4853497f0f827b3ceead45

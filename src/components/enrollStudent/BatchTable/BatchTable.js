@@ -1,5 +1,7 @@
 import { CheckBox, CheckBoxOutlineBlank } from "@mui/icons-material";
+import { Button, Checkbox, FormControlLabel, FormLabel } from "@mui/material";
 import React, { useState } from "react";
+import eyeIcon from "../../../assets/eye.png";
 
 function BatchTable() {
   return (
@@ -16,11 +18,19 @@ function Thead() {
   return (
     <thead className="">
       <tr className="border-b-2 border-dotted border-gray-600">
-        <th className="text-start py-2 w-[5%]"></th>
-        <th className="text-start py-2 w-[20%]">Batch Name</th>
-        <th className="text-start py-2 w-[10%]">Active Users</th>
-        <th className="text-start py-2 w-[10%]">Timings</th>
-        <th className="text-start py-2 w-[10%]">Faculty</th>
+        <th className="text-start py-2 ps-8 xl:w-[35%] lg:w-[45%] sm:w-[45%] w-[70%]">
+          Batch Name
+        </th>
+        <th className="text-start py-2 xl:w-[30%] lg:w-[30%] sm:w-[25%] invisible sm:visible">
+          Faculty
+        </th>
+        <th className="text-start py-2 xl:w-[20%] invisible lg:visible lg:w-[20%]">
+          Timings
+        </th>
+        <th className="py-2 visible lg:hidden w-[15%]">View</th>
+        <th className="text-start py-2 xl:w-[15%] invisible xl:visible">
+          Active Users
+        </th>
       </tr>
     </thead>
   );
@@ -29,37 +39,43 @@ function Thead() {
 function Tbody() {
   return (
     <tbody>
-      <Td flag={true} />
-      <Td flag={false} />
-      <Td flag={true} />
-      <Td flag={false} />
-      <Td flag={true} />
-      <Td flag={false} />
-      <Td flag={true} />
-      <Td flag={false} />
-      <Td flag={true} />
+      <Td />
+      <Td />
+      <Td />
+      <Td />
+      <Td />
+      <Td />
+      <Td />
+      <Td />
+      <Td />
     </tbody>
   );
 }
 
-function Td({ flag:parentFlag }) {
-  const [flag, setFlag] = useState(parentFlag)
-
+function Td() {
   return (
     <tr className="border-b-2 border-dotted border-gray-600">
-      <td className="text-center">
-        <button className="cursor-pointer">
-          {flag ? (
-            <CheckBox sx={{ fontSize: 16 }} onClick={() => setFlag(prev => !prev)} />
-          ) : (
-            <CheckBoxOutlineBlank sx={{ fontSize: 16 }} onClick={() => setFlag(prev => !prev)} />
-          )}
-        </button>
+      <td className="py-2 lg:w-[45%] sm:w-[45%] w-[70%] hover:underline hover:cursor-pointer">
+        <FormControlLabel
+          control={
+            <Checkbox
+              size=""
+              sx={{ marginInlineEnd: 2 }}
+              color="default"
+              defaultChecked
+            />
+          }
+          label="PlaceHolder Dunking"
+        />
       </td>
-      <td className="py-2">PlaceHolder Dunking</td>
-      <td className="py-2 px-2">2</td>
-      <td className="py-2">Morning</td>
-      <td className="py-2">Dude Perfect</td>
+      <td className="py-2 lg:w-[30%] sm:w-[30%] invisible sm:visible">
+        Dude Perfect
+      </td>
+      <td className="py-2 invisible lg:visible lg:w-[20%]">Morning</td>
+      <td className="py-2 visible lg:hidden hover:cursor-pointer">
+        <img src={eyeIcon} alt="view" width="20" className="mx-auto" />
+      </td>
+      <td className="py-2 px-2 invisible xl:visible">2</td>
     </tr>
   );
 }

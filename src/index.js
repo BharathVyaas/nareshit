@@ -5,13 +5,17 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { AuthCtxProvider } from "./context/auth.context";
 import UserDataCtxProvider from "./context/userData.context";
+import { Provider } from "react-redux";
+import store from "./store/root.store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <AuthCtxProvider>
-    <UserDataCtxProvider>
-      <App />
-    </UserDataCtxProvider>
+    <Provider store={store}>
+      <UserDataCtxProvider>
+        <App />
+      </UserDataCtxProvider>
+    </Provider>
   </AuthCtxProvider>
 );
 

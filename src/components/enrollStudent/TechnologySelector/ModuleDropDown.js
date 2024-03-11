@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Select from "../../../ui/EnrollStudent/Select";
+import { FormControl, InputLabel } from "@mui/material";
+import SelectMenu from "../../../ui/EnrollStudent/Select";
 
 const fetchHandler = async (setter, id) => {
   const res = await axios.get(`https://www.nareshit.net/fetchModules/${id}`);
 
   setter([
-    { key: "0", value: "0", option: "Select A Module" },
     ...res.data.map((ele) => {
       return {
         id: ele.ModuleID,
@@ -20,16 +20,14 @@ const fetchHandler = async (setter, id) => {
 function ModuleDropDown({ technologyData, dispatcher }) {
   const [moduleId, setModuleId] = useState("0");
 
-  const [options, setOptions] = useState([
-    { key: "0", value: "0", option: "Select A Module" },
-  ]);
+  const [options, setOptions] = useState([]);
 
   useEffect(() => {
     if (technologyData.technologyId)
       fetchHandler(setOptions, technologyData.technologyId);
-    else{
-      setOptions([{id: '0', value: '0', option: 'Select A Module'}])
-      setModuleId('0')
+    else {
+      setOptions([]);
+      setModuleId("0");
     }
   }, [technologyData.technologyId]);
 
@@ -39,8 +37,17 @@ function ModuleDropDown({ technologyData, dispatcher }) {
   }, [moduleId]);
 
   return (
-    <div className="px-3 py-2 inline">
-    <Select defaultValue={moduleId} setter={setModuleId} options={options} /></div>
+    <div className="w-1/3">
+      <FormControl sx={{ minWidth: 300 }}>
+        <InputLabel id="demo-simple-select-label">Module</InputLabel>
+        <SelectMenu
+          defaultValue={moduleId}
+          setter={setModuleId}
+          options={options}
+          label={"Module"}
+        />
+      </FormControl>
+    </div>
   );
 }
 

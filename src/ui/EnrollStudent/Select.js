@@ -1,18 +1,28 @@
+import { MenuItem, Select } from "@mui/material";
 import React from "react";
 
-function Select({ defaultValue, options, setter }) {
+function SelectMenu({ defaultValue, options, setter, label }) {
   return (
-    <select
+    <Select
+      labelId="demo-simple-select-label"
+      id="demo-simple-select"
+      value={defaultValue}
+      label={label}
       onChange={(e) => setter(e.target.value)}
-      defaultValue={defaultValue} className="px-2"
+      sx={{ textAlign: "start" }}
     >
-      {options.map((ele) => (
-        <option value={ele.value} key={ele.id}>
-          {ele.option}
-        </option>
-      ))}
-    </select>
+      <MenuItem key={-1} value={0}>
+        {`Select a ${label}`}
+      </MenuItem>
+      {options.map((ele) => {
+        return (
+          <MenuItem key={ele.key} value={ele.value}>
+            {ele.option}
+          </MenuItem>
+        );
+      })}
+    </Select>
   );
 }
 
-export default Select;
+export default SelectMenu;

@@ -20,18 +20,6 @@ function technologyDataReducer(state, action) {
     case "moduleId": {
       return reducerHelper(state, "moduleId", action.payload);
     }
-    case "topicId": {
-      return reducerHelper(state, "topicId", action.payload);
-    }
-    case "subTopicId": {
-      return reducerHelper(state, "subTopicId", action.payload);
-    }
-    case "startDate": {
-      return reducerHelper(state, "startDate", action.payload);
-    }
-    case "endDate": {
-      return reducerHelper(state, "endDate", action.payload);
-    }
     default: {
       throw new Error("technologyDataReducer: Not A valied action.type");
     }
@@ -44,20 +32,19 @@ const initialTechnologyData = {
 };
 
 function TechnologySelector() {
+  // techonlogyData doesn't only contains TechnologyDropDown it contains all data related to DropDowns Sections
   const [technologyData, dispatcher] = useReducer(
     technologyDataReducer,
     initialTechnologyData
   );
 
-  console.log(technologyData);
-
   return (
-    <div className="w-full text-center mb-6 mt-4">
-      <p className="inline me-6">Filter:</p>
+    <div className="w-full text-center mb-6 mt-4 container flex justify-center mx-auto">
       <TechnologyDropDown
         technologyData={technologyData}
         dispatcher={dispatcher}
       />
+
       <ModuleDropDown technologyData={technologyData} dispatcher={dispatcher} />
     </div>
   );

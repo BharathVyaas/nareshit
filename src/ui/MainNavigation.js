@@ -21,6 +21,7 @@ function MainNavigation() {
           <NavLink
             to="technology"
 <<<<<<< HEAD
+<<<<<<< HEAD
             onClick={(e) => e.preventDefault()}
             className={({ isActive }) =>
               isActive
@@ -32,6 +33,13 @@ function MainNavigation() {
                 ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
                 : "text-white font-medium rounded px-6 py-3"
 >>>>>>> origin/main
+=======
+            onClick={(e) => e.preventDefault()}
+            className={({ isActive }) =>
+              isActive
+                ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                : "text-white cursor-default font-medium rounded px-6 py-3"
+>>>>>>> origin/master
             }
             end
           >
@@ -42,26 +50,6 @@ function MainNavigation() {
           <NavLink
             to="assessments"
 <<<<<<< HEAD
-            onClick={(e) => e.preventDefault()}
-            className={({ isActive }) =>
-              isActive
-                ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
-                : "text-white cursor-default font-medium rounded px-6 py-3"
-=======
-            className={({ isActive }) =>
-              isActive
-                ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
-                : "text-white font-medium rounded px-6 py-3"
->>>>>>> origin/main
-            }
-            end
-          >
-            Assessment
-          </NavLink>
-        </li>
-        <li className="">
-          <NavLink
-            to="questionview"
 <<<<<<< HEAD
             onClick={(e) => e.preventDefault()}
             className={({ isActive }) =>
@@ -74,6 +62,42 @@ function MainNavigation() {
                 ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
                 : "text-white font-medium rounded px-6 py-3"
 >>>>>>> origin/main
+=======
+            onClick={(e) => e.preventDefault()}
+            className={({ isActive }) =>
+              isActive
+                ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                : "text-white cursor-default font-medium rounded px-6 py-3"
+>>>>>>> origin/master
+            }
+            end
+          >
+            Assessment
+          </NavLink>
+        </li>
+        <li className="">
+          <NavLink
+            to="questionview"
+<<<<<<< HEAD
+<<<<<<< HEAD
+            onClick={(e) => e.preventDefault()}
+            className={({ isActive }) =>
+              isActive
+                ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                : "text-white cursor-default font-medium rounded px-6 py-3"
+=======
+            className={({ isActive }) =>
+              isActive
+                ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                : "text-white font-medium rounded px-6 py-3"
+>>>>>>> origin/main
+=======
+            onClick={(e) => e.preventDefault()}
+            className={({ isActive }) =>
+              isActive
+                ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                : "text-white cursor-default font-medium rounded px-6 py-3"
+>>>>>>> origin/master
             }
             end
           >
@@ -83,6 +107,7 @@ function MainNavigation() {
         <li className="">
           <NavLink
             to="scheduletime"
+<<<<<<< HEAD
 <<<<<<< HEAD
             onClick={(e) => e.preventDefault()}
             className={({ isActive }) =>
@@ -94,15 +119,22 @@ function MainNavigation() {
           >
             ScheduleTime
 =======
+=======
+            onClick={(e) => e.preventDefault()}
+>>>>>>> origin/master
             className={({ isActive }) =>
               isActive
                 ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
-                : "text-white font-medium rounded px-6 py-3"
+                : "text-white cursor-default font-medium rounded px-6 py-3"
             }
             end
           >
+<<<<<<< HEAD
             SheduleTime
 >>>>>>> origin/main
+=======
+            ScheduleTime
+>>>>>>> origin/master
           </NavLink>
         </li>
       </ul>

@@ -25,4 +25,12 @@ function SelectMenu({ defaultValue, options, setter, label }) {
   );
 }
 
+<<<<<<< HEAD
 export default SelectMenu;
+=======
+<<<<<<< HEAD
+export default SelectMenu;
+=======
+export default SelectMenu;
+>>>>>>> a30fca1893a425daee4853497f0f827b3ceead45
+>>>>>>> origin/master

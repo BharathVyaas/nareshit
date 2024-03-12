@@ -37,10 +37,14 @@ function QusetionViewTechnlogy({
 
   return (
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
     <>
       <section className="flex justify-between w-full">
         <TopicsContextProvider>
           <ModuleDataLoader
+<<<<<<< HEAD
             selectedModule={selectedModule}
             setSelectedModule={setSelectedModule}
           />
@@ -83,10 +87,12 @@ function QusetionViewTechnlogy({
         />
         {selectedModule && (
           <TopicDataLoader
+=======
+>>>>>>> origin/master
             selectedModule={selectedModule}
-            selectedTopic={selectedTopic}
-            setSelectedTopic={setSelectedTopic}
+            setSelectedModule={setSelectedModule}
           />
+<<<<<<< HEAD
         )}
         {selectedTopic &&
         LocalStorage.topicData &&
@@ -111,6 +117,38 @@ function QusetionViewTechnlogy({
       </TopicsContextProvider>
     </section>
 >>>>>>> origin/main
+=======
+          {selectedModule && (
+            <TopicDataLoader
+              selectedModule={selectedModule}
+              selectedTopic={selectedTopic}
+              setSelectedTopic={setSelectedTopic}
+            />
+          )}
+          {selectedTopic &&
+          LocalStorage.topicData &&
+          LocalStorage._getTopicDataById() ? (
+            <SubTopicDataLoader
+              selectedTopic={setSelectedTopic}
+              selectedSubTopic={selectedSubTopic}
+              setSelectedSubTopic={setSelectedSubTopic}
+              questionView={questionView}
+              setQuestionView={setQuestionView}
+            />
+          ) : (
+            <div className="max-w-[30%] overflow-hidden flex flex-col">
+              <span>
+                <label htmlFor="subtopicName">Sub Topic Name:</label>
+              </span>
+              <select id="subtopicName" name="subtopicName" className="">
+                <option value="selectsubtopic">Select A Subtopic</option>
+              </select>
+            </div>
+          )}
+        </TopicsContextProvider>
+      </section>
+    </>
+>>>>>>> origin/master
   );
 }
 
@@ -150,12 +188,16 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
   }));
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [selectedModule, setSelectedModule] = useState();
 =======
   const [selectedModule, setSelectedModule] = useState(
     BuilderService.questionService.selectedTechnology.module || moduleNames[0]
   );
 >>>>>>> origin/main
+=======
+  const [selectedModule, setSelectedModule] = useState();
+>>>>>>> origin/master
 
   useEffect(() => {
     setSelectedTechnology((prev) => {
@@ -164,10 +206,15 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
     LocalStorage.moduleData = selectedModule;
     BuilderService.questionService.selectedTechnology.module = selectedModule;
 <<<<<<< HEAD
+<<<<<<< HEAD
     localStorage.removeItem("technology");
     localStorage.removeItem("subTopicData");
 =======
 >>>>>>> origin/main
+=======
+    localStorage.removeItem("technology");
+    localStorage.removeItem("subTopicData");
+>>>>>>> origin/master
   }, [setSelectedTechnology, selectedModule]);
 
   const handleModuleChange = (event) => {
@@ -176,20 +223,28 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
       (module) => module?.moduleName === selectedModuleName
     );
 <<<<<<< HEAD
+<<<<<<< HEAD
     console.log("change", selectedModule);
 =======
 
 >>>>>>> origin/main
+=======
+    console.log("change", selectedModule);
+>>>>>>> origin/master
     setSelectedModule(selectedModule);
   };
 
   return (
     <>
 <<<<<<< HEAD
+<<<<<<< HEAD
       <Form className="max-w-[20%] flex flex-col me-6">
 =======
       <Form className="max-w-[20%] me-6">
 >>>>>>> origin/main
+=======
+      <Form className="max-w-[20%] flex flex-col me-6">
+>>>>>>> origin/master
         <label htmlFor="moduleName">
           Module Name:
           <select
@@ -198,6 +253,7 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
             value={selectedModule?.moduleName}
             onChange={handleModuleChange}
           >
+<<<<<<< HEAD
 <<<<<<< HEAD
             <option value={"Select A Module"}>Select A Module</option>
             {moduleNames.map((element, index) => (
@@ -209,6 +265,14 @@ function ModuleName({ setSelectedTechnology, moduledata }) {
             {moduleNames.map((element, index) => (
               <option key={element.moduleId + index} value={element.moduleName}>
 >>>>>>> origin/main
+=======
+            <option value={"Select A Module"}>Select A Module</option>
+            {moduleNames.map((element, index) => (
+              <option
+                key={(element.moduleId, index)}
+                value={element.moduleName}
+              >
+>>>>>>> origin/master
                 {element.moduleName}
               </option>
             ))}
@@ -239,10 +303,14 @@ function TopicDataLoader({ selectedTopic, setSelectedTopic, selectedModule }) {
     placeHolder.TopicID = -1;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     updatedData = [...data];
 =======
     updatedData = [placeHolder, ...data];
 >>>>>>> origin/main
+=======
+    updatedData = [...data];
+>>>>>>> origin/master
   }
   useEffect(() => {
     queryClient.invalidateQueries({
@@ -279,12 +347,16 @@ function TopicName({ setSelectedTechnology, data }) {
   }));
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [selectedModule, setSelectedModule] = useState();
 =======
   const [selectedModule, setSelectedModule] = useState(
     BuilderService.questionService.selectedTechnology.topic || topicNames[0]
   );
 >>>>>>> origin/main
+=======
+  const [selectedModule, setSelectedModule] = useState();
+>>>>>>> origin/master
   const { setShouldLoad } = useContext(TopicsContext);
   useEffect(() => {
     setSelectedTechnology((prev) => {
@@ -294,10 +366,15 @@ function TopicName({ setSelectedTechnology, data }) {
     LocalStorage.topicData = selectedModule;
     BuilderService.questionService.selectedTechnology.topic = selectedModule;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     localStorage.removeItem("subTopicData");
 =======
 >>>>>>> origin/main
+=======
+
+    localStorage.removeItem("subTopicData");
+>>>>>>> origin/master
   }, [setSelectedTechnology, selectedModule]);
 
   const handleModuleChange = (event) => {
@@ -321,9 +398,13 @@ function TopicName({ setSelectedTechnology, data }) {
         onChange={handleModuleChange}
       >
 <<<<<<< HEAD
+<<<<<<< HEAD
         <option value={"Select A Topic"}>Select A Topic</option>
 =======
 >>>>>>> origin/main
+=======
+        <option value={"Select A Topic"}>Select A Topic</option>
+>>>>>>> origin/master
         {topicNames.map((element, index) => (
           <option
             className=""
@@ -372,12 +453,16 @@ function SubTopicDataLoader({
 
   return (
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
     <SubTopicName
       data={data}
       setSelectedTechnology={setSelectedSubTopic}
       questionView={setQuestionView}
       setQuestionView={setQuestionView}
     />
+<<<<<<< HEAD
 =======
     <>
       {data && data[0].subTopicId === -1 ? (
@@ -399,6 +484,8 @@ function SubTopicDataLoader({
       )}
     </>
 >>>>>>> origin/main
+=======
+>>>>>>> origin/master
   );
 }
 
@@ -410,10 +497,14 @@ function SubTopicName({
 }) {
   const subTopicNames = data.map((element) => ({
 <<<<<<< HEAD
+<<<<<<< HEAD
     subTopicName: element?.SubTopicName,
 =======
     subTopicName: element.SubTopicName,
 >>>>>>> origin/main
+=======
+    subTopicName: element?.SubTopicName,
+>>>>>>> origin/master
     moduleId: element.ModuleID,
     subTopicId: element.SubTopicID,
     parentTopicId: element.ParentTopicID,
@@ -430,6 +521,7 @@ function SubTopicName({
   }));
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [selectedModule, setSelectedModule] = useState();
 =======
   const [selectedModule, setSelectedModule] = useState(
@@ -445,6 +537,9 @@ function SubTopicName({
 
   const [popup, setPopup] = useState(false);
 >>>>>>> origin/main
+=======
+  const [selectedModule, setSelectedModule] = useState();
+>>>>>>> origin/master
 
   useEffect(() => {
     setSelectedTechnology((prev) => {
@@ -463,6 +558,7 @@ function SubTopicName({
     );
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     setSelectedModule(selectedModule);
   };
 
@@ -471,20 +567,14 @@ function SubTopicName({
 =======
     setPopup(selectedModule);
 
+=======
+>>>>>>> origin/master
     setSelectedModule(selectedModule);
   };
 
-  function handler(data) {
-    const prevs = [];
-
-    setQuestionView((prev) => {
-      if (!prev || prev.length === 0) return [data];
-      return [...prev, data];
-    });
-  }
-
   return (
     <>
+<<<<<<< HEAD
       {popup && (
         <QuestionViewHandler
           topicData={topicData}
@@ -493,6 +583,8 @@ function SubTopicName({
         />
       )}
 >>>>>>> origin/main
+=======
+>>>>>>> origin/master
       <Form className="max-w-[30%] overflow-hidden relative">
         <div htmlFor="subtopicName">
           <p>Sub Topic Name:</p>
@@ -501,10 +593,14 @@ function SubTopicName({
               id="subtopicName"
               name="subtopicName"
 <<<<<<< HEAD
+<<<<<<< HEAD
               value={selectedModule?.subTopicName}
 =======
               value={selectedModule.subTopicName}
 >>>>>>> origin/main
+=======
+              value={selectedModule?.subTopicName}
+>>>>>>> origin/master
               onChange={handleModuleChange}
             >
               {subTopicNames.map((element, index) => (

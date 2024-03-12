@@ -8,6 +8,9 @@ import ListOfAssessment, {
   loader as AssessmentLoader,
 } from "./pages/ListOfAssessment";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
 import { TechnologyV2, TechnologyActionV2 } from "./pages/Technology";
 import {
   AssessmentActionV2,
@@ -15,6 +18,7 @@ import {
   AssessmentsV2,
 } from "./pages/Assessments";
 import { QuestionViewV2 } from "./pages/QuestionView";
+<<<<<<< HEAD
 =======
 import Technology, {
   loader as TechnologyLoader,
@@ -23,11 +27,14 @@ import Technology, {
 import Assessments, { action as AssessmentAction } from "./pages/Assessments";
 import QuestionView, { loader as QuestionLoader } from "./pages/QuestionView";
 >>>>>>> origin/main
+=======
+>>>>>>> origin/master
 import ScheduleTime, {
   action as ScheduleTimeAction,
 } from "./pages/ScheduleTime";
 
 import { queryClient } from "./util/http";
+<<<<<<< HEAD
 <<<<<<< HEAD
 import UploadTopic from "./pages/UploadTopic";
 import Questiondb from "./pages/Questiondb";
@@ -56,12 +63,27 @@ function initializeBuilderService() {
   BuilderService.init();
 }
 >>>>>>> origin/main
+=======
+import UploadTopic from "./pages/UploadTopic";
+import Questiondb from "./pages/Questiondb";
+import { QuestionViewProvider } from "./context/questionView";
+import QuestionViewFixed from "./pages/QuestionViewFixed";
+import QuestionViewFixedEasy from "./pages/QuestionViewFixedEasy";
+import { TableTotalCtxProvider } from "./context/tableTotalCtx";
+import Login from "./pages/Login";
+import UserLogin from "./components/login/UserLogin";
+import AdminLogin from "./components/login/AdminLogin";
+import Dashboard from "./pages/Dashboard";
+import EnrollStudent from "./pages/enrollStudent/EnrollStudent";
+import UserManagement from "./pages/userManagement/UserManagement";
+>>>>>>> origin/master
 
 /**
  *
  * Main App component that sets up routing and provides QueryClient for React Query.
  */
 function App() {
+<<<<<<< HEAD
 <<<<<<< HEAD
   // Define the routing configuration
   const appRoutes = [
@@ -80,6 +102,19 @@ function App() {
   // Define the routing configuration
   const appRoutes = [
 >>>>>>> origin/main
+=======
+  // Define the routing configuration
+  const appRoutes = [
+    {
+      path: "/login",
+      element: <Login />,
+      children: [
+        { index: true, element: <UserLogin /> },
+        { path: "admin", element: <AdminLogin /> },
+      ],
+    },
+    { path: "/dashboard", element: <Dashboard /> },
+>>>>>>> origin/master
     { path: "/", element: <AdminHomePage /> },
     {
       path: "questiondb",
@@ -90,9 +125,13 @@ function App() {
       path: "categories",
       element: <Categories />,
 <<<<<<< HEAD
+<<<<<<< HEAD
       ErrorEvent: <h1>Reload Page</h1>,
 =======
 >>>>>>> origin/main
+=======
+      ErrorEvent: <h1>Reload Page</h1>,
+>>>>>>> origin/master
       children: [
         {
           path: "assessmentlist",
@@ -101,6 +140,7 @@ function App() {
         },
         {
           path: "technology",
+<<<<<<< HEAD
 <<<<<<< HEAD
           element: <TechnologyV2 />,
           id: "tech",
@@ -128,20 +168,38 @@ function App() {
           children: [{ index: true, element: <QuestionViewFixedEasy /> }],
 =======
           element: <Technology />,
+=======
+          element: <TechnologyV2 />,
+>>>>>>> origin/master
           id: "tech",
-          loader: TechnologyLoader,
-          action: TechnologyAction,
+          action: TechnologyActionV2,
         },
         {
           path: "assessments",
-          element: <Assessments />,
-          action: AssessmentAction,
+          element: <AssessmentsV2 />,
+          action: AssessmentActionV2,
+          loader: AssessmentLoaderV2,
         },
         {
           path: "questionview",
+<<<<<<< HEAD
           element: <QuestionView />,
           loader: QuestionLoader,
 >>>>>>> origin/main
+=======
+          element: (
+            <QuestionViewProvider>
+              <TableTotalCtxProvider>
+                <QuestionViewV2 />
+              </TableTotalCtxProvider>
+            </QuestionViewProvider>
+          ),
+        },
+        {
+          path: "questionviewfixed",
+          element: <QuestionViewFixed />,
+          children: [{ index: true, element: <QuestionViewFixedEasy /> }],
+>>>>>>> origin/master
         },
         {
           path: "scheduletime",
@@ -151,6 +209,9 @@ function App() {
       ],
     },
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
     {
       path: "user-management",
       element: <UserManagement />,
@@ -159,8 +220,11 @@ function App() {
       path: "enroll-student",
       element: <EnrollStudent />,
     },
+<<<<<<< HEAD
 =======
 >>>>>>> origin/main
+=======
+>>>>>>> origin/master
   ];
 
   const router = createBrowserRouter(appRoutes);

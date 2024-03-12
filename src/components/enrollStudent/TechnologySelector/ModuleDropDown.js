@@ -51,4 +51,12 @@ function ModuleDropDown({ technologyData, dispatcher }) {
   );
 }
 
+<<<<<<< HEAD
 export default ModuleDropDown;
+=======
+<<<<<<< HEAD
+export default ModuleDropDown;
+=======
+export default ModuleDropDown;
+>>>>>>> a30fca1893a425daee4853497f0f827b3ceead45
+>>>>>>> origin/master

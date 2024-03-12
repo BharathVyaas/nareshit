@@ -6,10 +6,15 @@ const titles = [
   { id: 5, title: "State Time" },
   { id: 6, title: "End Time" },
 <<<<<<< HEAD
+<<<<<<< HEAD
   { id: 7, title: "CreatedAt" },
   { id: 8, title: "CreatedBy" },
 =======
 >>>>>>> origin/main
+=======
+  { id: 7, title: "CreatedAt" },
+  { id: 8, title: "CreatedBy" },
+>>>>>>> origin/master
 ];
 
 const progLangs = [

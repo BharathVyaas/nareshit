@@ -29,16 +29,22 @@ export function TableBodyRenderer({ element, index, handler }) {
     TestStartDate,
     TestEndDate,
 <<<<<<< HEAD
+<<<<<<< HEAD
     CreatedAt,
     CreatedBy,
 =======
     TestStartTime,
     TestEndTime,
 >>>>>>> origin/main
+=======
+    CreatedAt,
+    CreatedBy,
+>>>>>>> origin/master
   } = element;
 
   const styles =
     index % 2 === 0
+<<<<<<< HEAD
 <<<<<<< HEAD
       ? "bg-gray-100 hover:bg-gray-200 max-w-[80vw] overflow-scroll"
       : "bg-white hover:bg-gray-300  max-w-[80vw] overflow-scroll";
@@ -46,6 +52,10 @@ export function TableBodyRenderer({ element, index, handler }) {
       ? "bg-gray-100 hover:cursor-pointer hover:bg-gray-200"
       : "bg-white hover:cursor-pointer hover:bg-gray-300";
 >>>>>>> origin/main
+=======
+      ? "bg-gray-100 hover:bg-gray-200 max-w-[80vw] overflow-scroll"
+      : "bg-white hover:bg-gray-300  max-w-[80vw] overflow-scroll";
+>>>>>>> origin/master
   const dateStart = new Date(TestStartDate);
   const dateEnd = new Date(TestEndDate);
 
@@ -97,6 +107,9 @@ export function TableBodyRenderer({ element, index, handler }) {
 
   return (
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
     <tr className={styles}>
       <Tbody
         data={TestName}
@@ -137,9 +150,12 @@ export function TableBodyRenderer({ element, index, handler }) {
 }
 
 /*  <tr onClick={() => handler(element)} key={element.id} className={styles}>
+<<<<<<< HEAD
 =======
     <tr onClick={() => handler(element)} key={element.id} className={styles}>
 >>>>>>> origin/main
+=======
+>>>>>>> origin/master
       <Tbody data={TestName} />
       <Tbody data={IsActive ? 1 : 0} />
       <Tbody data={fullStartDate} />
@@ -147,12 +163,16 @@ export function TableBodyRenderer({ element, index, handler }) {
       <Tbody data={fullStartTime} />
       <Tbody data={fullEndTime} />
 <<<<<<< HEAD
+<<<<<<< HEAD
     </tr> */
 =======
     </tr>
   );
 }
 >>>>>>> origin/main
+=======
+    </tr> */
+>>>>>>> origin/master
 
 /**
  * Component for rendering table body cells.
@@ -161,6 +181,7 @@ export function TableBodyRenderer({ element, index, handler }) {
  * @returns {JSX.Element} The Tbody component.
  */
 export function Tbody({ data, ...props }) {
+<<<<<<< HEAD
 <<<<<<< HEAD
   return <td {...props}>{data}</td>;
 =======
@@ -173,4 +194,7 @@ export function Tbody({ data, ...props }) {
     </td>
   );
 >>>>>>> origin/main
+=======
+  return <td {...props}>{data}</td>;
+>>>>>>> origin/master
 }

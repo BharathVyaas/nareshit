@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React, { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthCtx from "../context/auth.context";
@@ -6,6 +7,11 @@ import AuthCtx from "../context/auth.context";
 import React from "react";
 import { Link } from "react-router-dom";
 >>>>>>> origin/main
+=======
+import React, { useContext, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import AuthCtx from "../context/auth.context";
+>>>>>>> origin/master
 
 /**
  *    *** Still Under Developement ***
@@ -16,6 +22,9 @@ import { Link } from "react-router-dom";
  */
 function AdminHomePage() {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
   const { isLoggedIn } = useContext(AuthCtx);
   const navigate = useNavigate();
 
@@ -23,8 +32,11 @@ function AdminHomePage() {
     if (!isLoggedIn) navigate("/login");
   }, [isLoggedIn, navigate]);
 
+<<<<<<< HEAD
 =======
 >>>>>>> origin/main
+=======
+>>>>>>> origin/master
   return (
     <>
       <header className="p-[0.6rem] bg-[azure]">
@@ -41,10 +53,14 @@ function AdminHomePage() {
       </header>
       <main>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <section className="w-[70%] h-60 mx-auto grid place-content-center text-center mt-20 shadow-2xl">
 =======
         <section className="w-[85%] h-60 mx-auto grid place-content-center text-center mt-20 shadow-2xl">
 >>>>>>> origin/main
+=======
+        <section className="w-[70%] h-60 mx-auto grid place-content-center text-center mt-20 shadow-2xl">
+>>>>>>> origin/master
           <h1 className="text-2xl font-medium p-3">Welcome to Admin Webpage</h1>
           <p className="">This is the Admin to Create for a Test Page</p>
           <aside className="w-[90%] mx-auto">
@@ -57,6 +73,9 @@ function AdminHomePage() {
                 </li>
                 <li className="text-white mx-2 bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
                   <Link
                     onClick={() =>
                       (window.location.href = "http://49.207.10.13:3003")
@@ -64,6 +83,7 @@ function AdminHomePage() {
                   >
                     Question's DB
                   </Link>
+<<<<<<< HEAD
                 </li>
                 <li className="text-white mx-2 bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
                   <Link to="user-management">User Management</Link>
@@ -76,6 +96,14 @@ function AdminHomePage() {
                 <li className="text-white mx-2 bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
                   <Link>Enroll Student</Link>
 >>>>>>> origin/main
+=======
+                </li>
+                <li className="text-white mx-2 bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
+                  <Link to="user-management">User Management</Link>
+                </li>
+                <li className="text-white mx-2 bg-sky-400 w-[200px] grid place-content-center h-10 hover:bg-sky-500 rounded-lg">
+                  <Link to="enroll-student">Enroll Student</Link>
+>>>>>>> origin/master
                 </li>
               </ul>
             </nav>

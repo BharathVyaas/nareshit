@@ -56,4 +56,12 @@ function TechnologyDropDown({ dispatcher }) {
   );
 }
 
+<<<<<<< HEAD
 export default TechnologyDropDown;
+=======
+<<<<<<< HEAD
+export default TechnologyDropDown;
+=======
+export default TechnologyDropDown;
+>>>>>>> a30fca1893a425daee4853497f0f827b3ceead45
+>>>>>>> origin/master

@@ -3,6 +3,9 @@ import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
 function SelectedTechnology({
   proglang,
   setProgLang,
@@ -10,9 +13,12 @@ function SelectedTechnology({
   editTechnologyId,
   editedSelectProgrammingLanguage,
 }) {
+<<<<<<< HEAD
 =======
 function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
 >>>>>>> origin/main
+=======
+>>>>>>> origin/master
   useEffect(() => {
     const data = programmingLanguages.find(
       (element) => element.TechnologyName === proglang
@@ -21,10 +27,14 @@ function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
     BuilderService.requestData.assessments.technology = data;
     LocalStorage.technology = data;
 <<<<<<< HEAD
+<<<<<<< HEAD
     BuilderService.id.technologyId = data?.TechnologyID;
 =======
     BuilderService.id.technologyId = data.TechnologyID;
 >>>>>>> origin/main
+=======
+    BuilderService.id.technologyId = data?.TechnologyID;
+>>>>>>> origin/master
   }, [proglang]);
 
   return (
@@ -36,6 +46,9 @@ function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
           name="proglang"
           className="mx-6 w-[200px]"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
           defaultChecked={
             editedSelectProgrammingLanguage?.TechnologyName || editTechnologyId
           }
@@ -46,11 +59,14 @@ function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
           onChange={(e) => setProgLang(e.target.value)}
         >
           <option value={"Select A Technology"}>Select A Technology</option>
+<<<<<<< HEAD
 =======
           value={proglang}
           onChange={(e) => setProgLang(e.target.value)}
         >
 >>>>>>> origin/main
+=======
+>>>>>>> origin/master
           {programmingLanguages.map(({ TechnologyID, TechnologyName }) => (
             <option key={TechnologyID} value={TechnologyName}>
               {TechnologyName}

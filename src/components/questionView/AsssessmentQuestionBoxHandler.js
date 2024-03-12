@@ -1,8 +1,12 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React, { useContext, useEffect, useMemo, useState } from "react";
 =======
 import React, { useContext, useEffect, useState } from "react";
 >>>>>>> origin/main
+=======
+import React, { useContext, useEffect, useMemo, useState } from "react";
+>>>>>>> origin/master
 import AssessmentQuestionBox from "../AssessmentQuestionbox";
 import BuilderService from "../../services/builder";
 import TopicsContext from "../../context/topicsContext";
@@ -10,13 +14,19 @@ import QuestionViewTopic from "./QuestionViewTopic";
 import { LocalStorage } from "../../services/LocalStorage";
 import QuestionView from "../../context/questionView";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
 import axios from "axios";
 import Modal from "../../ui/Modal";
 import QuestionViewFixedModal from "../../ui/QuestionViewFixedModal.js";
 import TableTotalCtx from "../../context/tableTotalCtx.js";
 import { useLocation } from "react-router";
+<<<<<<< HEAD
 =======
 >>>>>>> origin/main
+=======
+>>>>>>> origin/master
 
 const Titles = ["MCQ", "MCQ"];
 
@@ -27,14 +37,20 @@ function AsssessmentQuestionBoxHandler({
   setQuestionView,
   selectTechnology,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
   data: questionData,
   setData: setQuestionData,
   nextButtonHandler,
   setTotal,
   isValid,
   setIsValid,
+<<<<<<< HEAD
 =======
 >>>>>>> origin/main
+=======
+>>>>>>> origin/master
 }) {
   const [stale, setStale] = useState(parentStale);
 
@@ -87,6 +103,9 @@ function AsssessmentQuestionBoxHandler({
   );
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
   const easy = useMemo(() => easyTotalSibling, [easyTotalSibling]);
   const medium = useMemo(() => mediumTotalSibling, [mediumTotalSibling]);
   const hard = useMemo(() => hardTotalSibling, [hardTotalSibling]);
@@ -108,6 +127,7 @@ function AsssessmentQuestionBoxHandler({
       setIsValid(false);
     }
   }, [easy, medium, hard]);
+<<<<<<< HEAD
 
   const TableAttributeTitles = [
     { title: "Module Name", id: "sds" },
@@ -129,6 +149,16 @@ function AsssessmentQuestionBoxHandler({
     { title: `Medium: ${medium} / ${MCQDifficulty.medium}`, id: 5 },
     { title: `Hard:  ${hard} / ${MCQDifficulty.hard}`, id: 6 },
 >>>>>>> origin/main
+=======
+
+  const TableAttributeTitles = [
+    { title: "Module Name", id: "sds" },
+    { title: "Topic Name", id: "wer" },
+    { title: "Sub Topic Name", id: "wes" },
+    { title: `Easy: ${easy} / ${MCQDifficulty.easy}`, id: "fgh" },
+    { title: `Medium: ${medium} / ${MCQDifficulty.medium}`, id: "ntr" },
+    { title: `Hard:  ${hard} / ${MCQDifficulty.hard}`, id: "zcd" },
+>>>>>>> origin/master
   ];
 
   /*******
@@ -144,6 +174,7 @@ function AsssessmentQuestionBoxHandler({
       startTime: element?.medium,
       endTime: element?.hard,
       id: element?.id,
+<<<<<<< HEAD
 <<<<<<< HEAD
       element: element,
     };
@@ -202,12 +233,68 @@ function AsssessmentQuestionBoxHandler({
         />
       )}
 =======
+=======
+      element: element,
+>>>>>>> origin/master
     };
   });
 
+  const [popup, setPopup] = useState(false);
+  /*const { setTotal } = useContext(TableTotalCtx); */
+
+  /*  useEffect(() => {
+    let easy = 0;
+    let medium = 0;
+    let hard = 0;
+
+    tableBody.forEach((element) => {
+      easy += element.endDate;
+      medium += element.startTime;
+      hard += element.endTime;
+      console.log(element);
+    });
+
+     setTotal({ easy, medium, hard });
+  }, [tableBody]); */
+
+  async function handler(data) {
+    /*  // Ensure data properties are properly formatted
+    const endDate = data.element.endDate;
+    const startTime = data.element.startTime;
+    const endTime = data.element.endTime;
+    const subTopicId = data.subTopicId;
+
+    // Construct the URL with validated parameters
+    const url = `https://www.nareshit.net/fetchDynamicQuestions?Hardcount=${endDate}&MediumCount=${startTime}&EasyCount=${endTime}&SubTopicID=${subTopicId}`;
+
+    try {
+      // Fetch data from the constructed URL
+      const res = await axios.get(url);
+      setQuestionData(res.data);
+      console.log(res);
+    } catch (error) {
+      console.error("Error fetching dynamic questions:", error);
+    } */
+  }
+
+  function handler(data) {
+    /* console.log("handling", data); */
+  }
+
   return (
     <section className="overflow-auto container">
+<<<<<<< HEAD
 >>>>>>> origin/main
+=======
+      {popup && (
+        <Modal
+          styles={"bg-white rounded-lg shadow-lg w-3/4 md:w-1/2 lg:w-2/3 z-50"}
+          data={popup}
+          setter={setPopup}
+          ModalParam={QuestionViewFixedModal}
+        />
+      )}
+>>>>>>> origin/master
       <AssessmentQuestionBox
         title={Titles[0]}
         setStale={setStale}
@@ -228,6 +315,7 @@ function AsssessmentQuestionBoxHandler({
               tableBody.map((element, index) => (
                 <TableBodyRenderer
 <<<<<<< HEAD
+<<<<<<< HEAD
                   nextButtonHandler={nextButtonHandler}
                   setPopup={setPopup}
                   key={element.id}
@@ -235,6 +323,11 @@ function AsssessmentQuestionBoxHandler({
                   key={element.id + index}
                   index={index}
 >>>>>>> origin/main
+=======
+                  nextButtonHandler={nextButtonHandler}
+                  setPopup={setPopup}
+                  key={element.id}
+>>>>>>> origin/master
                   element={element}
                   setStale={setStale}
                 />
@@ -278,6 +371,9 @@ export function TableHead({ titles }) {
   return (
     <tr className="border-[2px] border-black">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
       {titles.map(({ title, id }, index) =>
         index < 3 ? (
           <th
@@ -295,6 +391,7 @@ export function TableHead({ titles }) {
           </th>
         )
       )}
+<<<<<<< HEAD
 =======
       {titles.map(({ title, id }) => (
         <th className="px-5 border-x-2 border-black" key={id}>
@@ -302,6 +399,8 @@ export function TableHead({ titles }) {
         </th>
       ))}
 >>>>>>> origin/main
+=======
+>>>>>>> origin/master
     </tr>
   );
 }
@@ -312,6 +411,7 @@ export function TableHead({ titles }) {
  * @param {Object} props.element - An assessment data object.
  * @returns {JSX.Element} The TableBodyRenderer component.
  */
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 export function TableBodyRenderer({
@@ -391,39 +491,88 @@ export function TableBodyRenderer({
 export function TableBodyRenderer({ element, index, setStale }) {
   const { testName, isActive, startDate, endDate, startTime, endTime } =
     element;
+=======
+>>>>>>> origin/master
 
-  const styles =
-    index % 2 === 0
-      ? "bg-gray-100 hover:cursor-pointer hover:bg-gray-200"
-      : "bg-white hover:cursor-pointer hover:bg-gray-300";
+export function TableBodyRenderer({
+  setViewModal,
+  setEditModal,
+  element,
+  combination,
+  setCombination,
+  natureID,
+}) {
+  const arr = Object.values(element);
+  let data;
+  if (typeof arr === "object") data = arr[0];
 
   return (
-    <tr
-      onClick={() => console.log(element)}
-      key={element.id}
-      className={styles}
-    >
-      <Tbody data={testName} id={element.id} setStale={setStale} />
-      <Tbody data={isActive} id={element.id} setStale={setStale} />
-      <Tbody data={startDate} id={element.id} setStale={setStale} />
+    <tr key={element.id} className="bg-gray-100 hover:bg-gray-200">
       <Tbody
-        data={endDate}
-        tag="input"
-        id={element.id + " easy"}
-        setStale={setStale}
+        natureID={natureID}
+        setViewModal={setViewModal}
+        setEditModal={setEditModal}
+        data={element?.selectedModule}
+        type="moduleName"
+        element={element}
+        combination={combination}
+        setCombination={setCombination}
       />
       <Tbody
-        data={startTime}
-        tag="input"
-        id={element.id + " medium"}
-        setStale={setStale}
+        natureID={natureID}
+        setViewModal={setViewModal}
+        setEditModal={setEditModal}
+        data={element?.selectedTopic}
+        type="topicName"
+        element={element}
+        combination={combination}
+        setCombination={setCombination}
       />
       <Tbody
-        data={endTime}
+        natureID={natureID}
+        setViewModal={setViewModal}
+        setEditModal={setEditModal}
+        data={element?.selectedSubTopic}
+        type="subTopicName"
+        element={element}
+        combination={combination}
+        setCombination={setCombination}
+      />
+      <Tbody
+        natureID={natureID}
+        setViewModal={setViewModal}
+        setEditModal={setEditModal}
         tag="input"
+<<<<<<< HEAD
         id={element.id + " hard"}
         setStale={setStale}
 >>>>>>> origin/main
+=======
+        type="easy"
+        element={element}
+        combination={combination}
+        setCombination={setCombination}
+      />
+      <Tbody
+        natureID={natureID}
+        setViewModal={setViewModal}
+        setEditModal={setEditModal}
+        tag="input"
+        type="medium"
+        element={element}
+        combination={combination}
+        setCombination={setCombination}
+      />
+      <Tbody
+        natureID={natureID}
+        setViewModal={setViewModal}
+        setEditModal={setEditModal}
+        tag="input"
+        type="hard"
+        element={element}
+        combination={combination}
+        setCombination={setCombination}
+>>>>>>> origin/master
       />
     </tr>
   );
@@ -436,6 +585,9 @@ export function TableBodyRenderer({ element, index, setStale }) {
  * @returns {JSX.Element} The Tbody component.
  */
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
 /**
  * Component for rendering table body cells.
  * @param {Object} props - The component props.
@@ -456,6 +608,7 @@ export function Tbody({
 }) {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+<<<<<<< HEAD
 
   let content = (
     <td
@@ -530,59 +683,88 @@ export function Tbody({
 =======
 export function Tbody({ data, tag, id, setStale, ...props }) {
   const { data: dataCtx, setData: setDataCtx } = useContext(QuestionView);
+=======
+>>>>>>> origin/master
 
   let content = (
-    <td className="md:px-5 text-center py-1 border-[1.2px]" {...props}>
-      {data}
+    <td
+      className="md:ps-2 text-start py-1 border-[1.2px]"
+      {...props}
+      onClick={() => {
+        /* console.log("edit", {
+          modalData: element,
+          type,
+          element: element,
+          combination,
+          popupType: "edit",
+        }); */
+        setEditModal({
+          modalData: element,
+          type,
+          element,
+          combination,
+          popupType: "edit",
+        });
+      }}
+    >
+      {data || element[type] || "None Selected"}
     </td>
   );
 
-  const [value, setValue] = useState(data);
+  // used to change count
+  function handler(present, previous, flag) {
+    if ((element?.includes?.[type]?.includes?.length || 0) > present) {
+      // if user already in 0
+      if (previous != 0)
+        window.alert("Must remove 1 question before reducing count");
+    } else {
+      // returns array of combination objects
+      const allElements = Object.values(combination);
 
-  function handler(_data, setter, _total, id, siblings) {
-    setStale((prev) => true);
-    let data = Number(_data);
-    let evaluate;
+      // total from asssessment page
+      const queryTotal = Number(queryParams.get(type)) || 0;
 
-    if (id.includes("easy")) evaluate = "easy";
-    if (id.includes("medium")) evaluate = "medium";
-    if (id.includes("hard")) evaluate = "hard";
+      // stroes a number
+      let total = allElements.reduce((acc, ele) => {
+        return Number(ele[type]) + acc;
+      }, 0);
 
-    if (!evaluate)
-      throw new Error("AssessmentQuestionBoxHandler:Tbody:handler");
+      // to get current Data
+      total -= previous;
+      total += present;
 
-    const max_value = _total.assessmentData.MCQ.difficulty[evaluate];
-    const current_value = 3;
-    const siblings_eval_array = [];
-    let siblings_evaluate = 0;
+      // if total is less then queryTotal and user doing add
+      // ||
+      // if present is less then 0 and user trying to do sub
+      if ((total <= queryTotal && flag) || (present >= 0 && !flag)) {
+        // if user want to decrease count and count is already 0 dont go lower
+        if (present >= 0 || flag) {
+          setCombination((prev) => {
+            const obj = { ...prev };
+            obj[element.id][type] = Number(present);
 
-    siblings.forEach((element) => siblings_eval_array.push(element[evaluate]));
-
-    siblings_evaluate = siblings_eval_array.reduce((e, a) => e + a, 0);
-
-    if (siblings_evaluate + data > max_value) return;
-    else {
-      const _in = LocalStorage.questionView.find((element) => {
-        return element.id + " " + evaluate === id;
-      });
-
-      _in[evaluate] = data;
-
-      const _out = LocalStorage.questionView.filter((element) => {
-        return element.id + " " + evaluate !== id;
-      });
-      LocalStorage.questionView = [_in, ..._out];
-      setDataCtx([_in, ..._out]);
-
-      setValue(data);
+            return obj;
+          });
+        }
+      } else {
+        window.alert("You have reached maximum limit!");
+      }
     }
   }
 
+<<<<<<< HEAD
 >>>>>>> origin/main
+=======
+  const underline =
+    natureID === 2
+      ? "bg-transparent underline underline-offset-2 decoration-2 decoration-red-500"
+      : "bg-transparent ";
+>>>>>>> origin/master
   if (tag === "input")
     content = (
       <td
         onClick={(e) => e.stopPropagation()}
+<<<<<<< HEAD
 <<<<<<< HEAD
         className="text-center border-[1.2px]"
         {...props}
@@ -645,6 +827,48 @@ export function Tbody({ data, tag, id, setStale, ...props }) {
           }}
         />
 >>>>>>> origin/main
+=======
+        className="text-center border-[1.2px]"
+        {...props}
+      >
+        <div className="flex justify-between items-center">
+          <button
+            className="grid place-content-center w-6 mx-1 rounded bg-slate-700 text-white"
+            onClick={(e) => {
+              handler(Number(element[type] + 1), Number(element[type]), true);
+            }}
+          >
+            +
+          </button>
+
+          <button
+            /* className={underline} */
+            className={underline}
+            onClick={() => {
+              if (natureID === 2)
+                setViewModal({
+                  modalData: element,
+                  type,
+                  element,
+                  combination,
+                  popupType: "view",
+                  currentTotal: element[type],
+                });
+            }}
+          >
+            {element[type]}
+          </button>
+
+          <button
+            className="grid place-content-center w-6 mx-1 rounded bg-slate-700 text-white"
+            onClick={(e) => {
+              handler(Number(element[type] - 1), Number(element[type]), false);
+            }}
+          >
+            -
+          </button>
+        </div>
+>>>>>>> origin/master
       </td>
     );
   return content;

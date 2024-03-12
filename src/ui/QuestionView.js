@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React from "react";
 
 import QuestionViewEditModal from "./questionViews/QuestionViewEditModal";
@@ -26,83 +27,26 @@ function QuestionView({ data, handler, setter }) {
 import React, { useId, useRef } from "react";
 import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
+=======
+import React from "react";
+>>>>>>> origin/master
 
-function QuestionView({ question, setModalData, data, handler, setter }) {
-  const easyRef = useRef();
-  const mediumRef = useRef();
-  const hardRef = useRef();
-  const id = useId();
+import QuestionViewEditModal from "./questionViews/QuestionViewEditModal";
+import QuestionViewModalView from "./questionViews/QuestionViewModalView";
 
-  let result = {
-    name: "My Name",
-    id,
-    selectedModule: data.selectedModule,
-    selectedTopic: data.selectedTopic,
-    selectedSubTopic: data.selectedSubTopic,
-    easy: Number(easyRef.current?.value),
-    medium: Number(mediumRef.current?.value),
-    hard: Number(hardRef.current?.value),
-  };
+function QuestionView({ data, handler, setter }) {
+  let currentCombination;
 
-  function submiteHandler() {
-    let go = false;
-    console.log(LocalStorage.questionView);
-
-    let easy = 0;
-    let medium = 0;
-    let hard = 0;
-
-    LocalStorage.questionView.forEach((element) => (easy += element.easy));
-    LocalStorage.questionView.forEach((element) => (medium += element.medium));
-    LocalStorage.questionView.forEach((element) => (hard += element.hard));
-
-    result.easy = Number(easyRef.current?.value);
-    result.medium = Number(mediumRef.current?.value);
-    result.hard = Number(hardRef.current?.value);
-
-    const finelEasy = result.easy + easy;
-    const finelMedium = result.medium + medium;
-    const finelHard = result.hard + hard;
-
-    console.log(finelEasy, finelMedium, finelHard);
-    console.log(BuilderService.assessmentService._difficulty);
-
-    if (
-      finelEasy <= BuilderService.assessmentService._difficulty.easy &&
-      finelMedium <= BuilderService.assessmentService._difficulty.medium &&
-      finelHard <= BuilderService.assessmentService._difficulty.hard
-    ) {
-      go = true;
-      handler(result);
-      setter(false);
-    }
-    if (!go) {
-      if (finelEasy > BuilderService.assessmentService._difficulty.easy) {
-        easyRef.current.style.border = "2px solid red";
-      } else if (
-        finelEasy <= BuilderService.assessmentService._difficulty.easy
-      ) {
-        easyRef.current.style.border = "1px solid gray";
-      }
-      if (finelMedium > BuilderService.assessmentService._difficulty.medium) {
-        mediumRef.current.style.border = "2px solid red";
-      } else if (
-        finelMedium <= BuilderService.assessmentService._difficulty.medium
-      ) {
-        mediumRef.current.style.border = "1px solid gray";
-      }
-      if (finelHard > BuilderService.assessmentService._difficulty.hard) {
-        hardRef.current.style.border = "2px solid red";
-      } else if (
-        finelHard <= BuilderService.assessmentService._difficulty.hard
-      ) {
-        hardRef.current.style.border = "1px solid gray";
-      } else {
-        throw new Error("unexpected error QuestionView submitHandler");
-      }
-    }
+  if (data?.combination && data?.element?.id) {
+    currentCombination = data?.combination[data?.element?.id];
   }
+
+  if (data.popupType === "edit")
+    return (
+      <QuestionViewEditModal data={data} handler={handler} setter={setter} />
+    );
   return (
+<<<<<<< HEAD
     <div
       onClick={(e) => {
         e.stopPropagation();
@@ -163,6 +107,14 @@ function QuestionView({ question, setModalData, data, handler, setter }) {
       </section>
     </div>
 >>>>>>> origin/main
+=======
+    <QuestionViewModalView
+      data={data}
+      handler={handler}
+      setter={setter}
+      currentCombination={currentCombination}
+    />
+>>>>>>> origin/master
   );
 }
 

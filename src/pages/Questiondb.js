@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React, { useContext, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
 import AuthCtx from "../context/auth.context";
@@ -17,6 +18,20 @@ import { Outlet } from "react-router";
 
 function Questiondb() {
 >>>>>>> origin/main
+=======
+import React, { useContext, useEffect } from "react";
+import { Outlet, useNavigate } from "react-router";
+import AuthCtx from "../context/auth.context";
+
+function Questiondb() {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useContext(AuthCtx);
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login");
+  }, []);
+
+>>>>>>> origin/master
   return <Outlet />;
 }
 

@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React, { useContext, useEffect, useState } from "react";
 import { Form, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
@@ -16,13 +17,16 @@ function ScheduleTime() {
 import React, { useEffect, useRef, useState } from "react";
 import { Form, redirect } from "react-router-dom";
 
+=======
+import React, { useContext, useEffect, useState } from "react";
+import { Form, useNavigate } from "react-router-dom";
+>>>>>>> origin/master
 import { AnimatePresence, motion } from "framer-motion";
-import ScheduleTimeService from "../services/scheduleTimeService";
-import BuilderService from "../services/builder";
-import { LocalStorage } from "../services/LocalStorage";
 import axios from "axios";
+import AuthCtx from "../context/auth.context";
 
 function ScheduleTime() {
+<<<<<<< HEAD
   const testNameRef = useRef();
   const testDescriptionRef = useRef();
   const startDateRef = useRef();
@@ -30,6 +34,14 @@ function ScheduleTime() {
   const startTimeRef = useRef();
   const endTimeRef = useRef();
 >>>>>>> origin/main
+=======
+  const navigate = useNavigate();
+  const { isLoggedIn } = useContext(AuthCtx);
+
+  useEffect(() => {
+    if (!isLoggedIn) navigate("/login?page=/categories/scheduletime");
+  }, [isLoggedIn, navigate]);
+>>>>>>> origin/master
 
   const [testName, setTestName] = useState("");
   const [testDescription, setTestDescription] = useState("");
@@ -38,6 +50,7 @@ function ScheduleTime() {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   const [scheduleLater, setScheduleLater] = useState(false);
 
@@ -65,26 +78,39 @@ function ScheduleTime() {
   const [isDateValid, setIsDateValid] = useState(false);
   const [isTimeValid, setIsTimeValid] = useState(false);
   const [isTestValid, setIsTestValid] = useState(false);
+=======
+  const [scheduleLater, setScheduleLater] = useState(false);
+>>>>>>> origin/master
 
-  BuilderService.scheduleTimeService.scheduleTimeData.testName = testName;
-  BuilderService.scheduleTimeService.scheduleTimeData.testDescription =
-    testDescription;
-  BuilderService.scheduleTimeService.scheduleTimeData.startDate = startDate;
-  BuilderService.scheduleTimeService.scheduleTimeData.endDate = endDate;
-  BuilderService.scheduleTimeService.scheduleTimeData.startTime = startTime;
-  BuilderService.scheduleTimeService.scheduleTimeData.endTime = endTime;
+  const [isValid, setIsValid] = useState(false);
+  const [isDateValid, setIsDateValid] = useState();
+  const [isTimeValid, setIsTimeValid] = useState(true);
+  const [isTestValid, setIsTestValid] = useState();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (startDate && endDate) {
-      const startDateTime = new Date(startDate).toISOString();
-      const endDateTime = new Date(endDate).toISOString();
+      const today = new Date();
+      const startDateObj = new Date(startDate);
+      const endDateObj = new Date(endDate);
 
+<<<<<<< HEAD
       setIsDateValid(startDateTime <= endDateTime);
 >>>>>>> origin/main
+=======
+      console.log(new Date(startDate), startDate);
+
+      const isStartDateValid = startDateObj >= today;
+      const isEndDateValid = startDateObj <= endDateObj;
+
+      setIsDateValid(isStartDateValid && isEndDateValid);
+>>>>>>> origin/master
     }
   }, [startDate, endDate]);
 
   useEffect(() => {
+<<<<<<< HEAD
 <<<<<<< HEAD
     setIsTestValid(testName);
   }, [testName, testDescription]);
@@ -155,15 +181,72 @@ function ScheduleTime() {
     setIsValid(isTimeValid && isTestValid && isDateValid);
   }, [isTimeValid, isDateValid, isTestValid]);
 >>>>>>> origin/main
+=======
+    setIsTestValid(testName);
+  }, [testName, testDescription]);
+
+  useEffect(() => {
+    setIsTimeValid(true);
+  }, [startTime, endTime]);
+
+  useEffect(() => {
+    setIsValid(isTestValid && (scheduleLater || (isDateValid && isTimeValid)));
+  }, [isTimeValid, scheduleLater, isDateValid, isTestValid]);
+
+  useEffect(() => {
+    if (scheduleLater) {
+      if (!isTimeValid) setIsTestValid(true);
+      if (!isDateValid) setIsDateValid(true);
+    }
+  }, [scheduleLater, isDateValid, isTimeValid]);
+
+  const submitHandler = (e) => {
+    if (isSubmitting) {
+      e.preventDefault();
+      return;
+    }
+
+    if (isValid) {
+      setIsSubmitting(true);
+    }
+
+    if (!isValid) {
+      console.log(isTestValid, isDateValid, isTimeValid);
+      e.preventDefault();
+    }
+
+    if (!(testName || testDescription)) {
+      setIsTestValid(false);
+    }
+
+    if (!scheduleLater) {
+      if (!(startDate || endDate)) {
+        setIsDateValid(false);
+      }
+    }
+  };
+
+  /*   console.log(
+    "time\n",
+    isTimeValid,
+    "\ndate\n",
+    isDateValid,
+    isTestValid && (scheduleLater || (isTimeValid && isDateValid))
+  ); */
+>>>>>>> origin/master
 
   return (
     <AnimatePresence>
       <motion.main
 <<<<<<< HEAD
+<<<<<<< HEAD
         initial={{ x: "100%" }}
 =======
         initial={{ x: "100%", transition: { duration: 0.3 } }}
 >>>>>>> origin/main
+=======
+        initial={{ x: "100%" }}
+>>>>>>> origin/master
         animate={{ x: 0, transition: { duration: 0.3 } }}
       >
         <Form
@@ -176,10 +259,14 @@ function ScheduleTime() {
           <input
             type="text"
 <<<<<<< HEAD
+<<<<<<< HEAD
             name="TestName"
 =======
             name="testName"
 >>>>>>> origin/main
+=======
+            name="TestName"
+>>>>>>> origin/master
             id="testName"
             value={testName}
             onChange={(e) => setTestName(e.target.value)}
@@ -191,16 +278,23 @@ function ScheduleTime() {
           <input
             type="text"
 <<<<<<< HEAD
+<<<<<<< HEAD
             name="TestDescription"
 =======
             name="testDescription"
 >>>>>>> origin/main
+=======
+            name="TestDescription"
+>>>>>>> origin/master
             id="testDescription"
             value={testDescription}
             onChange={(e) => setTestDescription(e.target.value)}
             className="w-full border-[1.2px]  _text-start border-black h-[2.2rem] p-2"
           />
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
 
           <div className="mt-4">
             <label>
@@ -287,6 +381,7 @@ function ScheduleTime() {
             )}
           </div>
 
+<<<<<<< HEAD
           <button
             onClick={submitHandler}
             className="px-8 py-2 mx-auto mt-4 bg-green-300 hover:bg-green-400"
@@ -337,13 +432,18 @@ function ScheduleTime() {
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
           />
+=======
+>>>>>>> origin/master
           <button
-            disabled={!isValid}
-            onClick={() => console.log(BuilderService)}
+            onClick={submitHandler}
             className="px-8 py-2 mx-auto mt-4 bg-green-300 hover:bg-green-400"
           >
+<<<<<<< HEAD
             Test Prepared
 >>>>>>> origin/main
+=======
+            {isSubmitting ? "Loading..." : "Schedule Assessment"}
+>>>>>>> origin/master
           </button>
         </Form>
       </motion.main>
@@ -353,6 +453,7 @@ function ScheduleTime() {
 
 export default ScheduleTime;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 export async function action({ request, params }) {
   console.log("action");
@@ -397,29 +498,53 @@ export async function action({ request, params }) {
 =======
 export async function action() {
   const data = {};
+=======
+export async function action({ request, params }) {
+  console.log("action");
+  const url = new URL(request.url);
+>>>>>>> origin/master
 
-  const startDate = new Date(
-    BuilderService.scheduleTimeService.scheduleTimeData.startDate
-  ).toString();
+  const queryTestID =
+    url.searchParams.get("TestID") === "undefined"
+      ? 0
+      : url.searchParams.get("TestID");
 
-  const endDate = new Date(
-    BuilderService.scheduleTimeService.scheduleTimeData.startDate
-  ).toString();
+  const formData = await request.formData();
+  const TestName = formData.get("TestName");
+  const TestDescription = formData.get("TestDescription");
+  let TestStartDate = formData.get("TestStartDate");
+  let TestEndDate = formData.get("TestEndDate");
+  const TestStartTime = formData.get("TestStartTime");
+  const TestEndTime = formData.get("TestEndTime");
 
-  data["TestID"] = 15723;
-  data["TestName"] =
-    BuilderService.scheduleTimeService.scheduleTimeData.testName;
-  data["TestStartDate"] =
-    BuilderService.scheduleTimeService.scheduleTimeData.testDescription;
-  data["TestEndDate"] = startDate;
-  data["TestStartTime"] = endDate;
-  data["TestEndTime"] =
-    BuilderService.scheduleTimeService.scheduleTimeData.startTime + ":00";
-  data["TestDescription"] =
-    BuilderService.scheduleTimeService.scheduleTimeData.endTime + ":00";
+  console.log({
+    data: {
+      TestID: queryTestID,
+      TestName,
+      TestDescription,
+      TestStartDate,
+      TestEndDate,
+      TestStartTime,
+      TestEndTime,
+    },
+  });
 
+<<<<<<< HEAD
   const res = await axios.post("https://www.nareshit.net/updateTest", { data });
 >>>>>>> origin/main
+=======
+  const res = await axios.post("https://www.nareshit.net/updateTest", {
+    data: {
+      TestID: queryTestID,
+      TestName,
+      TestDescription,
+      TestStartDate,
+      TestEndDate,
+      TestStartTime,
+      TestEndTime,
+    },
+  });
+>>>>>>> origin/master
 
   console.log(res);
 

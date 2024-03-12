@@ -8,12 +8,16 @@ export const queryClient = new QueryClient();
 export const getAllAssessments = async () => {
   const res = await axios.get("https://www.nareshit.net/getAllTests");
 <<<<<<< HEAD
+<<<<<<< HEAD
   console.log(res.data);
 =======
 
   console.log("res", res.data);
 
 >>>>>>> origin/main
+=======
+  console.log(res.data);
+>>>>>>> origin/master
   return await { assessments: res.data };
 };
 
@@ -23,6 +27,7 @@ export const getProgLangs = async () => {
   return { programmingLanguages: res.data };
 };
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 export const getModuleNames = async (id) => {
   console.log(id);
@@ -37,6 +42,13 @@ export const getModuleNames = async () => {
       `https://www.nareshit.net/fetchModules/${LocalStorage.getProgrammingLanguageById()}`
     );
 >>>>>>> origin/main
+=======
+export const getModuleNames = async (id) => {
+  console.log(id);
+  try {
+    /* console.log("getModuleNames:fetch"); */
+    const res = await axios.get(`https://www.nareshit.net/fetchModules/${id}`);
+>>>>>>> origin/master
     /* console.log("fetchedData", res.data); */
     const data = { moduleNames: res.data };
     return data;

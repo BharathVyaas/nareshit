@@ -1,10 +1,16 @@
 import React, { useEffect, useRef } from "react";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import AssessmentService from "../services/assessmentsService";
 import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
 =======
 >>>>>>> origin/main
+=======
+import AssessmentService from "../services/assessmentsService";
+import { LocalStorage } from "../services/LocalStorage";
+import BuilderService from "../services/builder";
+>>>>>>> origin/master
 
 function QuestionTypes({
   questionType,
@@ -15,12 +21,18 @@ function QuestionTypes({
   dataDifficulty,
   setDataDifficulty,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
   queryEasy,
   queryMedium,
   queryHard,
   queryTotal,
+<<<<<<< HEAD
 =======
 >>>>>>> origin/main
+=======
+>>>>>>> origin/master
 }) {
   return (
     <>
@@ -34,12 +46,18 @@ function QuestionTypes({
           checked
           disabled
 <<<<<<< HEAD
+<<<<<<< HEAD
           onChange={() => {
             setData((prev) => !prev);
           }}
 =======
           onChange={() => setData((prev) => !prev)}
 >>>>>>> origin/main
+=======
+          onChange={() => {
+            setData((prev) => !prev);
+          }}
+>>>>>>> origin/master
         />
         {questionType}
       </label>
@@ -49,6 +67,7 @@ function QuestionTypes({
           <NumberOfQuestions
             dataQuestions={dataQuestions}
             setDataQuestions={setDataQuestions}
+<<<<<<< HEAD
 <<<<<<< HEAD
             queryTotal={queryTotal}
           />
@@ -61,15 +80,26 @@ function QuestionTypes({
             <legend>Difficulty Levels:</legend>
             <div className="ms-6 mt-2">
 >>>>>>> origin/main
+=======
+            queryTotal={queryTotal}
+          />
+          <fieldset>
+            <legend>Difficulty Levels:</legend>
+            <div className="ms-6 mt-4">
+>>>>>>> origin/master
               <DifficultyLevel
                 difficultyLevel="easy"
                 dataDifficulty={dataDifficulty}
                 dataQuestions={dataQuestions}
                 setDataDifficulty={setDataDifficulty}
 <<<<<<< HEAD
+<<<<<<< HEAD
                 queryData={queryEasy}
 =======
 >>>>>>> origin/main
+=======
+                queryData={queryEasy}
+>>>>>>> origin/master
               />
               <DifficultyLevel
                 difficultyLevel="medium"
@@ -77,9 +107,13 @@ function QuestionTypes({
                 dataQuestions={dataQuestions}
                 setDataDifficulty={setDataDifficulty}
 <<<<<<< HEAD
+<<<<<<< HEAD
                 queryData={queryMedium}
 =======
 >>>>>>> origin/main
+=======
+                queryData={queryMedium}
+>>>>>>> origin/master
               />
               <DifficultyLevel
                 difficultyLevel="hard"
@@ -87,9 +121,13 @@ function QuestionTypes({
                 dataQuestions={dataQuestions}
                 setDataDifficulty={setDataDifficulty}
 <<<<<<< HEAD
+<<<<<<< HEAD
                 queryData={queryHard}
 =======
 >>>>>>> origin/main
+=======
+                queryData={queryHard}
+>>>>>>> origin/master
               />
             </div>
           </fieldset>
@@ -107,6 +145,7 @@ function DifficultyLevel({
   setDataDifficulty,
   dataQuestions,
 <<<<<<< HEAD
+<<<<<<< HEAD
   queryData,
 }) {
 =======
@@ -114,6 +153,10 @@ function DifficultyLevel({
   const ref = useRef();
 
 >>>>>>> origin/main
+=======
+  queryData,
+}) {
+>>>>>>> origin/master
   return (
     <label htmlFor="dataEasy">
       {difficultyLevel}:
@@ -123,11 +166,15 @@ function DifficultyLevel({
         id="dataEasy"
         name="dataEasy"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
         defaultValue={
           queryData ||
           LocalStorage.data?.assessmentData?.MCQ?.difficulty[difficultyLevel] ||
           0
         }
+<<<<<<< HEAD
         onChange={(e) =>
           setDataDifficulty((prev) => {
             const obj = { ...prev };
@@ -145,28 +192,27 @@ function DifficultyLevel({
 =======
         ref={ref}
         value={dataDifficulty[difficultyLevel]}
+=======
+>>>>>>> origin/master
         onChange={(e) =>
           setDataDifficulty((prev) => {
-            let total =
-              dataDifficulty.easy +
-              dataDifficulty.medium +
-              dataDifficulty.hard -
-              dataDifficulty[difficultyLevel] +
-              Number(e.target.value);
-            let newData;
-            if (total <= dataQuestions) {
-              ref.current.style.outline = "";
-              newData = {
-                ...dataDifficulty,
-                [difficultyLevel]: Number(e.target.value),
-              };
-            } else {
-              ref.current.style.outline = "2px solid red";
-              newData = prev;
-            }
+            const obj = { ...prev };
 
+<<<<<<< HEAD
             return newData;
 >>>>>>> origin/main
+=======
+            BuilderService.assessmentService =
+              AssessmentService.updateDifficulty({
+                ...AssessmentService.getDifficulty(),
+                [difficultyLevel]: Number(e.target.value),
+              });
+
+            LocalStorage.data.assessmentData.MCQ.difficulty[difficultyLevel] =
+              Number(e.target.value);
+            obj[difficultyLevel] = Number(e.target.value);
+            return obj;
+>>>>>>> origin/master
           })
         }
       />
@@ -183,12 +229,18 @@ export function NumberOfQuestions({ dataQuestions, setDataQuestions }) {
         type="number"
         name="No.Q-secondary"
 <<<<<<< HEAD
+<<<<<<< HEAD
         defaultValue={
           LocalStorage.data?.assessmentData?.MCQ?.totalQuestions || 0
         }
 =======
         value={dataQuestions}
 >>>>>>> origin/main
+=======
+        defaultValue={
+          LocalStorage.data?.assessmentData?.MCQ?.totalQuestions || 0
+        }
+>>>>>>> origin/master
         onChange={(e) => setDataQuestions(Number(e.target.value))}
       />
     </label>

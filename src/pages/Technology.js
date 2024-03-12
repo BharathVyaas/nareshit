@@ -1,10 +1,14 @@
 import { Form } from "react-router-dom";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
 import { redirect, useLocation } from "react-router";
 import { useEffect, useState } from "react";
 
 import SelectedTechnologyV2 from "../components/technology/SelectedTechnology";
 import NatureOfAssessmentV2 from "../components/technology/NatureOfAssessment";
+<<<<<<< HEAD
 
 import axios from "axios";
 import AssessmentV2 from "../components/technology/Assessment";
@@ -69,35 +73,59 @@ import SelectedTechnology from "../components/SelectedTechnology";
 import NatureOfAssessments from "../components/NatureOfAssessments";
 import Randoms from "../components/Randoms";
 import Button from "../ui/Button";
+=======
+>>>>>>> origin/master
 
-import { AnimatePresence, motion } from "framer-motion";
-import { LocalStorage } from "../services/LocalStorage";
-import BuilderService from "../services/builder";
 import axios from "axios";
+import AssessmentV2 from "../components/technology/Assessment";
+import RandomV2 from "../components/technology/Random";
+import TechnologyNext from "../components/technology/TechnologyNext";
+import { AnimatePresence, motion } from "framer-motion";
 
-const formNames = ["proglangs", "catogaryType", "assessmentNature", "random"];
+export function TechnologyV2() {
+  /**
+   *
+   * Default Data
+   */
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const randomId = queryParams.get("randomId");
+  const natureId = queryParams.get("natureId");
+  const technologyId = queryParams.get("technologyId");
 
-function Technology() {
-  const { programmingLanguages, fetchedData } = useLoaderData();
+  const [isFormValid, setIsFormValid] = useState();
 
-  const updatedProgrammingLanguages = [
-    {
-      TechnologyID: -1,
-      TechnologyName:
-        BuilderService.technologyService._technology?.programmingLanguage,
-    },
-    ...programmingLanguages,
-  ];
-
-  const [proglang, setProgLang] = useState(
-    BuilderService.technologyService._technology?.programmingLanguage
+  const [technologyID, setTechnologyID] = useState(
+    technologyId === "null" ? -1 : technologyId || -1
+  );
+  const [assessmentID, setAssessmentID] = useState(1);
+  const [natureID, setNatureID] = useState(
+    natureId === "null" ? 1 : natureId || 1
+  );
+  const [randomID, setRandomID] = useState(
+    randomId === "null" ? 1 : randomId || 1
   );
 
+  const [errMsg, setErrMsg] = useState("");
+
   useEffect(() => {
-    setProgLang(
-      LocalStorage.programmingLanguageData?.TechnologyName ||
-        BuilderService.technologyService._technology?.programmingLanguage
+    // set Error message to be desplayed
+    if (!technologyID) {
+      setErrMsg(errMsg);
+    } else {
+      setErrMsg("");
+    }
+
+    // must be true to enable next button
+    setIsFormValid(
+      technologyID &&
+        assessmentID &&
+        natureID &&
+        randomID &&
+        technologyID !== -1 &&
+        technologyID !== "-1"
     );
+<<<<<<< HEAD
   }, []);
 
   useEffect(() => {
@@ -142,10 +170,14 @@ function Technology() {
     LocalStorage.data = BuilderService.getData();
   }, [random]);
 >>>>>>> origin/main
+=======
+  }, [technologyID, natureID, randomID, assessmentID, errMsg, setIsFormValid]);
+>>>>>>> origin/master
 
   return (
     <AnimatePresence>
       <motion.main
+<<<<<<< HEAD
 <<<<<<< HEAD
         initial={{ x: "100%" }}
         animate={{ x: 0, transition: { duration: 0.3 } }}
@@ -174,19 +206,20 @@ function Technology() {
           <TechnologyNext isFormValid={isFormValid} errMsg={errMsg} />
 =======
         initial={{ x: "100%", transition: { duration: 0.3 } }}
+=======
+        initial={{ x: "100%" }}
+>>>>>>> origin/master
         animate={{ x: 0, transition: { duration: 0.3 } }}
-        exit={{ x: "100%", transition: { duration: 0.3 } }}
-        className="bg-gray-50 min-h-[70vh]"
+        exit={{ x: "-100%", transition: { duration: 0.3 } }}
       >
-        <Form method="POST" className="p-5">
-          <SelectedTechnology
-            proglang={proglang}
-            setProgLang={setProgLang}
-            programmingLanguages={updatedProgrammingLanguages}
+        <Form method="POST" className="m-5">
+          {/**  Technology */}
+          <SelectedTechnologyV2
+            technologyID={technologyID}
+            setTechnologyID={setTechnologyID}
           />
-          <NatureOfAssessments nature={nature} setNature={setNature} />
-          <Randoms random={random} setRandom={setRandom} />
 
+<<<<<<< HEAD
           {/* <Button link="/categories/assessments" /> */}
           <div className="w-full flex mt-14">
             <button
@@ -196,12 +229,29 @@ function Technology() {
             </button>
           </div>
 >>>>>>> origin/main
+=======
+          {/* Assessment radio */}
+          <AssessmentV2
+            assessmentID={assessmentID}
+            setAssessmentID={setAssessmentID}
+          />
+
+          {/** Nature of Assessment   */}
+          <NatureOfAssessmentV2 natureID={natureID} setNatureID={setNatureID} />
+
+          {/**  Random */}
+          <RandomV2 randomID={randomID} setRandomID={setRandomID} />
+
+          {/**  Submit */}
+          <TechnologyNext isFormValid={isFormValid} errMsg={errMsg} />
+>>>>>>> origin/master
         </Form>
       </motion.main>
     </AnimatePresence>
   );
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 export async function TechnologyActionV2({ request, params }) {
   const url = new URL(request.url);
@@ -292,138 +342,95 @@ export async function TechnologyActionV2({ request, params }) {
   return redirect(redirectVar);
 =======
 export default Technology;
+=======
+export async function TechnologyActionV2({ request, params }) {
+  const url = new URL(request.url);
+>>>>>>> origin/master
 
-export async function loader() {
-  let natureId;
+  const queryTestID =
+    url.searchParams.get("TestID") === undefined ||
+    url.searchParams.get("TestID") === "undefined"
+      ? 0
+      : url.searchParams.get("TestID");
 
-  // NatureID
-  if (
-    BuilderService.technologyService._technology.natureOfAssessment ===
-    "dynamic"
-  ) {
-    natureId = 1;
-  } else if (
-    BuilderService.technologyService._technology.natureOfAssessment === "fixed"
-  ) {
-    natureId = 2;
-  } else {
-    natureId = 3;
-  }
+  const formData = await request.formData();
 
-  // RandomID
-  let randomId;
+  console.log("data", formData.get("RandomID"));
 
-  if (
-    BuilderService.technologyService._technology.assessmentNature ===
-    "completeTest"
-  ) {
-    randomId = 1;
-  }
-  if (
-    BuilderService.technologyService._technology.assessmentNature ===
-    "moduleWiseRandom"
-  ) {
-    randomId = 2;
-  }
-  if (
-    BuilderService.technologyService._technology.assessmentNature ===
-    "topicWiseRandom"
-  ) {
-    randomId = 3;
-  }
-  if (
-    BuilderService.technologyService._technology.assessmentNature === "noRandom"
-  ) {
-    randomId = 4;
-  }
+  let TestID = queryTestID || params.TestID || 0;
 
-  let resultData = await getProgLangs();
-  const result = { programmingLanguages: resultData };
+  let AssessmentID = formData.get("AssessmentID") || "1";
+  let TechnologyName = formData.get("TechnologyName") || "0";
+  let TechnologyID = formData.get("TechnologyID") || "1";
+  let NatureID = formData.get("NatureID") || "1";
+  let RandomID = formData.get("RandomID") || "1";
 
-  /* let dataData = { fetchedData: {} };
-  const data = { fetchedData: dataData };
-
-  if (BuilderService.id.listOfAssessment) {
-    data.fetchedData["TestID"] = BuilderService.id.listOfAssessment;
-    data.fetchedData["TechnologyID"] = BuilderService.id.technologyId;
-    data.fetchedData["NatureID"] = natureId;
-    data.fetchedData["RandomID"] = randomId;
-    data.fetchedData["AssessmentID"] = 0;
-    data.fetchedData["CreatedBy"] = "Admin";
-    data.fetchedData["ModifiedBy"] = "Admin";
-  }
-
-  console.log("fetch", data.fetchedData);
-
-  const res = await axios.post("https://www.nareshit.net/createEditTest", {
-    data,
+  console.log("data", {
+    TestID,
+    AssessmentID,
+    TechnologyID,
+    NatureID,
+    RandomID,
+    CreatedBy: "Admin",
+    ModifiedBy: "Admin",
   });
-  console.log("fetch", res);
 
-  return { result, data }; */
+  let res = await axios.post("https://www.nareshit.net/createEditTest", {
+    data: {
+      TestID,
+      AssessmentID,
+      TechnologyID,
+      NatureID,
+      RandomID,
+      CreatedBy: "Admin",
+      ModifiedBy: "Admin",
+    },
+  });
 
-  return result.programmingLanguages;
-}
+  console.log(
+    "url",
+    "https://www.nareshit.net/createEditTest",
+    "req",
+    {
+      TestID,
+      AssessmentID,
+      TechnologyID,
+      NatureID,
+      RandomID,
+      CreatedBy: "Admin",
+      ModifiedBy: "Admin",
+    },
+    "res",
+    res
+  );
 
-export async function action() {
-  let natureId;
+  TestID = res.data.data[0]?.TestID;
 
-  // NatureID
-  if (
-    BuilderService.technologyService._technology.natureOfAssessment ===
-    "dynamic"
-  ) {
-    natureId = 1;
-  } else if (
-    BuilderService.technologyService._technology.natureOfAssessment === "fixed"
-  ) {
-    natureId = 2;
-  } else {
-    natureId = 3;
-  }
+  // Get Data to make add Default values
+  res = await axios.post("https://www.nareshit.net/getBasicTestDetailsInfo", {
+    data: { TestID: TestID },
+  });
 
-  // RandomID
-  let randomId;
+  console.log("getBasicTestDetailsInfo response:", res);
 
-  if (
-    BuilderService.technologyService._technology.assessmentNature ===
-    "completeTest"
-  ) {
-    randomId = 1;
-  }
-  if (
-    BuilderService.technologyService._technology.assessmentNature ===
-    "moduleWiseRandom"
-  ) {
-    randomId = 2;
-  }
-  if (
-    BuilderService.technologyService._technology.assessmentNature ===
-    "topicWiseRandom"
-  ) {
-    randomId = 3;
-  }
-  if (
-    BuilderService.technologyService._technology.assessmentNature === "noRandom"
-  ) {
-    randomId = 4;
-  }
+  let TestDetailsID = res.data.data[0]?.TestDetailsID || 0;
+  let NumOfEasy = res.data.data[0]?.NumOfEasy;
+  let NumOfMedium = res.data.data[0]?.NumOfMedium;
+  let NumOfHard = res.data.data[0]?.NumOfHard;
 
-  let data = {};
-  data["TestID"] = BuilderService.id.listOfAssessment;
-  data["TechnologyID"] = BuilderService.id.technologyId;
-  data["NatureID"] = natureId;
-  data["RandomID"] = randomId;
-  data["AssessmentID"] = 0;
-  data["CreatedBy"] = "Admin";
-  data["ModifiedBy"] = "Admin";
+  console.log("req", params);
+  console.log("test", TestID);
 
   let redirectVar = "/categories/assessments";
 
-  if (data["NatureID"] === "fastTrack") redirectVar = "/questiondb/uploadTopic";
+  if (TestID) {
+    redirectVar = `/categories/assessments?edit=true&TestID=${TestID}&TestDetailsID=${TestDetailsID}&TechnologyName=${TechnologyName}&TechnologyID=${TechnologyID}&NumOfEasy=${NumOfEasy}&NumOfMedium=${NumOfMedium}&NumOfHard=${NumOfHard}`;
+  }
 
-  console.log(data);
+  if (NatureID === 3 || NatureID === "3")
+    redirectVar = "/questiondb/uploadTopic";
 
+<<<<<<< HEAD
   const res = await axios.post("https://www.nareshit.net/createEditTest", {
     data: data,
   });
@@ -434,4 +441,7 @@ export async function action() {
 
   return redirect("/categories/assessments");
 >>>>>>> origin/main
+=======
+  return redirect(redirectVar);
+>>>>>>> origin/master
 }

@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React from "react";
 import Modal from "./Modal";
 import QuestionView from "./QuestionView";
@@ -13,18 +14,24 @@ function QuestionViewHandler({ modalData, setPopup, handler, styles }) {
       styles={styles}
 =======
 import React, { useContext } from "react";
+=======
+import React from "react";
+>>>>>>> origin/master
 import Modal from "./Modal";
-import TopicsContext from "../context/topicsContext";
 import QuestionView from "./QuestionView";
 
-function QuestionViewHandler({ topicData, setTopics, setPopup, handler }) {
+function QuestionViewHandler({ modalData, setPopup, handler, styles }) {
   return (
     <Modal
-      data={topicData}
+      data={modalData}
       setter={setPopup}
       ModalParam={QuestionView}
       handler={handler}
+<<<<<<< HEAD
 >>>>>>> origin/main
+=======
+      styles={styles}
+>>>>>>> origin/master
     />
   );
 }

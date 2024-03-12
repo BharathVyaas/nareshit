@@ -1,8 +1,12 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 export class ScheduleTimeClass {
 =======
 class ScheduleTimeClass {
 >>>>>>> origin/main
+=======
+export class ScheduleTimeClass {
+>>>>>>> origin/master
   static instance;
   static getInstance() {
     if (!this.instance) this.instance = new ScheduleTimeClass();

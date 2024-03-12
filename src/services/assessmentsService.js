@@ -57,10 +57,14 @@ class MCQClass extends Composite {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export class AssessmentClass extends Composite {
 =======
 class AssessmentClass extends Composite {
 >>>>>>> origin/main
+=======
+export class AssessmentClass extends Composite {
+>>>>>>> origin/master
   static instance;
   static getInstance() {
     if (!this.instance) this.instance = new AssessmentClass();
@@ -70,6 +74,7 @@ class AssessmentClass extends Composite {
   constructor() {
     super();
     this._flag = false;
+<<<<<<< HEAD
 <<<<<<< HEAD
     this._totalQuestionCount = 0;
     this._difficulty = { easy: 0, medium: 0, hard: 0 };
@@ -87,6 +92,15 @@ class AssessmentClass extends Composite {
         totalQuestions: 10,
         difficulty: { easy: 4, medium: 3, hard: 3 },
 >>>>>>> origin/main
+=======
+    this._totalQuestionCount = 0;
+    this._difficulty = { easy: 0, medium: 0, hard: 0 };
+    this.options = {
+      MCQ: {
+        flag: true,
+        totalQuestions: 0,
+        difficulty: { easy: 0, medium: 0, hard: 0 },
+>>>>>>> origin/master
       },
     };
   }

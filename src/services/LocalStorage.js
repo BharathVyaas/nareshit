@@ -1,14 +1,20 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import BuilderService from "./builder";
 
 =======
 >>>>>>> origin/main
+=======
+import BuilderService from "./builder";
+
+>>>>>>> origin/master
 class LocalStorageClass {
   static instance;
   static getInstance() {
     if (!this.instance) this.instance = new LocalStorageClass();
     return this.instance;
   }
+<<<<<<< HEAD
 <<<<<<< HEAD
 
   #auth;
@@ -33,23 +39,29 @@ class LocalStorageClass {
   set auth(newData) {
     localStorage.setItem("auth", newData);
 =======
+=======
+
+  #auth;
+  #main;
+>>>>>>> origin/master
   constructor() {
-    this.data = undefined;
-    this.moduleData = undefined;
-    this.programmingLanguageData = undefined;
+    this.#auth = { isLoggedIn: false, type: "user | admin", userName: "dude" };
+    this.#main = {};
   }
 
-  get programmingLanguageFirstVisit() {
-    const result = localStorage.getItem("programmingLanguageFirstVisit");
-    console.log("result", result);
-    this.programmingLanguageFirstVisit = false;
-    return result;
+  /** Utility */
+
+  clear() {
+    localStorage.removeItem("main");
   }
 
-  set programmingLanguageFirstVisit(flag) {
-    localStorage.setItem("programmingLanguageFirstVisit", flag);
+  /** End Utility */
+
+  get auth() {
+    return JSON.parse(localStorage.getItem("auth"));
   }
 
+<<<<<<< HEAD
   get data() {
     const result = this.parse("data");
 
@@ -186,6 +198,10 @@ class LocalStorageClass {
     if (data) data = data.TechnologyID;
     return data;
 >>>>>>> origin/main
+=======
+  set auth(newData) {
+    localStorage.setItem("auth", newData);
+>>>>>>> origin/master
   }
 }
 

@@ -13,6 +13,7 @@ class Builder {
   }
   constructor() {
     this.id = {
+<<<<<<< HEAD
       testId: 0,
       technologyId: 0,
       testDetailsId: 0,
@@ -24,6 +25,11 @@ class Builder {
       include: 0,
       exclude: 0,
       total: 0,
+=======
+      listOfAssessment: 0,
+      technology: 0,
+      technologyId: 0,
+>>>>>>> origin/main
     };
     this.requestData = { assessments: {} };
     this.assessmentService = AssessmentService;

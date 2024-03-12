@@ -7,6 +7,7 @@ import Categories from "./pages/Categories";
 import ListOfAssessment, {
   loader as AssessmentLoader,
 } from "./pages/ListOfAssessment";
+<<<<<<< HEAD
 import { TechnologyV2, TechnologyActionV2 } from "./pages/Technology";
 import {
   AssessmentActionV2,
@@ -14,11 +15,20 @@ import {
   AssessmentsV2,
 } from "./pages/Assessments";
 import { QuestionViewV2 } from "./pages/QuestionView";
+=======
+import Technology, {
+  loader as TechnologyLoader,
+  action as TechnologyAction,
+} from "./pages/Technology";
+import Assessments, { action as AssessmentAction } from "./pages/Assessments";
+import QuestionView, { loader as QuestionLoader } from "./pages/QuestionView";
+>>>>>>> origin/main
 import ScheduleTime, {
   action as ScheduleTimeAction,
 } from "./pages/ScheduleTime";
 
 import { queryClient } from "./util/http";
+<<<<<<< HEAD
 import UploadTopic from "./pages/UploadTopic";
 import Questiondb from "./pages/Questiondb";
 import { QuestionViewProvider } from "./context/questionView";
@@ -31,12 +41,28 @@ import AdminLogin from "./components/login/AdminLogin";
 import Dashboard from "./pages/Dashboard";
 import EnrollStudent from "./pages/enrollStudent/EnrollStudent";
 import UserManagement from "./pages/userManagement/UserManagement";
+=======
+import BuilderService from "./services/builder";
+import UploadTopic from "./pages/UploadTopic";
+import Questiondb from "./pages/Questiondb";
+
+/**
+ * Initializes the Builder service.
+ *
+ * Builder Service is Necessary to run this application,
+ * initializing it in App ensure that all the user interaction is recorded.
+ */
+function initializeBuilderService() {
+  BuilderService.init();
+}
+>>>>>>> origin/main
 
 /**
  *
  * Main App component that sets up routing and provides QueryClient for React Query.
  */
 function App() {
+<<<<<<< HEAD
   // Define the routing configuration
   const appRoutes = [
     {
@@ -48,6 +74,12 @@ function App() {
       ],
     },
     { path: "/dashboard", element: <Dashboard /> },
+=======
+  initializeBuilderService();
+
+  // Define the routing configuration
+  const appRoutes = [
+>>>>>>> origin/main
     { path: "/", element: <AdminHomePage /> },
     {
       path: "questiondb",
@@ -57,7 +89,10 @@ function App() {
     {
       path: "categories",
       element: <Categories />,
+<<<<<<< HEAD
       ErrorEvent: <h1>Reload Page</h1>,
+=======
+>>>>>>> origin/main
       children: [
         {
           path: "assessmentlist",
@@ -66,6 +101,7 @@ function App() {
         },
         {
           path: "technology",
+<<<<<<< HEAD
           element: <TechnologyV2 />,
           id: "tech",
           action: TechnologyActionV2,
@@ -90,6 +126,22 @@ function App() {
           path: "questionviewfixed",
           element: <QuestionViewFixed />,
           children: [{ index: true, element: <QuestionViewFixedEasy /> }],
+=======
+          element: <Technology />,
+          id: "tech",
+          loader: TechnologyLoader,
+          action: TechnologyAction,
+        },
+        {
+          path: "assessments",
+          element: <Assessments />,
+          action: AssessmentAction,
+        },
+        {
+          path: "questionview",
+          element: <QuestionView />,
+          loader: QuestionLoader,
+>>>>>>> origin/main
         },
         {
           path: "scheduletime",
@@ -98,6 +150,7 @@ function App() {
         },
       ],
     },
+<<<<<<< HEAD
     {
       path: "user-management",
       element: <UserManagement />,
@@ -106,6 +159,8 @@ function App() {
       path: "enroll-student",
       element: <EnrollStudent />,
     },
+=======
+>>>>>>> origin/main
   ];
 
   const router = createBrowserRouter(appRoutes);

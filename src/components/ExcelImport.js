@@ -1,7 +1,15 @@
+<<<<<<< HEAD
 import React from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import TopicTxt from "../assets/TopicTxt.txt";
+=======
+/* import React from "react";
+import { useDropzone } from "react-dropzone";
+import axios from "axios";
+import TopicTxt from "../assets/TopicTxt.txt";
+import { useNavigate } from "react-router";
+>>>>>>> origin/main
 
 const REFERENCE = {
   Technology: "DotNet",
@@ -19,6 +27,11 @@ const REFERENCE = {
 };
 
 function ExcelImport() {
+<<<<<<< HEAD
+=======
+  const navigate = useNavigate();
+
+>>>>>>> origin/main
   async function convertToJson(contents) {
     const keyArr = Object.keys(REFERENCE);
     const contentsArr = contents.split("\n");
@@ -35,12 +48,22 @@ function ExcelImport() {
 
     try {
       const res = await axios.post(
+<<<<<<< HEAD
         "https://www.nareshit.net/insertQuestionData",
+=======
+        "https://www.nareshit.net/FastTrackCreateTest",
+>>>>>>> origin/main
         {
           data: resultArr,
         }
       );
       console.log("Data uploaded successfully", res);
+<<<<<<< HEAD
+=======
+      if (res.status === 200) {
+        navigate("/categories/assessmentlist");
+      }
+>>>>>>> origin/main
     } catch (err) {
       console.error("Error during POST request:", err);
     }
@@ -106,3 +129,15 @@ function ExcelImport() {
 }
 
 export default ExcelImport;
+<<<<<<< HEAD
+=======
+ */
+
+import React from "react";
+
+function ExcelImport() {
+  return <div>ExcelImport</div>;
+}
+
+export default ExcelImport;
+>>>>>>> origin/main

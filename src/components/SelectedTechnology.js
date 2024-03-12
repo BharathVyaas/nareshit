@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { LocalStorage } from "../services/LocalStorage";
 import BuilderService from "../services/builder";
 
+<<<<<<< HEAD
 function SelectedTechnology({
   proglang,
   setProgLang,
@@ -9,6 +10,9 @@ function SelectedTechnology({
   editTechnologyId,
   editedSelectProgrammingLanguage,
 }) {
+=======
+function SelectedTechnology({ proglang, setProgLang, programmingLanguages }) {
+>>>>>>> origin/main
   useEffect(() => {
     const data = programmingLanguages.find(
       (element) => element.TechnologyName === proglang
@@ -16,7 +20,11 @@ function SelectedTechnology({
 
     BuilderService.requestData.assessments.technology = data;
     LocalStorage.technology = data;
+<<<<<<< HEAD
     BuilderService.id.technologyId = data?.TechnologyID;
+=======
+    BuilderService.id.technologyId = data.TechnologyID;
+>>>>>>> origin/main
   }, [proglang]);
 
   return (
@@ -27,6 +35,7 @@ function SelectedTechnology({
           id="proglang"
           name="proglang"
           className="mx-6 w-[200px]"
+<<<<<<< HEAD
           defaultChecked={
             editedSelectProgrammingLanguage?.TechnologyName || editTechnologyId
           }
@@ -37,6 +46,11 @@ function SelectedTechnology({
           onChange={(e) => setProgLang(e.target.value)}
         >
           <option value={"Select A Technology"}>Select A Technology</option>
+=======
+          value={proglang}
+          onChange={(e) => setProgLang(e.target.value)}
+        >
+>>>>>>> origin/main
           {programmingLanguages.map(({ TechnologyID, TechnologyName }) => (
             <option key={TechnologyID} value={TechnologyName}>
               {TechnologyName}

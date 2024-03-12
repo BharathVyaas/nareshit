@@ -1,15 +1,22 @@
+<<<<<<< HEAD
 import React, { useContext, useEffect, useMemo, useState } from "react";
+=======
+import React, { useContext, useEffect, useState } from "react";
+>>>>>>> origin/main
 import AssessmentQuestionBox from "../AssessmentQuestionbox";
 import BuilderService from "../../services/builder";
 import TopicsContext from "../../context/topicsContext";
 import QuestionViewTopic from "./QuestionViewTopic";
 import { LocalStorage } from "../../services/LocalStorage";
 import QuestionView from "../../context/questionView";
+<<<<<<< HEAD
 import axios from "axios";
 import Modal from "../../ui/Modal";
 import QuestionViewFixedModal from "../../ui/QuestionViewFixedModal.js";
 import TableTotalCtx from "../../context/tableTotalCtx.js";
 import { useLocation } from "react-router";
+=======
+>>>>>>> origin/main
 
 const Titles = ["MCQ", "MCQ"];
 
@@ -19,12 +26,15 @@ function AsssessmentQuestionBoxHandler({
   questionView,
   setQuestionView,
   selectTechnology,
+<<<<<<< HEAD
   data: questionData,
   setData: setQuestionData,
   nextButtonHandler,
   setTotal,
   isValid,
   setIsValid,
+=======
+>>>>>>> origin/main
 }) {
   const [stale, setStale] = useState(parentStale);
 
@@ -76,6 +86,7 @@ function AsssessmentQuestionBoxHandler({
     (element) => (hardTotalSibling += element.hard)
   );
 
+<<<<<<< HEAD
   const easy = useMemo(() => easyTotalSibling, [easyTotalSibling]);
   const medium = useMemo(() => mediumTotalSibling, [mediumTotalSibling]);
   const hard = useMemo(() => hardTotalSibling, [hardTotalSibling]);
@@ -105,6 +116,19 @@ function AsssessmentQuestionBoxHandler({
     { title: `Easy: ${easy} / ${MCQDifficulty.easy}`, id: "fgh" },
     { title: `Medium: ${medium} / ${MCQDifficulty.medium}`, id: "ntr" },
     { title: `Hard:  ${hard} / ${MCQDifficulty.hard}`, id: "zcd" },
+=======
+  const easy = easyTotalSibling;
+  const medium = mediumTotalSibling;
+  const hard = hardTotalSibling;
+
+  const TableAttributeTitles = [
+    { title: "Module Name", id: 1 },
+    { title: "Topic Name", id: 2 },
+    { title: "Sub Topic Name", id: 3 },
+    { title: `Easy: ${easy} / ${MCQDifficulty.easy}`, id: 4 },
+    { title: `Medium: ${medium} / ${MCQDifficulty.medium}`, id: 5 },
+    { title: `Hard:  ${hard} / ${MCQDifficulty.hard}`, id: 6 },
+>>>>>>> origin/main
   ];
 
   /*******
@@ -120,6 +144,7 @@ function AsssessmentQuestionBoxHandler({
       startTime: element?.medium,
       endTime: element?.hard,
       id: element?.id,
+<<<<<<< HEAD
       element: element,
     };
   });
@@ -176,6 +201,13 @@ function AsssessmentQuestionBoxHandler({
           ModalParam={QuestionViewFixedModal}
         />
       )}
+=======
+    };
+  });
+
+  return (
+    <section className="overflow-auto container">
+>>>>>>> origin/main
       <AssessmentQuestionBox
         title={Titles[0]}
         setStale={setStale}
@@ -195,9 +227,14 @@ function AsssessmentQuestionBoxHandler({
               LocalStorage.questionView[0]?.name &&
               tableBody.map((element, index) => (
                 <TableBodyRenderer
+<<<<<<< HEAD
                   nextButtonHandler={nextButtonHandler}
                   setPopup={setPopup}
                   key={element.id}
+=======
+                  key={element.id + index}
+                  index={index}
+>>>>>>> origin/main
                   element={element}
                   setStale={setStale}
                 />
@@ -240,6 +277,7 @@ export default AsssessmentQuestionBoxHandler;
 export function TableHead({ titles }) {
   return (
     <tr className="border-[2px] border-black">
+<<<<<<< HEAD
       {titles.map(({ title, id }, index) =>
         index < 3 ? (
           <th
@@ -257,6 +295,13 @@ export function TableHead({ titles }) {
           </th>
         )
       )}
+=======
+      {titles.map(({ title, id }) => (
+        <th className="px-5 border-x-2 border-black" key={id}>
+          {title}
+        </th>
+      ))}
+>>>>>>> origin/main
     </tr>
   );
 }
@@ -267,6 +312,7 @@ export function TableHead({ titles }) {
  * @param {Object} props.element - An assessment data object.
  * @returns {JSX.Element} The TableBodyRenderer component.
  */
+<<<<<<< HEAD
 
 export function TableBodyRenderer({
   setViewModal,
@@ -341,6 +387,43 @@ export function TableBodyRenderer({
         element={element}
         combination={combination}
         setCombination={setCombination}
+=======
+export function TableBodyRenderer({ element, index, setStale }) {
+  const { testName, isActive, startDate, endDate, startTime, endTime } =
+    element;
+
+  const styles =
+    index % 2 === 0
+      ? "bg-gray-100 hover:cursor-pointer hover:bg-gray-200"
+      : "bg-white hover:cursor-pointer hover:bg-gray-300";
+
+  return (
+    <tr
+      onClick={() => console.log(element)}
+      key={element.id}
+      className={styles}
+    >
+      <Tbody data={testName} id={element.id} setStale={setStale} />
+      <Tbody data={isActive} id={element.id} setStale={setStale} />
+      <Tbody data={startDate} id={element.id} setStale={setStale} />
+      <Tbody
+        data={endDate}
+        tag="input"
+        id={element.id + " easy"}
+        setStale={setStale}
+      />
+      <Tbody
+        data={startTime}
+        tag="input"
+        id={element.id + " medium"}
+        setStale={setStale}
+      />
+      <Tbody
+        data={endTime}
+        tag="input"
+        id={element.id + " hard"}
+        setStale={setStale}
+>>>>>>> origin/main
       />
     </tr>
   );
@@ -352,6 +435,7 @@ export function TableBodyRenderer({
  * @param {string} props.data - The data to be displayed in the cell.
  * @returns {JSX.Element} The Tbody component.
  */
+<<<<<<< HEAD
 /**
  * Component for rendering table body cells.
  * @param {Object} props - The component props.
@@ -443,10 +527,63 @@ export function Tbody({
     natureID === 2
       ? "bg-transparent underline underline-offset-2 decoration-2 decoration-red-500"
       : "bg-transparent ";
+=======
+export function Tbody({ data, tag, id, setStale, ...props }) {
+  const { data: dataCtx, setData: setDataCtx } = useContext(QuestionView);
+
+  let content = (
+    <td className="md:px-5 text-center py-1 border-[1.2px]" {...props}>
+      {data}
+    </td>
+  );
+
+  const [value, setValue] = useState(data);
+
+  function handler(_data, setter, _total, id, siblings) {
+    setStale((prev) => true);
+    let data = Number(_data);
+    let evaluate;
+
+    if (id.includes("easy")) evaluate = "easy";
+    if (id.includes("medium")) evaluate = "medium";
+    if (id.includes("hard")) evaluate = "hard";
+
+    if (!evaluate)
+      throw new Error("AssessmentQuestionBoxHandler:Tbody:handler");
+
+    const max_value = _total.assessmentData.MCQ.difficulty[evaluate];
+    const current_value = 3;
+    const siblings_eval_array = [];
+    let siblings_evaluate = 0;
+
+    siblings.forEach((element) => siblings_eval_array.push(element[evaluate]));
+
+    siblings_evaluate = siblings_eval_array.reduce((e, a) => e + a, 0);
+
+    if (siblings_evaluate + data > max_value) return;
+    else {
+      const _in = LocalStorage.questionView.find((element) => {
+        return element.id + " " + evaluate === id;
+      });
+
+      _in[evaluate] = data;
+
+      const _out = LocalStorage.questionView.filter((element) => {
+        return element.id + " " + evaluate !== id;
+      });
+      LocalStorage.questionView = [_in, ..._out];
+      setDataCtx([_in, ..._out]);
+
+      setValue(data);
+    }
+  }
+
+>>>>>>> origin/main
   if (tag === "input")
     content = (
       <td
         onClick={(e) => e.stopPropagation()}
+<<<<<<< HEAD
         className="text-center border-[1.2px]"
         {...props}
       >
@@ -487,6 +624,27 @@ export function Tbody({
             -
           </button>
         </div>
+=======
+        className="md:px-5 text-center py-1 border-[1.2px]"
+        {...props}
+      >
+        <input
+          type="number"
+          className="w-10"
+          id={id}
+          value={value}
+          onChange={(e) => {
+            setStale((prev) => !prev);
+            handler(
+              e.target.value,
+              setValue,
+              LocalStorage.data,
+              id,
+              LocalStorage.questionView
+            );
+          }}
+        />
+>>>>>>> origin/main
       </td>
     );
   return content;

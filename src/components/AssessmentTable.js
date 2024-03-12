@@ -10,7 +10,11 @@ import { TableBodyRenderer, TableHead } from "../ui/table/TableUI";
  */
 function AssessmentTable({ titles, assessments, handler }) {
   return (
+<<<<<<< HEAD
     <table className="mt-3 border-[2px] max-w-[80vw] overflow-scroll border-slate-400">
+=======
+    <table className="mt-3 border-[2px] mx-auto border-slate-400">
+>>>>>>> origin/main
       <caption className="sr-only">Assessment Details</caption>
       <thead>
         <TableHead titles={titles} />

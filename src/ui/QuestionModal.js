@@ -12,8 +12,11 @@ function QuestionModal({ data: questionData, setter: setQuestionData }) {
     CorrectAnswer,
   } = questionData;
 
+<<<<<<< HEAD
   console.log(questionData);
 
+=======
+>>>>>>> origin/main
   const difficulty =
     DifficultyLevelID === 1
       ? "Easy"

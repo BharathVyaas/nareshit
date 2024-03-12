@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 export class QueryViewClass {
+=======
+class QueryViewClass {
+>>>>>>> origin/main
   static instance;
   static getInstance() {
     if (!this.instance) this.instance = new QueryViewClass();

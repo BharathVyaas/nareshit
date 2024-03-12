@@ -28,14 +28,24 @@ export function TableBodyRenderer({ element, index, handler }) {
     IsActive,
     TestStartDate,
     TestEndDate,
+<<<<<<< HEAD
     CreatedAt,
     CreatedBy,
+=======
+    TestStartTime,
+    TestEndTime,
+>>>>>>> origin/main
   } = element;
 
   const styles =
     index % 2 === 0
+<<<<<<< HEAD
       ? "bg-gray-100 hover:bg-gray-200 max-w-[80vw] overflow-scroll"
       : "bg-white hover:bg-gray-300  max-w-[80vw] overflow-scroll";
+=======
+      ? "bg-gray-100 hover:cursor-pointer hover:bg-gray-200"
+      : "bg-white hover:cursor-pointer hover:bg-gray-300";
+>>>>>>> origin/main
   const dateStart = new Date(TestStartDate);
   const dateEnd = new Date(TestEndDate);
 
@@ -86,6 +96,7 @@ export function TableBodyRenderer({ element, index, handler }) {
   if (endMinute) fullEndTime += endMinute;
 
   return (
+<<<<<<< HEAD
     <tr className={styles}>
       <Tbody
         data={TestName}
@@ -126,13 +137,22 @@ export function TableBodyRenderer({ element, index, handler }) {
 }
 
 /*  <tr onClick={() => handler(element)} key={element.id} className={styles}>
+=======
+    <tr onClick={() => handler(element)} key={element.id} className={styles}>
+>>>>>>> origin/main
       <Tbody data={TestName} />
       <Tbody data={IsActive ? 1 : 0} />
       <Tbody data={fullStartDate} />
       <Tbody data={fullEndDate} />
       <Tbody data={fullStartTime} />
       <Tbody data={fullEndTime} />
+<<<<<<< HEAD
     </tr> */
+=======
+    </tr>
+  );
+}
+>>>>>>> origin/main
 
 /**
  * Component for rendering table body cells.
@@ -141,5 +161,16 @@ export function TableBodyRenderer({ element, index, handler }) {
  * @returns {JSX.Element} The Tbody component.
  */
 export function Tbody({ data, ...props }) {
+<<<<<<< HEAD
   return <td {...props}>{data}</td>;
+=======
+  return (
+    <td
+      className="md:px-5 text-center max-w-26 h-10 overflow-clip whitespace-nowrap py-1 border-[1.2px]"
+      {...props}
+    >
+      {data}
+    </td>
+  );
+>>>>>>> origin/main
 }

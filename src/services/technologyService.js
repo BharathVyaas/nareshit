@@ -61,7 +61,11 @@ class RandomClass extends Composite {
   }
 }
 
+<<<<<<< HEAD
 export class TechnologyClass extends Composite {
+=======
+class TechnologyClass extends Composite {
+>>>>>>> origin/main
   static instance;
   static getInstance() {
     if (!this.instance) this.instance = new TechnologyClass();

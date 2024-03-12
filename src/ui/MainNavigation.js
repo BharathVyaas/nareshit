@@ -20,11 +20,18 @@ function MainNavigation() {
         <li className="">
           <NavLink
             to="technology"
+<<<<<<< HEAD
             onClick={(e) => e.preventDefault()}
             className={({ isActive }) =>
               isActive
                 ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
                 : "text-white cursor-default font-medium rounded px-6 py-3"
+=======
+            className={({ isActive }) =>
+              isActive
+                ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                : "text-white font-medium rounded px-6 py-3"
+>>>>>>> origin/main
             }
             end
           >
@@ -34,11 +41,18 @@ function MainNavigation() {
         <li className="">
           <NavLink
             to="assessments"
+<<<<<<< HEAD
             onClick={(e) => e.preventDefault()}
             className={({ isActive }) =>
               isActive
                 ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
                 : "text-white cursor-default font-medium rounded px-6 py-3"
+=======
+            className={({ isActive }) =>
+              isActive
+                ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                : "text-white font-medium rounded px-6 py-3"
+>>>>>>> origin/main
             }
             end
           >
@@ -48,11 +62,18 @@ function MainNavigation() {
         <li className="">
           <NavLink
             to="questionview"
+<<<<<<< HEAD
             onClick={(e) => e.preventDefault()}
             className={({ isActive }) =>
               isActive
                 ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
                 : "text-white cursor-default font-medium rounded px-6 py-3"
+=======
+            className={({ isActive }) =>
+              isActive
+                ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                : "text-white font-medium rounded px-6 py-3"
+>>>>>>> origin/main
             }
             end
           >
@@ -62,6 +83,7 @@ function MainNavigation() {
         <li className="">
           <NavLink
             to="scheduletime"
+<<<<<<< HEAD
             onClick={(e) => e.preventDefault()}
             className={({ isActive }) =>
               isActive
@@ -71,6 +93,16 @@ function MainNavigation() {
             end
           >
             ScheduleTime
+=======
+            className={({ isActive }) =>
+              isActive
+                ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                : "text-white font-medium rounded px-6 py-3"
+            }
+            end
+          >
+            SheduleTime
+>>>>>>> origin/main
           </NavLink>
         </li>
       </ul>

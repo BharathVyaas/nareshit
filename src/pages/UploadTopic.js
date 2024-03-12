@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useContext, useEffect } from "react";
 import ExcelImport from "../components/ExcelImport";
 import { useNavigate } from "react-router";
@@ -11,6 +12,12 @@ function UploadTopic() {
     if (!isLoggedIn) navigate("/login");
   }, []);
 
+=======
+import React from "react";
+import ExcelImport from "../components/ExcelImport";
+
+function UploadTopic() {
+>>>>>>> origin/main
   return <ExcelImport />;
 }
 

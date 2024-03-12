@@ -1,4 +1,5 @@
 import React from "react";
+<<<<<<< HEAD
 import BuilderService from "../services/builder";
 
 function NatureOfAssessments({
@@ -7,6 +8,10 @@ function NatureOfAssessments({
   editNatureId,
   setFixedDisabled,
 }) {
+=======
+
+function NatureOfAssessments({ nature, setNature }) {
+>>>>>>> origin/main
   return (
     <fieldset className="mx-4">
       <legend>Nature of Assessment:</legend>
@@ -17,6 +22,7 @@ function NatureOfAssessments({
             name="assessmentNature"
             value="dynamic"
             checked={nature === "dynamic"}
+<<<<<<< HEAD
             onChange={(e) => {
               setFixedDisabled(false);
               setNature(e.target.value);
@@ -47,6 +53,29 @@ function NatureOfAssessments({
               setFixedDisabled(false);
               setNature(e.target.value);
             }}
+=======
+            onChange={(e) => setNature(e.target.value)}
+          />
+          <span className="p-2">Dynamic</span>
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="assessmentNature"
+            checked={nature === "fixed"}
+            value="fixed"
+            onChange={(e) => setNature(e.target.value)}
+          />
+          <span className="p-2">Fixed</span>
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="assessmentNature"
+            checked={nature === "fastTrack"}
+            value="fastTrack"
+            onChange={(e) => setNature(e.target.value)}
+>>>>>>> origin/main
           />
           <span className="p-2">Fast Track</span>
         </label>

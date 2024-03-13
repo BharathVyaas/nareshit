@@ -35,7 +35,11 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
+<<<<<<< HEAD
     "start": "set PORT=3012 && react-scripts start",
+=======
+    "start": "set PORT=3002 && react-scripts start",
+>>>>>>> origin/conflit
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

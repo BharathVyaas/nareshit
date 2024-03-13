@@ -242,6 +242,7 @@ export function QuestionViewV2() {
   };
 
   // type if we include new question type refers to the modal difficulty type
+<<<<<<< HEAD
   const handler = (resultObj, type, id, setDataFlag, countFromModal) => {
     console.log("combination", combination);
     console.log("resultObj", resultObj);
@@ -251,6 +252,13 @@ export function QuestionViewV2() {
       setTableTotal(typeof countFromModal === 'object' ? countFromModal : {easy: 0, medium : 0, hard: 0})
     }
     
+=======
+  const handler = (resultObj, type, id, setDataFlag) => {
+    console.log("combination", combination);
+    console.log("resultObj", resultObj);
+    console.log("type", type);
+
+>>>>>>> origin/conflit
     // user have selected same combination in create tamplate
     if(setDataFlag){
       setCombination((prev) => {
@@ -310,11 +318,22 @@ export function QuestionViewV2() {
 
   const [tableTotal, setTableTotal] = useState({ easy: 0, medium: 0, hard: 0 });
 
+<<<<<<< HEAD
+=======
+  console.log(tableTotal, tableTotal.easy , queryEasy ,
+    tableTotal.medium , queryMedium ,
+    tableTotal.hard , queryHard)
+
+>>>>>>> origin/conflit
   useEffect(() => {
     if (combination) {
       Object.values(combination).forEach((ele) => {
         // if Nature is not dynamic
+<<<<<<< HEAD
         /* if (natureID === 2 || natureID === "2") {
+=======
+        if (natureID === 2 || natureID === "2") {
+>>>>>>> origin/conflit
           for (let key in ele.includes) {
             const value = ele.includes[key];
 
@@ -327,7 +346,11 @@ export function QuestionViewV2() {
             if (key === "hard") {
               setTableTotal({easy: queryEasy, medium: queryMedium, hard: queryHard})}
           }
+<<<<<<< HEAD
         } */
+=======
+        }
+>>>>>>> origin/conflit
         if (natureID === 1 || natureID === "1") {
           let totalTableEasy = 0;
           let totalTableMedium = 0;
@@ -353,11 +376,19 @@ export function QuestionViewV2() {
     }
   }, [combination, natureID]);
 
+<<<<<<< HEAD
 console.log(tableTotal.easy >= queryEasy ,
   tableTotal.medium >= queryMedium ,
   tableTotal.hard >= queryHard, tableTotal.easy, queryEasy, queryEasy, queryMedium, queryHard, tableTotal.easy,
   tableTotal.medium,
   tableTotal.hard, tableTotal)
+=======
+/* console.log(tableTotal.easy >= queryEasy ,
+  tableTotal.medium >= queryMedium ,
+  tableTotal.hard >= queryHard, tableTotal.easy, queryEasy, queryEasy, queryMedium, queryHard, tableTotal.easy,
+  tableTotal.medium,
+  tableTotal.hard) */
+>>>>>>> origin/conflit
   
   return (
     <AnimatePresence>
@@ -409,9 +440,15 @@ console.log(tableTotal.easy >= queryEasy ,
             combination={combination}
             natureID={natureID}
             isTableTotalValid={
+<<<<<<< HEAD
               tableTotal.easy >= queryEasy &&
               tableTotal.medium >= queryMedium &&
               tableTotal.hard >= queryHard
+=======
+              /* tableTotal.easy >= queryEasy &&
+              tableTotal.medium >= queryMedium &&
+              tableTotal.hard >= queryHard */true
+>>>>>>> origin/conflit
             }
           />
         </div>

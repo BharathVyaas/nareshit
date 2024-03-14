@@ -5,7 +5,7 @@ const initialState = {
   isLoading: false,
   // if refetching current data is stale
   stale: false,
-  // true if if data is loading and if rejucted
+  // true if if data is loading and if rejected
   isPending: false,
   // holds data returned by response
   data: {},
@@ -19,7 +19,7 @@ const initialState = {
   isError: false,
   // holds error object
   error: false,
-  // state is resolved | rejucted
+  // state is resolved | rejected
   state: "resolved",
 };
 
@@ -59,18 +59,10 @@ function getSlice(name) {
         state.statusText = action.payload.statusText || "";
         state.isSuccess = false;
         state.isLoading = false;
-        state.state = "rejucted";
+        state.state = "rejected";
       },
     },
   });
 }
 
-<<<<<<< HEAD
 export default getSlice;
-=======
-<<<<<<< HEAD
-export default getSlice;
-=======
-export default getSlice;
->>>>>>> a30fca1893a425daee4853497f0f827b3ceead45
->>>>>>> origin/master

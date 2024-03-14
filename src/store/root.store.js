@@ -28,12 +28,4 @@ function* rootSaga() {
 
 sagaMiddleware.run(rootSaga);
 
-<<<<<<< HEAD
 export default store;
-=======
-<<<<<<< HEAD
-export default store;
-=======
-export default store;
->>>>>>> a30fca1893a425daee4853497f0f827b3ceead45
->>>>>>> origin/master

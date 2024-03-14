@@ -91,10 +91,6 @@ function getTotal(data) {
 }
 
 function QuestionViewEditModal({ data, handler, setter }) {
-<<<<<<< HEAD
-=======
-  console.log("data", data);
->>>>>>> origin/conflit
   // max total values
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -148,11 +144,7 @@ function QuestionViewEditModal({ data, handler, setter }) {
     if (Number(maxEasyCount) === 0) setCorrectEasy(0);
     else {
       setCorrectEasy(
-<<<<<<< HEAD
         maxEasyCount > availableEasyTotal ? queryEasy - easyTotal : maxEasyCount
-=======
-        maxEasyCount >= availableEasyTotal ? queryEasy - easyTotal : maxEasyCount
->>>>>>> origin/conflit
       );
     }
   }, [maxCount, easyTotal, queryEasy]);
@@ -167,15 +159,9 @@ function QuestionViewEditModal({ data, handler, setter }) {
       setCorrectMedium(0);
     } else {
       setCorrectMedium(
-<<<<<<< HEAD
         maxMediumCount > availableMediumTotal
           ? queryMedium - mediumTotal
           : availableMediumTotal
-=======
-        maxMediumCount >= availableMediumTotal
-          ? queryMedium - mediumTotal
-          : maxMediumCount
->>>>>>> origin/conflit
       );
     }
   }, [maxCount, mediumTotal, queryMedium]);
@@ -190,15 +176,9 @@ function QuestionViewEditModal({ data, handler, setter }) {
       setCurrentHard(0);
     } else {
       setCurrentHard(
-<<<<<<< HEAD
         maxHardCount > availableHardTotal
           ? queryHard - hardTotal
           : availableHardTotal
-=======
-        maxHardCount >= availableHardTotal
-          ? queryHard - hardTotal
-          : maxHardCount
->>>>>>> origin/conflit
       );
     }
   }, [maxCount, hardTotal, queryHard]);
@@ -328,13 +308,6 @@ function QuestionViewEditModal({ data, handler, setter }) {
             return obj;
           };
 
-<<<<<<< HEAD
-=======
-          console.log(
-            "updatedCombination",
-            updatedCombination(data.combination)
-          );
->>>>>>> origin/conflit
 
           const postCombinations = async () => {
             const res = await axios.post(

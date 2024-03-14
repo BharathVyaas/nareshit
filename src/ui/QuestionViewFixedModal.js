@@ -1,9 +1,5 @@
 import axios from "axios";
-<<<<<<< HEAD
 import React, { useEffect, useState, useCallback } from "react";
-=======
-import React, { useEffect, useState } from "react";
->>>>>>> origin/conflit
 import { Questions } from "../pages/QuestionView";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "react-router";
@@ -251,10 +247,6 @@ function QuestionViewFixedModalBody({
   });
 
   useEffect(() => {
-<<<<<<< HEAD
-=======
-    console.log(getURL(type, currentCombination));
->>>>>>> origin/conflit
     axios.get(getURL(type, currentCombination)).then((res) => {
       console.log("res", res);
       setQuestions(res.data);
@@ -299,7 +291,6 @@ function QuestionViewFixedModalFooter({
   const technologyName = queryParams.get("TechnologyName");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-<<<<<<< HEAD
   const [natureId, setNatureId] = useState(0)
   
   const fetchNatureID = useCallback(
@@ -315,8 +306,6 @@ function QuestionViewFixedModalFooter({
   useEffect(() => {
     fetchNatureID()
   }, [natureId])
-=======
->>>>>>> origin/conflit
 
   const submitHandler = async () => {
     if (isSubmitting) return;
@@ -373,7 +362,6 @@ function QuestionViewFixedModalFooter({
       res
     );
 
-<<<<<<< HEAD
     const key = Object.keys(includes)[0]
     const obj = includes[key]
 
@@ -387,9 +375,6 @@ function QuestionViewFixedModalFooter({
       return { easy: ele?.includes?.easy?.count || 0, medium: ele?.includes?.medium?.count || 0, hard: ele?.includes?.hard?.count || 0 };
   }));
   handler(includes, data.type, undefined,undefined, Object.values(data.combination).map(ele => { return {easy: ele?.includes?.easy?.count || 0, medium: ele?.includes?.medium?.count || 0, hard: ele?.includes?.hard?.count || 0}}).reduce((ele, acc) => {return {easy: ele.easy + acc.easy, medium: ele.medium + acc.medium, hard: ele.hard + acc.hard }}, {easy:0,medium:0, hard:0}));
-=======
-    handler(includes, data.type);
->>>>>>> origin/conflit
     setter(false);
   };
 

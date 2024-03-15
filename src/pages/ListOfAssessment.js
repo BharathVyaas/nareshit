@@ -1,118 +1,87 @@
-import DataHandler from "../util/fetchHandler";
-import { NavLink, useLoaderData, useNavigate } from "react-router-dom";
-import { getAllAssessments } from "../util/http";
-import AssessmentTable from "../components/AssessmentTable";
+import React, { useEffect, useState } from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
-import { LocalStorage } from "../services/LocalStorage";
-import AuthCtx from "../context/auth.context";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
+
+import { useDispatch, useSelector } from "react-redux";
+import { AgGridReact } from "ag-grid-react";
+import { Button } from "@mui/material";
+
+import { fetchAssessmentList } from "../store/root.actions";
+import useGridReady from "../hooks/ListOfAssessments/useGridReady";
 
 /**
- * Component for displaying a list of assessments created by other users.
- * @returns {JSX.Element} The ListOfAssessment component.
+ * Component to display a list of assessments.
+ * @returns JSX.Element
  */
 function ListOfAssessment() {
-  const navigate = useNavigate();
-  const { isLoggedIn } = useContext(AuthCtx);
+  const dispatch = useDispatch();
+  const [rowData, setRowData] = useState([]);
+  const { onGridReady } = useGridReady();
+  const assessmentList = useSelector(
+    (store) => store.listOfAssessmentPageReducer
+  );
 
   useEffect(() => {
-    if (!isLoggedIn) navigate("/login?page=categories/assessmentlist");
-  }, [isLoggedIn, navigate]);
+    dispatch(fetchAssessmentList());
+  }, [dispatch]);
 
-  const [titleData, setTitleData] = useState([]);
-  const { data } = useQuery({
-    queryKey: ["listofAssessment"],
-    queryFn: getAllAssessments,
-    staleTime: Infinity,
-    gcTime: Infinity,
-  });
-
+  /**
+   * Effect to format assessment list data when it changes.
+   */
   useEffect(() => {
-    setTitleData(data);
-  }, [data]);
+    if (assessmentList.data.length > 0) {
+      const formattedData = formatAssessmentList(assessmentList.data);
+      setRowData(formattedData);
+    }
+  }, [assessmentList]);
 
-  // Get table titles from DataHandler
-  const titles = DataHandler.getTitles();
-
-  // Fetch assessments using react-query's useLoaderData
-  const { assessments } = useLoaderData();
-
-  function createNewHandler(e) {
-    LocalStorage.clear();
-
-    navigate("/categories/technology");
-  }
-
-  async function handler(data) {
-    const res = await axios.post("https://www.nareshit.net/getBasicTestInfo", {
-      data: { TestID: data.TestID },
-    });
-    console.log(
-      "data",
-      data.TestID,
-      "url",
-      "https://www.nareshit.net/getBasicTestInfo",
-      "create",
-      res
-    );
-
-    navigate(
-      `/categories/technology?edit=true&TestID=${res.data.data[0]?.TestID}&randomId=${res.data.data[0]?.RandomID}&natureId=${res.data.data[0]?.NatureID}&technologyId=${res.data.data[0]?.TechnologyID}`
-    );
-
-    if (res) setTitleData({ assessments: res.data });
-  }
-
-  useEffect(() => {
-    setTitleData(assessments);
-  }, [titleData, assessments]);
+  /**
+   * Function to format assessment list data.
+   * @param {Array} list - List of assessments
+   * @returns {Array} Formatted list of assessments
+   */
+  const formatAssessmentList = (list) => {
+    return list.map((assessment) => ({
+      TestName: assessment.TestName,
+      IsActive: assessment.IsActive,
+      // Making sure that date column is filled
+      StartDate: assessment.TestStartDate
+        ? new Date(assessment.TestStartDate)
+        : "Not Added",
+      EndDate: assessment.TestEndDate
+        ? new Date(assessment.TestEndDate)
+        : "Not Added",
+      StartTime: assessment.TestStartTime
+        ? new Date(assessment.TestStartTime)
+        : "Not Added",
+      EndTime: assessment.TestEndTime
+        ? new Date(assessment.TestEndTime)
+        : "Not Added",
+      CreatedBy: assessment.CreatedBy,
+      CreatedAt: new Date(assessment.CreatedAt),
+    }));
+  };
 
   return (
-    <AnimatePresence>
-      <motion.main
-        initial={{ x: "100%" }}
-        animate={{ x: 0, transition: { duration: 0.3 } }}
-        exit={{ x: "-100%", transition: { duration: 0.3 } }}
-        className="container bg-slate-100 min-h-[70vh] min-w-[80vw]  overflow-scroll py-[20px] shadow-xl mx-auto my-[20px]"
+    <div className="container mx-auto my-8">
+      {/**  to create new Assessment. */}
+      <Button variant="contained" className="mb-4">
+        Create New
+      </Button>
+      {/**  List of Assessments */}
+      <div
+        className="ag-theme-alpine"
+        style={{ height: "500px", width: "100%", margin: "1rem auto" }}
       >
-        <section className="flex align-middle">
-          {/* Hidden heading for accessibility and SEO */}
-          <h1 className="absolute left-[-9999px]">Assessments</h1>
-
-          {/* NavLink for creating a new assessment */}
-          <div className="flex flex-col mx-auto">
-            <NavLink
-              className="inline-block max-w-40 text-center mt-3 px-[10px] py-[1px] font-medium rounded bg-[buttonface] hover:bg-gray-300 border-[1px] border-black"
-              to="/categories/technology"
-              onClick={createNewHandler}
-            >
-              Create New
-            </NavLink>
-            {/* Render the AssessmentTable component */}
-            <AssessmentTable
-              titles={titles}
-              assessments={assessments}
-              handler={handler}
-            />
-          </div>
-        </section>
-      </motion.main>
-    </AnimatePresence>
+        {rowData.length > 0 ? (
+          <AgGridReact onGridReady={onGridReady} rowData={rowData} />
+        ) : (
+          <div>Loading...</div>
+        )}
+      </div>
+    </div>
   );
 }
 
 export default ListOfAssessment;
-
-/**
- * Loader function to fetch all assessments.
- * @returns {Promise} A promise that resolves to the fetched assessment data.
- */
-export async function loader() {
-  // Fetch assessments with specific stale time and garbage collection time
-  const result = await getAllAssessments();
-
-  return result;
-}

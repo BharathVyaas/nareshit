@@ -1,20 +1,28 @@
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 import React from "react";
 
 function Assessment() {
   return (
-    <div className="flex flex-col mb-4">
-      <label htmlFor="catogaryType" className="mt-4 ml-4">
-        <input
-          id="catogaryType"
-          type="radio"
-          checked
-          disabled
-          name="AssessmentID"
+    <FormControl>
+      <FormLabel id="demo-row-radio-buttons-group-label"></FormLabel>
+      <RadioGroup
+        row
+        aria-labelledby="demo-row-radio-buttons-group-label"
+        name="Assessment"
+      >
+        <FormControlLabel
           value="1"
+          disabled
+          checked
+          control={<Radio />}
+          label="Assessment"
         />
-        <span className="p-2">Assessment</span>
-      </label>
-    </div>
+      </RadioGroup>
+    </FormControl>
   );
 }
 

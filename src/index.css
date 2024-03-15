@@ -77,4 +77,17 @@
   .disabled {
     background-color: rgb(252 165 165) !important;
   }
+
+  .ag-header-cell-custom {
+    font-size: 1rem;
+    background-color: #f0f0f0;
+  }
+
+  .ag-theme-alpine .ag-cell {
+    transition: background-color 0.3s ease;
+  }
+
+  .ag-theme-alpine .ag-row:hover {
+    background-color: #f0f0f0;
+  }
 }

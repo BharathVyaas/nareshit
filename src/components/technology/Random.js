@@ -1,46 +1,51 @@
-import React from "react";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { userSelectionAction } from "../../store/root.actions";
 
-function RandomV2({ randomID, setRandomID }) {
-  const changeHandler = (e) => setRandomID(e.target.value);
+function Random() {
+  const dispatch = useDispatch();
+  const technologyPageDetails = useSelector(
+    (store) => store.technologyPageReducer
+  );
+  const [selectedRandom, setSelectedRandom] = useState("1");
+
+  useEffect(() => {
+    setSelectedRandom(String(technologyPageDetails.data?.RandomID));
+  }, [technologyPageDetails.data?.RandomID]);
+
+  useEffect(() => {
+    dispatch(userSelectionAction.setRandom(selectedRandom));
+  }, [selectedRandom]);
+
+  const onSelectionChange = (e) => {
+    setSelectedRandom(e.target.value);
+  };
 
   return (
-    <div className="mx-4">
-      <legend>Random:</legend>
-      <div className="mt-2">
-        <label className="p-5">
-          <input
-            type="radio"
-            name="RandomID"
-            value="1"
-            onChange={changeHandler}
-            defaultChecked={Number(randomID) === 1 || randomID === 1}
-          />
-          <span className="ps-2">Complete Test</span>
-        </label>
-        <label className="p-5">
-          <input
-            type="radio"
-            name="RandomID"
-            value="2"
-            onChange={changeHandler}
-            defaultChecked={Number(randomID) === 2 || randomID === 2}
-          />
-          <span className="ps-2">Module Wise Random</span>
-        </label>
-
-        <label className="p-5">
-          <input
-            type="radio"
-            name="RandomID"
-            value="3"
-            onChange={changeHandler}
-            defaultChecked={Number(randomID) === 3 || randomID === 3}
-          />
-          <span className="ps-2">No Random</span>
-        </label>
-      </div>
-    </div>
+    <FormControl>
+      <FormLabel id="demo-row-radio-buttons-group-label">Random</FormLabel>
+      <RadioGroup
+        row
+        aria-labelledby="demo-row-radio-buttons-group-label"
+        name="row-radio-buttons-group"
+        value={selectedRandom}
+        onChange={onSelectionChange}
+      >
+        <FormControlLabel value="1" control={<Radio />} label="Complete Test" />
+        <FormControlLabel
+          value="2"
+          control={<Radio />}
+          label="Module Wise Random"
+        />
+        <FormControlLabel value="3" control={<Radio />} label="No Random" />
+      </RadioGroup>
+    </FormControl>
   );
 }
 
-export default RandomV2;
+export default Random;

@@ -9,6 +9,8 @@ export const types = {
   QUESTION_LIST: "questionlist",
   // Enroll-Student
   TEST_LIST: "listoftests",
+  BATCH_LIST: "listofbatches",
+  STUDENT_LIST: "listofstudent",
 
   // PAGES
 
@@ -25,6 +27,7 @@ export const types = {
   AVAILABLEDBQUESTIONCOUNT: "availabledbquestioncount",
 };
 
+// LISTS
 export const fetchAssessmentList = () => {
   return {
     type: types.LISTOFASSESSMENT_PAGE,
@@ -54,6 +57,27 @@ export const fetchTopicList = (payload) => {
 export const fetchSubTopicList = (payload) => {
   return {
     type: types.SUBTOPIC_LIST,
+    payload,
+  };
+};
+
+export const fetchTestList = (payload) => {
+  return {
+    type: types.TEST_LIST,
+    payload,
+  };
+};
+
+export const fetchBatchList = (payload) => {
+  return {
+    type: types.BATCH_LIST,
+    payload,
+  };
+};
+
+export const fetchStudentList = (payload) => {
+  return {
+    type: types.STUDENT_LIST,
     payload,
   };
 };

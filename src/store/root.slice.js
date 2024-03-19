@@ -13,7 +13,9 @@ const questionListSlice = getSlice(types.QUESTION_LIST);
 {
   /* Enroll-Student */
 }
-const testsListSlice = getSlice(types.TEST_LIST);
+const testListSlice = getSlice(types.TEST_LIST);
+const batchListSlice = getSlice(types.BATCH_LIST);
+const studentListSlice = getSlice(types.STUDENT_LIST);
 
 // LOADERS
 {
@@ -33,7 +35,9 @@ export {
   topicsListSlice,
   subTopicsListSlice,
   questionListSlice,
-  testsListSlice,
+  testListSlice,
+  batchListSlice,
+  studentListSlice,
 };
 export {
   listOfAssessmentPageSlice,

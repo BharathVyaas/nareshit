@@ -3,6 +3,13 @@ import TechnologySelector from "../../components/enrollStudent/TechnologySelecto
 import TestTable from "../../components/enrollStudent/TestTable/TestTable";
 import axios from "axios";
 import EnrollStudentNavigation from "../../ui/EnrollStudent/EnrollStudentNavigation";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchBatchList,
+  fetchStudentList,
+  fetchTestList,
+} from "../../store/root.actions";
+import { AgGridReact } from "ag-grid-react";
 
 const fetchTestTableHandler = async (technologyId, moduleId, setter) => {
   try {
@@ -23,6 +30,15 @@ function EnrollStudent() {
   const [selectedTechnology, setSelectedTechnology] = useState(0);
   const [selectedModule, setSelectedModule] = useState(0);
   const [testData, setTestData] = useState([]);
+
+  const store = useSelector((store) => store);
+
+  console.log(store);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchStudentList(1));
+  }, []);
 
   return (
     <>

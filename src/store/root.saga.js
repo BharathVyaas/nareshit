@@ -2,14 +2,16 @@ import { put, call, takeLatest } from "redux-saga/effects";
 import {
   assessmentPageSlice,
   availableDBQuestionCountSlice,
+  batchListSlice,
   listOfAssessmentPageSlice,
   modulesListSlice,
   questionListSlice,
   schedulePageSlice,
+  studentListSlice,
   subTopicsListSlice,
   technologiesListSlice,
   technologyPageSlice,
-  testsListSlice,
+  testListSlice,
   topicsListSlice,
 } from "./root.slice";
 import axios from "axios";
@@ -146,24 +148,125 @@ function* questionSaga(action) {
 }
 
 function* testListSaga(action) {
+  console.log(action);
   try {
-    yield put(testsListSlice.actions.fetchStart());
+    yield put(testListSlice.actions.fetchStart());
     const response = yield call(
       axios.post,
       "https://www.nareshit.net/Listof_AvailableTests",
-      { data: { TestID: action.payload } }
+      {
+        TechnologyId: action.payload.technologyId,
+        ModuleId: action.payload.moduleId,
+      }
     );
-    console.log("res", response);
+
+    // Log
+    console.log(
+      "url",
+      "https://www.nareshit.net/Listof_AvailableTests",
+      "req",
+      {
+        TechnologyId: action.payload.technologyId,
+        ModuleId: action.payload.moduleId,
+      },
+      "res",
+      response
+    );
+
     yield put(
-      testsListSlice.actions.fetchSuccess({
-        data: response.data.data[0],
+      testListSlice.actions.fetchSuccess({
+        data: response.data.dbresult,
         statusCode: response.status,
       })
     );
   } catch (error) {
     console.error(error);
     yield put(
-      testsListSlice.actions.fetchFailure({
+      testListSlice.actions.fetchFailure({
+        error,
+        statusCode: error.response.status,
+        statusText: error.message,
+      })
+    );
+  }
+}
+
+function* batchListSaga(action) {
+  console.log(action);
+  try {
+    yield put(batchListSlice.actions.fetchStart());
+    const response = yield call(
+      axios.post,
+      "https://www.nareshit.net/GetBatchesByTestId",
+      {
+        TestId: action.payload,
+      }
+    );
+
+    // Log
+    console.log(
+      "url",
+      "https://www.nareshit.net/GetBatchesByTestId",
+      "req",
+      {
+        TestId: action.payload,
+      },
+      "res",
+      response
+    );
+
+    yield put(
+      batchListSlice.actions.fetchSuccess({
+        data: response.data.dbresult,
+        statusCode: response.status,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    yield put(
+      batchListSlice.actions.fetchFailure({
+        error,
+        statusCode: error.response.status,
+        statusText: error.message,
+      })
+    );
+  }
+}
+
+function* studentListSaga(action) {
+  console.log(action);
+  try {
+    yield put(studentListSlice.actions.fetchStart());
+    const response = yield call(
+      axios.post,
+      "https://www.nareshit.net/GetStudentNameByBatchId",
+      {
+        BatchId: action.payload,
+      }
+    );
+
+    // Log
+    console.log(
+      "url",
+      "https://www.nareshit.net/GetStudentNameByBatchId",
+      "req",
+      {
+        BatchId: action.payload,
+      },
+      "res",
+      response
+    );
+
+    yield put(
+      studentListSlice.actions.fetchSuccess({
+        data: response.data.dbresult,
+        statusCode: response.status,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    yield put(
+      studentListSlice.actions.fetchFailure({
         error,
         statusCode: error.response.status,
         statusText: error.message,
@@ -314,6 +417,7 @@ function* availableDBQuestionCount(action) {
 // ADMIN
 
 function* adminWatcher() {
+  // LISTS
   {
     /* Assessment-View*/
   }
@@ -325,7 +429,9 @@ function* adminWatcher() {
   {
     /* Enroll-Student */
   }
-  yield takeLatest(types.TEST_LIST);
+  yield takeLatest(types.TEST_LIST, testListSaga);
+  yield takeLatest(types.BATCH_LIST, batchListSaga);
+  yield takeLatest(types.STUDENT_LIST, studentListSaga);
 
   // PAGES
   yield takeLatest(types.LISTOFASSESSMENT_PAGE, listOfAssessmentPageSaga);

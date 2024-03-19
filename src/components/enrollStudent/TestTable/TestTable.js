@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 function TestTable({ testData }) {
   return (
     <div>
-      <div className="max-h-[600px] overflow-y-auto w-4/6 mx-auto border-collapse border border-gray-300">
+      <div className="max-h-[60vh] overflow-y-auto w-4/6 mx-auto border-collapse border border-gray-300">
         <table className="w-full">
           <Thead />
           <Tbody testData={testData} />
@@ -46,7 +46,7 @@ function Td({ test }) {
     <tr className="border-b border-gray-300 hover:bg-gray-50">
       <td className="py-3 px-4">
         <NavLink
-          className="text-blue-500 hover:text-blue-600 underline"
+          className="text-blue-500 hover:text-blue-600 underline underline-offset-[3px]"
           to={`/enroll-student/batch-selection/${test.TestID}`}
         >
           {test.TestID}

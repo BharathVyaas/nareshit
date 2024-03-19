@@ -34,7 +34,7 @@ function BatchTablePage() {
         <EnrollStudentNavigation />
       </header>
 
-      <section className="text-black mt-5">
+      <main className="text-black mt-8">
         <div>
           <BatchTable batchData={batchData} />
         </div>
@@ -45,10 +45,10 @@ function BatchTablePage() {
             </Button>
           </span>
         </div>
-      </section>
+      </main>
 
       {/*  */}
-      <footer className="grid place-content-center p-6 w-full max-w-full overflow-hidden absolute bottom-0">
+      <footer className="grid place-content-center p-6 w-full max-w-full overflow-hidden fixed bottom-0">
         © 2023 Naresh i Technologies | Software Training - Online | All Rights
         Reserved.
       </footer>

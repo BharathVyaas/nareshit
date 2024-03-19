@@ -33,6 +33,7 @@ import EnrollStudent from "./pages/enrollStudent/EnrollStudent";
 import UserManagement from "./pages/userManagement/UserManagement";
 import BatchTablePage from "./pages/enrollStudent/BatchTablePage";
 import StudentSelectionPage from "./pages/enrollStudent/StudentSelectionPage";
+import ListOfTests from "./pages/enrollStudent/ListOfTests";
 
 /**
  *
@@ -118,6 +119,10 @@ function App() {
         {
           index: true,
           element: <EnrollStudent />,
+        },
+        {
+          path: "tests",
+          element: <ListOfTests />,
         },
         {
           path: "batch-selection/:testId",

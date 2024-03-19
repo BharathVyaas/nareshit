@@ -32,7 +32,14 @@ const initialTechnologyData = {
   moduleId: 0,
 };
 
-function TechnologySelector({setter, fetchHandler,selectedTechnology, selectedModule, setSelectedTechnology, setSelectedModule}) {
+function TechnologySelector({
+  setter,
+  fetchHandler,
+  selectedTechnology,
+  selectedModule,
+  setSelectedTechnology,
+  setSelectedModule,
+}) {
   // techonlogyData doesn't only contains TechnologyDropDown it contains all data related to DropDowns Sections
   const [technologyData, dispatcher] = useReducer(
     technologyDataReducer,
@@ -47,10 +54,19 @@ function TechnologySelector({setter, fetchHandler,selectedTechnology, selectedMo
         setSelectedTechnology={setSelectedTechnology}
       />
 
-      <ModuleDropDown technologyData={technologyData} dispatcher={dispatcher} setSelectedModule={setSelectedModule} />
+      <ModuleDropDown
+        technologyData={technologyData}
+        dispatcher={dispatcher}
+        setSelectedModule={setSelectedModule}
+      />
 
-      
-      <Button variant="contained" sx={{width: '8rem'}} onClick={() => fetchHandler(selectedTechnology, selectedModule, setter)}>Fetch</Button>
+      <Button
+        variant="contained"
+        sx={{ width: "8rem" }}
+        onClick={() => fetchHandler(selectedTechnology, selectedModule, setter)}
+      >
+        Show Tests
+      </Button>
     </div>
   );
 }

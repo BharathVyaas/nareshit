@@ -1,57 +1,69 @@
 import { Button } from "@mui/material";
-import Naresh_IT_Logo from "../../assets/Naresh_IT_Logo.png";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import Logo from "../Logo";
+import { NavLink } from "react-router-dom";
 
 function EnrollStudentNavigation() {
   return (
-    <header className="py-3 bg-[gray]">
-      <nav className="container mx-auto flex justify-between items-center">
-        <div>
-          <img
-            src={Naresh_IT_Logo}
-            alt="Naresh IT Logo"
-            height="30"
-            width="150"
-          />
-        </div>
-        <ul className="flex space-x-4">
-          {/*<li>
-                <a className="font-medium rounded text-white">
-                  <Button sx={{ color: "white" }} variant="text">
-                    Test Creation
-                  </Button>
-                </a>
-              </li>
-              <li>
-                <a className="font-medium rounded text-white">
-                  <Button sx={{ color: "white" }} variant="text">
-                    QuestionDB
-                  </Button>
-                </a>
-              </li>
-              <li>
-                <a className="font-medium rounded text-white">
-                  <Button sx={{ color: "white" }} variant="text">
-                    User Management
-                  </Button>
-                </a>
-              </li>*/}
-          <li>
-            <a className="bg-gray-500 font-medium rounded text-white">
-              <Button
-                sx={{ color: "white" }}
-                variant="contained"
-                color="secondary"
+    <header className="">
+      <Logo />
+      <div className="bg-[gray]">
+        <nav className="bg-[gray] p-[10px]">
+          <ul className="flex justify-center h-10 items-center">
+            <li className="">
+              <NavLink
+                to="/enroll-student"
+                className={({ isActive }) =>
+                  isActive
+                    ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                    : "text-white font-medium rounded px-6 py-3"
+                }
+                end
               >
-                Enroll Student
-              </Button>
-            </a>
-          </li>
-          <li className="">
-            <AccountCircleOutlinedIcon fontSize="large" />
-          </li>
-        </ul>
-      </nav>
+                Student Enrollment
+              </NavLink>
+            </li>
+            <li className="">
+              <NavLink
+                to="/enroll-student/tests"
+                className={({ isActive }) =>
+                  isActive
+                    ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                    : "text-white cursor-default font-medium rounded px-6 py-3"
+                }
+                end
+              >
+                List Of Tests
+              </NavLink>
+            </li>
+            <li className="">
+              <NavLink
+                to="/enroll-student/batch-selection"
+                onClick={(e) => e.preventDefault()}
+                className={({ isActive }) =>
+                  isActive
+                    ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                    : "text-white cursor-default font-medium rounded px-6 py-3"
+                }
+              >
+                Batch Selection
+              </NavLink>
+            </li>
+            <li className="">
+              <NavLink
+                to="/enroll-student/student-selection"
+                onClick={(e) => e.preventDefault()}
+                className={({ isActive }) =>
+                  isActive
+                    ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
+                    : "text-white cursor-default font-medium rounded px-6 py-3"
+                }
+              >
+                Student Selection
+              </NavLink>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </header>
   );
 }

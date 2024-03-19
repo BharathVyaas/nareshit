@@ -57,8 +57,8 @@ function StudentSelectionPage() {
         <EnrollStudentNavigation />
       </header>
 
-      <main className="mt-5">
-        <div className="max-h-[600px] overflow-y-auto w-4/6 mx-auto border-collapse border border-gray-300">
+      <main className="mt-8">
+        <div className="max-h-[60vh] overflow-y-auto w-4/6 mx-auto border-collapse border border-gray-300">
           <table className="w-full">
             <thead className="bg-gray-100">
               <tr className="border-b border-gray-300">
@@ -118,27 +118,16 @@ function StudentSelectionPage() {
               ))}
             </tbody>
           </table>
-          {/* <ol className="list-disc pl-6 max-h-80 overflow-y-auto border rounded-lg p-2">
-    {data.modalData.map((student) => (
-      <li key={student.Email} className="flex items-center mb-2">
-        <FormControlLabel
-          control={<Checkbox size="default" color="default" defaultChecked onClick={(e) => onUserCheck(e, student.StudentID, excludedArr, setExceludedArr)} />}
-          className="mr-2"
-        />
-        <p className="text-sm">{student.Email}</p>
-      </li>
-    ))}
-  </ol> */}
-          <div className="text-center mt-4">
-            <Button
-              variant="contained"
-              sx={{ width: "8rem" }}
-              color="primary"
-              onClick={() => {}}
-            >
-              Submit
-            </Button>
-          </div>
+        </div>
+        <div className="text-center mt-4">
+          <Button
+            variant="contained"
+            sx={{ width: "8rem" }}
+            color="primary"
+            onClick={() => {}}
+          >
+            Submit
+          </Button>
         </div>
       </main>
 

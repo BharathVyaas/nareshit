@@ -1,5 +1,17 @@
 import { combineReducers } from "redux";
-import { assessmentPageSlice, availableDBQuestionCountSlice, listOfAssessmentPageSlice, modulesListSlice, questionListSlice, schedulePageSlice, subTopicsListSlice, technologiesListSlice, technologyPageSlice, topicsListSlice } from "./root.slice";
+import {
+  assessmentPageSlice,
+  availableDBQuestionCountSlice,
+  listOfAssessmentPageSlice,
+  modulesListSlice,
+  questionListSlice,
+  schedulePageSlice,
+  subTopicsListSlice,
+  technologiesListSlice,
+  technologyPageSlice,
+  topicsListSlice,
+} from "./root.slice";
+import { userSelectionSlice } from "./slice/userSelectionsSlice";
 
 const reducersSlice = {
   technologiesListReducer: technologiesListSlice.reducer,
@@ -15,7 +27,8 @@ const reducersSlice = {
   schedulePageReducer: schedulePageSlice.reducer,
 
   // UTIL
-  availableDBQuestionCountReducer: availableDBQuestionCountSlice.reducer
+  availableDBQuestionCountReducer: availableDBQuestionCountSlice.reducer,
+  userSelectionReducer: userSelectionSlice.reducer,
 };
 
 const reducers = combineReducers(reducersSlice);

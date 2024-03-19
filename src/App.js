@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 
@@ -31,13 +31,15 @@ import AdminLogin from "./components/login/AdminLogin";
 import Dashboard from "./pages/Dashboard";
 import EnrollStudent from "./pages/enrollStudent/EnrollStudent";
 import UserManagement from "./pages/userManagement/UserManagement";
+import BatchTablePage from "./pages/enrollStudent/BatchTablePage";
+import StudentSelectionPage from "./pages/enrollStudent/StudentSelectionPage";
 
 /**
  *
  * Main App component that sets up routing and provides QueryClient for React Query.
  */
 function App() {
-/*   const module = useSelector(store => store.schedulePageReducer)
+  /*   const module = useSelector(store => store.schedulePageReducer)
   const dispatch = useDispatch()
   useEffect(() => {dispatch({type: `fetch/${types.SCHEDULE_PAGE}`, payload: 16190}); console.log('dispatch')}, [])
 
@@ -111,8 +113,21 @@ function App() {
       element: <UserManagement />,
     },
     {
-      path: "enroll-student",
-      element: <EnrollStudent />,
+      path: "/enroll-student",
+      children: [
+        {
+          index: true,
+          element: <EnrollStudent />,
+        },
+        {
+          path: "batch-selection/:testId",
+          element: <BatchTablePage />,
+        },
+        {
+          path: "student-selection/:batchId",
+          element: <StudentSelectionPage />,
+        },
+      ],
     },
   ];
 

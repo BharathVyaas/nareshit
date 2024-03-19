@@ -29,7 +29,11 @@ function BatchTablePage() {
 
   return (
     <>
-      <EnrollStudentNavigation />
+      {/*  */}
+      <header className="bg-gray-100 max-w-full overflow-hidden">
+        <EnrollStudentNavigation />
+      </header>
+
       <section className="text-black mt-5">
         <div>
           <BatchTable batchData={batchData} />
@@ -42,6 +46,12 @@ function BatchTablePage() {
           </span>
         </div>
       </section>
+
+      {/*  */}
+      <footer className="grid place-content-center p-6 w-full max-w-full overflow-hidden absolute bottom-0">
+        © 2023 Naresh i Technologies | Software Training - Online | All Rights
+        Reserved.
+      </footer>
     </>
   );
 }

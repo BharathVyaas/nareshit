@@ -1,4 +1,5 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
+import { NavLink } from "react-router-dom";
 
 function BatchTable({ batchData }) {
   return (
@@ -53,9 +54,12 @@ function Td({ batch }) {
             />
           }
         />
-        <button className="text-blue-500 hover:text-blue-600 underline">
+        <NavLink
+          className="text-blue-500 hover:text-blue-600 underline"
+          to={`/enroll-student/student-selection/${batch.BatchId}`}
+        >
           {batch.BatchId}
-        </button>
+        </NavLink>
       </td>
       <td className="py-3 px-4">{batch.BatchName}</td>
       <td className="py-3 px-4">{batch.CreatedBy}</td>

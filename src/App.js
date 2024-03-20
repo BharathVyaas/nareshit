@@ -125,7 +125,7 @@ function App() {
           element: <ListOfTests />,
         },
         {
-          path: "batch-selection/:testId",
+          path: "batch-selection",
           element: <BatchTablePage />,
         },
         {

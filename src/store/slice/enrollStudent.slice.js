@@ -5,10 +5,10 @@ const initialState = {
   technology: null,
   // Selected Module Details
   module: null,
-  // Current TestID
-  testId: null,
-  // SCurrent BatchID
-  batchId: null,
+  // Selected TestID List
+  testIdList: null,
+  // Selected BatchID List
+  batchIdList: null,
   // Excluded students from all Batches excludedStudents: {batchId: [...(excluded students)]}
   excludedStudents: {},
 };
@@ -23,10 +23,10 @@ export const enrollStudentSlice = createSlice({
     setModule(state, action) {
       state.module = action.payload;
     },
-    setTestId(state, action) {
-      state.testId = action.payload;
+    setTestIdList(state, action) {
+      state.testIdList = action.payload;
     },
-    setBatchId(state, action) {
+    setBatchIdList(state, action) {
       state.batchId = action.payload;
     },
     excludedStudents(state, action) {
@@ -34,3 +34,11 @@ export const enrollStudentSlice = createSlice({
     },
   },
 });
+
+export const {
+  setTechnology,
+  setModule,
+  setTestIdList,
+  setBatchIdList,
+  excludedStudents,
+} = enrollStudentSlice.actions;

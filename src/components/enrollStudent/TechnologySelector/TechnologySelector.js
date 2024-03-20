@@ -63,6 +63,7 @@ function TechnologySelector({
       <Button
         variant="contained"
         sx={{ width: "8rem" }}
+        fontSize="large"
         onClick={() => fetchHandler(selectedTechnology, selectedModule, setter)}
       >
         Show Tests

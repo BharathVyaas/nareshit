@@ -197,19 +197,19 @@ function* batchListSaga(action) {
     yield put(batchListSlice.actions.fetchStart());
     const response = yield call(
       axios.post,
-      "https://www.nareshit.net/GetBatchesByTestId",
+      "https://www.nareshit.net/GetBatchIdsByTestids",
       {
-        TestId: action.payload,
+        TestIdList: action.payload,
       }
     );
 
     // Log
     console.log(
       "url",
-      "https://www.nareshit.net/GetBatchesByTestId",
+      "https://www.nareshit.net/GetBatchIdsByTestids",
       "req",
       {
-        TestId: action.payload,
+        TestIdList: action.payload,
       },
       "res",
       response

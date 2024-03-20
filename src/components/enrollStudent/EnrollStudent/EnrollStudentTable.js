@@ -1,20 +1,21 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
+import React from "react";
 import { NavLink } from "react-router-dom";
 
-function BatchTable({ batchData, onBatchSelect }) {
+function EnrollStudentTable() {
   return (
     <div>
       <div className="max-h-[60vh] overflow-y-auto w-4/6 mx-auto border-collapse border border-gray-300">
         <table className="w-full">
           <Thead />
-          <Tbody batchData={batchData} onBatchSelect={onBatchSelect} />
+          <Tbody />
         </table>
       </div>
     </div>
   );
 }
 
-export default BatchTable;
+export default EnrollStudentTable;
 
 function Thead() {
   return (
@@ -31,34 +32,13 @@ function Thead() {
 }
 
 function Tbody({ batchData, onBatchSelect }) {
-  return batchData.length > 0 ? (
-    <tbody>
-      {batchData &&
-        batchData.map((batch) => (
-          <Td batch={batch} onBatchSelect={onBatchSelect} />
-        ))}
-    </tbody>
-  ) : (
-    <div className="h-[6rem] grid place-content-center w-full">
-      <i>Loading...</i>
-    </div>
-  );
+  return <tbody></tbody>;
 }
 
 function Td({ batch, onBatchSelect }) {
   return (
     <tr className="border-b border-gray-300 hover:bg-gray-50">
       <td className="py-3 px-4">
-        <FormControlLabel
-          control={
-            <Checkbox
-              size=""
-              sx={{ padding: 0, margin: 0 }}
-              color="default"
-              onClick={onBatchSelect}
-            />
-          }
-        />
         <NavLink
           className="text-blue-500 hover:text-blue-600 underline underline-offset-[3px]"
           to={`/enroll-student/student-selection/${batch.BatchId}`}

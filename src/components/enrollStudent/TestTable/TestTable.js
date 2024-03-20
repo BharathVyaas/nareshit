@@ -1,13 +1,14 @@
+import { Checkbox, FormControlLabel } from "@mui/material";
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-function TestTable({ testData }) {
+function TestTable({ testData, onTestSelect }) {
   return (
     <div>
       <div className="max-h-[60vh] overflow-y-auto w-4/6 mx-auto border-collapse border border-gray-300">
         <table className="w-full">
           <Thead />
-          <Tbody testData={testData} />
+          <Tbody testData={testData} onTestSelect={onTestSelect} />
         </table>
       </div>
     </div>
@@ -27,11 +28,11 @@ function Thead() {
   );
 }
 
-function Tbody({ testData }) {
+function Tbody({ testData, onTestSelect }) {
   return testData.length > 0 ? (
     <tbody>
       {testData.map((test) => (
-        <Td key={test.TestID} test={test} />
+        <Td key={test.TestID} test={test} onTestSelect={onTestSelect} />
       ))}
     </tbody>
   ) : (
@@ -41,16 +42,21 @@ function Tbody({ testData }) {
   );
 }
 
-function Td({ test }) {
+function Td({ test, onTestSelect }) {
   return (
     <tr className="border-b border-gray-300 hover:bg-gray-50">
       <td className="py-3 px-4">
-        <NavLink
-          className="text-blue-500 hover:text-blue-600 underline underline-offset-[3px]"
-          to={`/enroll-student/batch-selection/${test.TestID}`}
-        >
-          {test.TestID}
-        </NavLink>
+        <FormControlLabel
+          control={
+            <Checkbox
+              size=""
+              sx={{ padding: 0, margin: 0 }}
+              color="default"
+              onClick={(e) => onTestSelect(e, test.TestID)}
+            />
+          }
+        />
+        {test.TestID}
       </td>
       <td className="py-3 px-4">{test.TestName}</td>
       <td className="py-3 px-4">

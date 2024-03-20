@@ -2,30 +2,59 @@ import BatchTable from "../../components/enrollStudent/BatchTable/BatchTable";
 import { Button } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigation, useParams } from "react-router";
 import EnrollStudentNavigation from "../../ui/EnrollStudent/EnrollStudentNavigation";
-
-const fetchBatchTableHandler = async (test_Id, setter) => {
-  try {
-    const res = await axios.post(
-      "https://www.nareshit.net/GetBatchesByTestId",
-      {
-        TestId: test_Id,
-      }
-    );
-    setter(res.data.dbresult || []);
-  } catch (err) {
-    console.error(err);
-  }
-};
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBatchList } from "../../store/root.actions";
 
 function BatchTablePage() {
-  const { testId } = useParams();
   const [batchData, setBatchData] = useState([]);
+  const [selectedBatches, setSelectedBatches] = useState([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigation();
+  const { testIdList } = useSelector((store) => store.enrollStudentReducer);
+  const batchList = useSelector((store) => store.batchListReducer);
+  const [error, setError] = useState({
+    isError: false,
+    message: "",
+    local: true,
+    action: () => {
+      navigate("/enroll-student/");
+    },
+  });
 
   useEffect(() => {
-    fetchBatchTableHandler(testId, setBatchData);
-  }, [testId]);
+    if (testIdList && testIdList > 0)
+      dispatch(fetchBatchList(testIdList.join(",")));
+    else
+      setError((prev) => {
+        const updatedObj = { ...prev };
+        updatedObj.message = "Must select Technology";
+      });
+  }, [testIdList]);
+
+  console.log(batchList);
+
+  const onBatchSelect = (e, selectedBatch_Id) => {
+    if (!e.target.checked) {
+      if (selectedBatches.includes(selectedBatch_Id)) {
+        const index = selectedBatches.indexOf(selectedBatch_Id);
+        if (index !== -1) {
+          const updatedselectedBatches = [...selectedBatches];
+          updatedselectedBatches.splice(index, 1);
+          setSelectedBatches(updatedselectedBatches);
+        }
+      }
+    } else {
+      if (e.target.checked) {
+        setSelectedBatches((prev) => {
+          const updatedselectedTests = [...prev];
+          updatedselectedTests.push(selectedBatch_Id);
+          return updatedselectedTests;
+        });
+      }
+    }
+  };
 
   return (
     <>
@@ -36,7 +65,7 @@ function BatchTablePage() {
 
       <main className="text-black mt-8">
         <div>
-          <BatchTable batchData={batchData} />
+          <BatchTable batchData={batchData} onBatchSelect={onBatchSelect} />
         </div>
         <div className="mt-10 mx-auto w-4/6">
           <span className="ms-[9%]">

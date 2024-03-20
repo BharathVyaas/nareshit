@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Checkbox, FormControlLabel, Button } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import EnrollStudentNavigation from "../../ui/EnrollStudent/EnrollStudentNavigation";
 
 const fetchstudentsHandler = async (batchId, setter) => {
@@ -19,10 +18,10 @@ const fetchstudentsHandler = async (batchId, setter) => {
   }
 };
 
-const onUserCheck = (e, studentId, excludedArr, setExcludedArr) => {
+const onUserCheck = (e, studentFirstName, excludedArr, setExcludedArr) => {
   if (e.target.checked) {
-    if (excludedArr.includes(studentId)) {
-      const index = excludedArr.indexOf(studentId);
+    if (excludedArr.includes(studentFirstName)) {
+      const index = excludedArr.indexOf(studentFirstName);
       if (index !== -1) {
         const updatedExcludedArr = [...excludedArr];
         updatedExcludedArr.splice(index, 1);
@@ -33,7 +32,7 @@ const onUserCheck = (e, studentId, excludedArr, setExcludedArr) => {
     if (!e.target.checked) {
       setExcludedArr((prev) => {
         const updatedExcludedArr = [...prev];
-        updatedExcludedArr.push(studentId);
+        updatedExcludedArr.push(studentFirstName);
         return updatedExcludedArr;
       });
     }
@@ -80,42 +79,48 @@ function StudentSelectionPage() {
               </tr>
             </thead>
             <tbody>
-              {students.map((student) => (
-                <tr
-                  key={student.StudentID}
-                  className="border-b border-gray-300 hover:bg-gray-50"
-                >
-                  <td className="py-3 px-4">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          size="default"
-                          color="default"
-                          defaultChecked
-                          onClick={(e) =>
-                            onUserCheck(
-                              e,
-                              student.StudentID,
-                              excludedArr,
-                              setExcludedArr
-                            )
-                          }
-                        />
-                      }
-                      className="mr-2"
-                      label={student.FirstName}
-                    />
-                  </td>
-                  <td className="py-3 px-4">{student.LastName}</td>
-                  <td className="py-3 px-4">{student.Email}</td>
-                  <td className="py-3 px-4">{student.PhoneNumber}</td>
-                  <td className="py-3 px-4">
-                    {student.CreatedAt
-                      ? new Date(student.CreatedAt).toLocaleDateString()
-                      : ""}
-                  </td>
-                </tr>
-              ))}
+              {students.length > 0 ? (
+                students.map((student) => (
+                  <tr
+                    key={student.StudentID}
+                    className="border-b border-gray-300 hover:bg-gray-50"
+                  >
+                    <td className="py-3 px-4">
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            size="default"
+                            color="default"
+                            defaultChecked
+                            onClick={(e) => {
+                              onUserCheck(
+                                e,
+                                student.FirstName,
+                                excludedArr,
+                                setExcludedArr
+                              );
+                            }}
+                          />
+                        }
+                        className="mr-2"
+                        label={student.FirstName}
+                      />
+                    </td>
+                    <td className="py-3 px-4">{student.LastName}</td>
+                    <td className="py-3 px-4">{student.Email}</td>
+                    <td className="py-3 px-4">{student.PhoneNumber}</td>
+                    <td className="py-3 px-4">
+                      {student.CreatedAt
+                        ? new Date(student.CreatedAt).toLocaleDateString()
+                        : ""}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <div className="h-[6rem] grid place-content-center w-full">
+                  <i>Loading...</i>
+                </div>
+              )}
             </tbody>
           </table>
         </div>
@@ -124,7 +129,13 @@ function StudentSelectionPage() {
             variant="contained"
             sx={{ width: "8rem" }}
             color="primary"
-            onClick={() => {}}
+            onClick={() => {
+              axios.post("https://www.nareshit.net/EnrollStudents", {
+                BatchIdList: "1",
+                TestIdList: null,
+                StudentNameList: excludedArr.join(","),
+              });
+            }}
           >
             Submit
           </Button>

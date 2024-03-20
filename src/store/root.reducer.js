@@ -15,6 +15,7 @@ import {
   topicsListSlice,
 } from "./root.slice";
 import { userSelectionSlice } from "./slice/userSelectionsSlice";
+import { enrollStudentSlice } from "./slice/enrollStudent.slice";
 
 const reducersSlice = {
   // LISTS
@@ -38,6 +39,7 @@ const reducersSlice = {
   // UTIL
   availableDBQuestionCountReducer: availableDBQuestionCountSlice.reducer,
   userSelectionReducer: userSelectionSlice.reducer,
+  enrollStudentReducer: enrollStudentSlice.reducer,
 };
 
 const reducers = combineReducers(reducersSlice);

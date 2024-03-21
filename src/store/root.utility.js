@@ -8,7 +8,7 @@ const initialState = {
   // true if if data is loading and if rejucted
   isPending: false,
   // holds data returned by response
-  data: {},
+  data: undefined,
   // response status
   statusCode: null,
   // response status text

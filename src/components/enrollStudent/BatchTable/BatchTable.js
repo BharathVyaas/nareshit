@@ -39,9 +39,16 @@ function Tbody({ batchData, onBatchSelect }) {
         ))}
     </tbody>
   ) : (
-    <div className="h-[6rem] grid place-content-center w-full">
-      <i>Loading...</i>
-    </div>
+    <tbody className="h-[6rem] grid place-content-center w-full">
+      <tr>
+        <td colSpan="4">
+          <i>Loading...</i>
+        </td>
+        <td colSpan="0"></td>
+        <td colSpan="0"></td>
+        <td colSpan="0"></td>
+      </tr>
+    </tbody>
   );
 }
 

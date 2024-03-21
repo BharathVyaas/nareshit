@@ -39,8 +39,8 @@ function TechnologySelector({
   selectedModule,
   setSelectedTechnology,
   setSelectedModule,
+  isNotSelected,
 }) {
-  // techonlogyData doesn't only contains TechnologyDropDown it contains all data related to DropDowns Sections
   const [technologyData, dispatcher] = useReducer(
     technologyDataReducer,
     initialTechnologyData
@@ -52,12 +52,14 @@ function TechnologySelector({
         technologyData={technologyData}
         dispatcher={dispatcher}
         setSelectedTechnology={setSelectedTechnology}
+        isNotSelected={isNotSelected}
       />
 
       <ModuleDropDown
         technologyData={technologyData}
         dispatcher={dispatcher}
         setSelectedModule={setSelectedModule}
+        isNotSelected={isNotSelected}
       />
 
       <Button

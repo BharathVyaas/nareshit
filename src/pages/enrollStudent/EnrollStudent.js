@@ -1,7 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
 import EnrollStudentNavigation from "../../ui/EnrollStudent/EnrollStudentNavigation";
-import { Button } from "@mui/material";
-import EnrollStudentTable from "../../components/enrollStudent/EnrollStudent/EnrollStudentTable";
 
 function EnrollStudent() {
   return (
@@ -11,14 +9,7 @@ function EnrollStudent() {
         <EnrollStudentNavigation />
       </header>
 
-      <main className="mt-8 flex justify-center">
-        <div className="w-4/6">
-          <Button variant="contained">Create New</Button>
-          <div>
-            <EnrollStudentTable />
-          </div>
-        </div>
-      </main>
+      <main className="mt-8 flex justify-center"></main>
 
       {/*  */}
       <footer className="grid place-content-center p-6 w-full max-w-full overflow-hidden absolute bottom-0 bg-gray-100">

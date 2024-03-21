@@ -1,28 +1,33 @@
 import { useEffect, useState } from "react";
 import SelectMenu from "../../../ui/EnrollStudent/Select";
 import axios from "axios";
-import { FormControl, InputLabel } from "@mui/material";
+import { FormControl, FormHelperText, InputLabel } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { types } from "../../../store/root.actions";
 
 const fetchHandler = async (setter) => {
-  try{
-  const res = await axios.get("https://www.nareshit.net/fetchTechnologies");
+  try {
+    const res = await axios.get("https://www.nareshit.net/fetchTechnologies");
 
-  setter([
-    ...res.data.map((ele) => {
-      return {
-        id: ele.TechnologyID,
-        value: ele.TechnologyID,
-        option: ele.TechnologyName,
-      };
-    }),
-  ]);}catch(err){
-    console.error(err)
+    setter([
+      ...res.data.map((ele) => {
+        return {
+          id: ele.TechnologyID,
+          value: ele.TechnologyID,
+          option: ele.TechnologyName,
+        };
+      }),
+    ]);
+  } catch (err) {
+    console.error(err);
   }
 };
 
-function TechnologyDropDown({ dispatcher, setSelectedTechnology }) {
+function TechnologyDropDown({
+  dispatcher,
+  setSelectedTechnology,
+  isNotSelected,
+}) {
   //
   const technologyData = useSelector((state) => state.technologiesListReducer);
   const dispatch = useDispatch();
@@ -46,7 +51,7 @@ function TechnologyDropDown({ dispatcher, setSelectedTechnology }) {
 
   return (
     <div className="w-1/3 flex justify-start">
-      <FormControl sx={{ minWidth: 300 }}>
+      <FormControl sx={{ minWidth: 300 }} error={isNotSelected.technology}>
         <InputLabel id="demo-simple-select-label">Technology</InputLabel>
         <SelectMenu
           defaultValue={technologyId}
@@ -55,6 +60,9 @@ function TechnologyDropDown({ dispatcher, setSelectedTechnology }) {
           label="Technology"
           changeHandler={setSelectedTechnology}
         />
+        {isNotSelected.technology && (
+          <FormHelperText>Must Selcet A Technology</FormHelperText>
+        )}
       </FormControl>
     </div>
   );

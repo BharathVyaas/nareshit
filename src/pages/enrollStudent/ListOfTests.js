@@ -1,44 +1,43 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import TechnologySelector from "../../components/enrollStudent/TechnologySelector/TechnologySelector";
 import TestTable from "../../components/enrollStudent/TestTable/TestTable";
-import axios from "axios";
 import EnrollStudentNavigation from "../../ui/EnrollStudent/EnrollStudentNavigation";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchBatchList,
-  fetchStudentList,
-  fetchTestList,
-} from "../../store/root.actions";
-import { AgGridReact } from "ag-grid-react";
+import { fetchTestList } from "../../store/root.actions";
 import { Button } from "@mui/material";
-import {
-  enrollStudentSlice,
-  setTestIdList,
-} from "../../store/slice/enrollStudent.slice";
+import { setTestIdList } from "../../store/slice/enrollStudent.slice";
 import { NavLink } from "react-router-dom";
 
-const fetchTestTableHandler = async (technologyId, moduleId, setter) => {
-  try {
-    const res = await axios.post(
-      "https://www.nareshit.net/Listof_AvailableTests",
-      {
-        TechnologyId: technologyId,
-        ModuleId: moduleId,
-      }
-    );
-    setter(res.data.dbresult || []);
-  } catch (err) {
-    console.error(err);
-  }
-};
-
 function ListOfTests() {
+  const dispatch = useDispatch();
   const [selectedTechnology, setSelectedTechnology] = useState(0);
   const [selectedModule, setSelectedModule] = useState(0);
   const [testData, setTestData] = useState([]);
   const [selectedTests, setSelectedTests] = useState([]);
-  const store = useSelector((store) => store);
-  const dispatch = useDispatch();
+  const [isNotSelected, setIsNotSelected] = useState({
+    technology: false,
+    module: false,
+  });
+  const { data: testList, isLoading } = useSelector(
+    (store) => store.testListReducer
+  );
+
+  useEffect(() => {
+    setTestData(testList || []);
+  }, [testList]);
+
+  useEffect(() => {
+    if (isNotSelected.technology || isNotSelected.module) {
+      setIsNotSelected((prev) => {
+        const updatedObj = { ...prev };
+        if (updatedObj.technology || updatedObj.module) {
+          updatedObj.technology = false;
+          updatedObj.module = false;
+        }
+        return updatedObj;
+      });
+    }
+  }, [selectedTechnology, selectedModule, isLoading]);
 
   const onTestSelect = (e, selectedTest_Id) => {
     if (!e.target.checked) {
@@ -61,14 +60,22 @@ function ListOfTests() {
     }
   };
 
-  useEffect(() => {
-    if (selectedTests.length > 0) dispatch(setTestIdList(selectedTests));
-  }, [selectedTests]);
+  const fetchTestTableHandler = () => {
+    if (selectedTechnology && selectedModule) {
+      dispatch(fetchTestList({ selectedTechnology, selectedModule }));
+    } else {
+      setIsNotSelected((prev) => {
+        const updatedObj = { ...prev };
+        if (!selectedTechnology) updatedObj.technology = true;
+        if (!selectedModule) updatedObj.module = true;
+        return updatedObj;
+      });
+    }
+  };
 
-  /*
   useEffect(() => {
-    dispatch(fetchStudentList(1));
-  }, []);*/
+    dispatch(setTestIdList(selectedTests));
+  }, [selectedTests]);
 
   return (
     <>
@@ -87,6 +94,7 @@ function ListOfTests() {
             selectedModule={selectedModule}
             setSelectedTechnology={setSelectedTechnology}
             setSelectedModule={setSelectedModule}
+            isNotSelected={isNotSelected}
           />
         </section>
 

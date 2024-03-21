@@ -192,24 +192,25 @@ function* testListSaga(action) {
 }
 
 function* batchListSaga(action) {
-  console.log("--------------------------", action);
   try {
     yield put(batchListSlice.actions.fetchStart());
     const response = yield call(
       axios.post,
-      "https://www.nareshit.net/GetBatchIdsByTestids",
+      "https://www.nareshit.net/Listof_BatchDetails",
       {
-        TestIdList: action.payload,
+        TechnologyId: action.payload.technologyId,
+        ModuleId: action.payload.moduleId,
       }
     );
 
     // Log
     console.log(
       "url",
-      "https://www.nareshit.net/GetBatchIdsByTestids",
+      "https://www.nareshit.net/Listof_BatchDetails",
       "req",
       {
-        TestIdList: action.payload,
+        TechnologyId: action.payload.technologyId,
+        ModuleId: action.payload.moduleId,
       },
       "res",
       response

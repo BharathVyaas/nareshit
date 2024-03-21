@@ -1,5 +1,7 @@
-import { Checkbox, FormControlLabel } from "@mui/material";
-import React from "react";
+import { Close } from "@mui/icons-material";
+import { Button, Checkbox, Collapse, FormControlLabel } from "@mui/material";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 
 function TestTable({ testData, onTestSelect }) {
@@ -29,6 +31,10 @@ function Thead() {
 }
 
 function Tbody({ testData, onTestSelect }) {
+  const { isLoading, isError, state, data } = useSelector(
+    (store) => store.testListReducer
+  );
+  console.log(testData.length > 0, state, isLoading, isError);
   return testData.length > 0 ? (
     <tbody>
       {testData.map((test) => (
@@ -36,40 +42,89 @@ function Tbody({ testData, onTestSelect }) {
       ))}
     </tbody>
   ) : (
-    <div className="h-[6rem] grid place-content-center w-full">
-      <i>Must Select A Technology</i>
-    </div>
+    <tbody>
+      <tr>
+        <td colSpan="4" className="h-[100px]">
+          {isLoading ? (
+            <i className="mx-10">Loading...</i>
+          ) : data === undefined ? (
+            <i className="mx-10">Select Technology and Module to get tests</i>
+          ) : state === "resolved" ? (
+            <i className="mx-10">No data available on this module</i>
+          ) : (
+            isError && (
+              <i className="mx-10">
+                Something went wrong!. please try refreshing
+              </i>
+            )
+          )}
+        </td>
+        <td colSpan="0"></td>
+        <td colSpan="0"></td>
+        <td colSpan="0"></td>
+      </tr>
+    </tbody>
   );
 }
 
 function Td({ test, onTestSelect }) {
+  const [showDetails, setShowDetails] = useState(false);
+
   return (
-    <tr className="border-b border-gray-300 hover:bg-gray-50">
-      <td className="py-3 px-4">
-        <FormControlLabel
-          control={
-            <Checkbox
-              size=""
-              sx={{ padding: 0, margin: 0 }}
-              color="default"
-              onClick={(e) => onTestSelect(e, test.TestID)}
-            />
-          }
-        />
-        {test.TestID}
-      </td>
-      <td className="py-3 px-4">{test.TestName}</td>
-      <td className="py-3 px-4">
-        {test.TestStartDate
-          ? new Date(test.TestStartDate).toLocaleDateString()
-          : ""}
-      </td>
-      <td className="py-3 px-4">
-        {test.TestEndDate
-          ? new Date(test.TestEndDate).toLocaleDateString()
-          : ""}
-      </td>
-    </tr>
+    <>
+      <tr className="border-b border-gray-300 hover:bg-gray-50">
+        <td className="py-3 px-4">
+          <FormControlLabel
+            control={
+              <Checkbox
+                size=""
+                sx={{ padding: 0, margin: 0 }}
+                color="default"
+                onClick={(e) => onTestSelect(e, test.TestID)}
+              />
+            }
+          />
+          {test.TestID}
+        </td>
+        <td
+          className="py-3 px-4 text-blue-700 underline underline-offset-2 hover:cursor-pointer"
+          onClick={() => setShowDetails((prev) => !prev)}
+        >
+          {test.TestName}
+        </td>
+        <td className="py-3 px-4">
+          {test.TestStartDate
+            ? new Date(test.TestStartDate).toLocaleDateString()
+            : ""}
+        </td>
+        <td className="py-3 px-4">
+          {test.TestEndDate
+            ? new Date(test.TestEndDate).toLocaleDateString()
+            : ""}
+        </td>
+      </tr>
+      {showDetails && (
+        <tr>
+          <td colSpan="4">
+            <section className="p-2">
+              <Collapse in={showDetails} timeout="auto" unmountOnExit>
+                <div className="flex justify-between">
+                  <h2>Batch Details</h2>
+                  <span className="hover:cursor-pointer">
+                    <Close onClick={() => setShowDetails(false)} />
+                  </span>
+                </div>
+                <p className="m-10">Table Goes Here</p>
+                <Button variant="contained">Fetch Students</Button>
+              </Collapse>
+            </section>
+          </td>
+          <td colSpan="0"></td>
+          <td colSpan="0"></td>
+          <td colSpan="0"></td>
+        </tr>
+      )}
+    </>
   );
 }
 

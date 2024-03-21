@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FormControl, InputLabel } from "@mui/material";
+import { FormControl, FormHelperText, InputLabel } from "@mui/material";
 import SelectMenu from "../../../ui/EnrollStudent/Select";
 
 const fetchHandler = async (setter, id) => {
@@ -17,7 +17,12 @@ const fetchHandler = async (setter, id) => {
   ]);
 };
 
-function ModuleDropDown({ technologyData, dispatcher, setSelectedModule }) {
+function ModuleDropDown({
+  technologyData,
+  dispatcher,
+  setSelectedModule,
+  isNotSelected,
+}) {
   const [moduleId, setModuleId] = useState("0");
 
   const [options, setOptions] = useState([]);
@@ -38,7 +43,7 @@ function ModuleDropDown({ technologyData, dispatcher, setSelectedModule }) {
 
   return (
     <div className="w-1/3">
-      <FormControl sx={{ minWidth: 300 }}>
+      <FormControl sx={{ minWidth: 300 }} error={isNotSelected.module}>
         <InputLabel id="demo-simple-select-label">Module</InputLabel>
         <SelectMenu
           defaultValue={moduleId}
@@ -47,6 +52,9 @@ function ModuleDropDown({ technologyData, dispatcher, setSelectedModule }) {
           label={"Module"}
           changeHandler={setSelectedModule}
         />
+        {isNotSelected.module && (
+          <FormHelperText>Must Selcet A Module</FormHelperText>
+        )}
       </FormControl>
     </div>
   );

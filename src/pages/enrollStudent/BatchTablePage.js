@@ -9,6 +9,7 @@ import { fetchBatchList } from "../../store/root.actions";
 
 function BatchTablePage() {
   const [batchData, setBatchData] = useState([]);
+  const [testIdArr, setTestIdArr] = useState([]);
   const [selectedBatches, setSelectedBatches] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigation();
@@ -23,17 +24,23 @@ function BatchTablePage() {
     },
   });
 
+  const fetch = async () => {
+    const res = await axios.post(
+      "https://www.nareshit.net/GetBatchIdsByTestids",
+      {
+        TestIdList: testIdList?.join(","),
+      }
+    );
+    console.log(res);
+    setTestIdArr(Object.keys(res.data.dbresult));
+    setBatchData(Object.values(res.data.dbresult));
+  };
+
   useEffect(() => {
-    if (testIdList && testIdList > 0)
-      dispatch(fetchBatchList(testIdList.join(",")));
-    else
-      setError((prev) => {
-        const updatedObj = { ...prev };
-        updatedObj.message = "Must select Technology";
-      });
+    fetch();
   }, [testIdList]);
 
-  console.log(batchList);
+  console.log(testIdArr, batchData);
 
   const onBatchSelect = (e, selectedBatch_Id) => {
     if (!e.target.checked) {
@@ -64,8 +71,21 @@ function BatchTablePage() {
       </header>
 
       <main className="text-black mt-8">
+        batchList
         <div>
-          <BatchTable batchData={batchData} onBatchSelect={onBatchSelect} />
+          <div>
+            {batchData.length > 0
+              ? batchData.map((batchElement, index) => (
+                  <div>
+                    <p>{testIdArr[index]}</p>
+                    <BatchTable
+                      batchData={batchElement}
+                      onBatchSelect={onBatchSelect}
+                    />
+                  </div>
+                ))
+              : 0}
+          </div>
         </div>
         <div className="mt-10 mx-auto w-4/6">
           <span className="ms-[9%]">

@@ -192,7 +192,7 @@ function* testListSaga(action) {
 }
 
 function* batchListSaga(action) {
-  console.log(action);
+  console.log("--------------------------", action);
   try {
     yield put(batchListSlice.actions.fetchStart());
     const response = yield call(

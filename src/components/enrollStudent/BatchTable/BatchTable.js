@@ -71,7 +71,7 @@ function Td({ batch, onBatchSelect }) {
       <td className="py-3 px-4">
         {batch.CreatedAt ? new Date(batch.CreatedAt).toLocaleDateString() : ""}
       </td>
-      <td className="py-3 px-4">2</td>
+      <td className="py-3 px-4">-------</td>
     </tr>
   );
 }

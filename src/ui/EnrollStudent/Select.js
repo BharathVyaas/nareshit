@@ -9,8 +9,9 @@ function SelectMenu({ defaultValue, options, setter, label, changeHandler }) {
       value={defaultValue}
       label={label}
       onChange={(e) => {
-        changeHandler(e.target.value)
-        setter(e.target.value)}}
+        if (changeHandler) changeHandler(e.target.value);
+        if (setter) setter(e.target.value);
+      }}
       sx={{ textAlign: "start" }}
     >
       <MenuItem key={-1} value={0}>

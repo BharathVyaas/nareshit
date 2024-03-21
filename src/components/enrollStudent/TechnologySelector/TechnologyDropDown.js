@@ -40,6 +40,11 @@ function TechnologyDropDown({
 
   const [options, setOptions] = useState([]);
 
+  const changeHandler = (selectedTechnology) => {
+    console.log("selectedTech", selectedTechnology);
+    setTechnologyId(selectedTechnology);
+  };
+
   useEffect(() => {
     fetchHandler(setOptions);
   }, []);
@@ -56,7 +61,6 @@ function TechnologyDropDown({
         <SelectMenu
           defaultValue={technologyId}
           setter={setTechnologyId}
-          options={options}
           label="Technology"
           changeHandler={setSelectedTechnology}
         />

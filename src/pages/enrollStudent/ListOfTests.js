@@ -8,6 +8,28 @@ import { Button } from "@mui/material";
 import { setTestIdList } from "../../store/slice/enrollStudent.slice";
 import { NavLink } from "react-router-dom";
 
+const initialState = {
+  selectedTechnology: 0,
+  selectedModule: 0,
+  testData: [],
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "technology": {
+      return { ...state, selectedTechnology: action.payload };
+    }
+    case "module": {
+      return { ...state, selectedModule: action.payload };
+    }
+    case "testData": {
+      return { ...state, testData: action.payload };
+    }
+    default:
+      return state;
+  }
+};
+
 function ListOfTests() {
   const dispatch = useDispatch();
   const [selectedTechnology, setSelectedTechnology] = useState(0);
@@ -22,10 +44,13 @@ function ListOfTests() {
     (store) => store.testListReducer
   );
 
+  const [state, dispatcher] = useReducer(reducer, initialState);
+
   useEffect(() => {
     setTestData(testList || []);
   }, [testList]);
 
+  // To show warnings on Select Tags
   useEffect(() => {
     if (isNotSelected.technology || isNotSelected.module) {
       setIsNotSelected((prev) => {
@@ -60,6 +85,7 @@ function ListOfTests() {
     }
   };
 
+  // To Fetch Test on show tests button
   const fetchTestTableHandler = () => {
     if (selectedTechnology && selectedModule) {
       dispatch(fetchTestList({ selectedTechnology, selectedModule }));

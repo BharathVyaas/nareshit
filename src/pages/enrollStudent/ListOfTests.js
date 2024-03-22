@@ -12,15 +12,10 @@ import {
   getFormatedExcludes,
 } from "../../util/helper";
 
-/**
- * Component for listing tests and selecting them for enrollment.
- * @returns {JSX.Element} ListOfTests component.
- */
 function ListOfTests() {
   const dispatch = useDispatch();
   const [selectedTests, setSelectedTests] = useState([]);
   const [testData, setTestData] = useState([]);
-  // To validate select fileds on fetch button for tests
   const [isNotSelected, setIsNotSelected] = useState({
     technology: false,
     module: false,
@@ -35,14 +30,10 @@ function ListOfTests() {
     (store) => store.enrollStudentReducer
   );
 
-  console.log(excludedStudents, testIdList, batchIdList);
-
-  // Update local test data when the API response changes
   useEffect(() => {
     setTestData(testList || []);
   }, [testList]);
 
-  // Reset warning flags when technology or module changes
   useEffect(() => {
     if (isNotSelected.technology || isNotSelected.module) {
       setIsNotSelected((prev) => ({
@@ -53,7 +44,6 @@ function ListOfTests() {
     }
   }, [selectedTechnology, selectedModule, isLoading]);
 
-  // Handle test selection
   const onTestSelect = (e, selectedTest_Id) => {
     if (!e.target.checked) {
       setSelectedTests((prev) => prev.filter((id) => id !== selectedTest_Id));
@@ -62,7 +52,6 @@ function ListOfTests() {
     }
   };
 
-  // Fetch test data based on selected technology and module
   const fetchTestTableHandler = () => {
     if (selectedTechnology && selectedModule) {
       dispatch(
@@ -87,7 +76,6 @@ function ListOfTests() {
     }
   };
 
-  // Update Redux store with selected test IDs
   useEffect(() => {
     dispatch(setTestIdList(selectedTests));
   }, [selectedTests]);
@@ -123,25 +111,22 @@ function ListOfTests() {
   };
 
   return (
-    <>
-      <header className="bg-gray-100 max-w-full overflow-hidden">
+    <div className="flex flex-col min-h-screen">
+      <header className="bg-gray-100">
         <EnrollStudentNavigation />
       </header>
 
-      <main className="mt-8">
-        <section className="">
-          {/* Technology & Module selection */}
+      <main className="flex-grow mt-8 mb-8">
+        <section>
           <TechnologySelector
             fetchHandler={fetchTestTableHandler}
             isNotSelected={isNotSelected}
           />
         </section>
 
-        <section className="mt-10">
-          {/* Test table component */}
+        <section className="mt-10 flex-grow">
           <TestTable testData={testData} onTestSelect={onTestSelect} />
           <div className="w-4/6 mx-auto mt-5">
-            {/*  */}
             <Button variant="contained" onClick={submitHandler}>
               Submit
             </Button>
@@ -149,11 +134,13 @@ function ListOfTests() {
         </section>
       </main>
 
-      <footer className="grid place-content-center p-6 w-full max-w-full overflow-hidden absolute bottom-0 bg-gray-100">
-        © 2023 Naresh i Technologies | Software Training - Online | All Rights
-        Reserved.
+      <footer className="bg-gray-100 p-6">
+        <div className="max-w-full overflow-hidden">
+          © 2023 Naresh i Technologies | Software Training - Online | All Rights
+          Reserved.
+        </div>
       </footer>
-    </>
+    </div>
   );
 }
 

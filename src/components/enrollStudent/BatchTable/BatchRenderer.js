@@ -44,6 +44,7 @@ function BatchRenderer({ batch, testId }) {
   }, [studentList]);
 
   const onBatchSelection = (e) => {
+    e.stopPropagation();
     const flag = e.target.checked;
 
     if (flag) {
@@ -58,7 +59,12 @@ function BatchRenderer({ batch, testId }) {
 
   return (
     <>
-      <div className="flex justify-between">
+      <div
+        className="flex justify-between cursor-pointer py-1"
+        onClick={() => {
+          setDisplayStudents((prev) => !prev);
+        }}
+      >
         <div className="flex">
           <FormControlLabel
             control={
@@ -75,13 +81,7 @@ function BatchRenderer({ batch, testId }) {
           <p>{batch.BatchName}</p>
         </div>
 
-        <p
-          style={{ rotate: displayStudents ? "90deg" : "0deg" }}
-          onClick={() => {
-            setDisplayStudents((prev) => !prev);
-          }}
-          className="cursor-pointer"
-        >
+        <p style={{ rotate: displayStudents ? "90deg" : "0deg" }}>
           <ArrowForwardIosIcon fontSize="10" />
         </p>
       </div>

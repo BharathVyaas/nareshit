@@ -46,23 +46,18 @@ function Tbody({ testData, onTestSelect }) {
     <tbody>
       <tr>
         <td colSpan="4" className="h-[100px]">
-          {isLoading ? (
+          {isError ? (
+            <i className="mx-10">
+              Something went wrong!. please try refreshing
+            </i>
+          ) : isLoading ? (
             <i className="mx-10">Loading...</i>
           ) : data === undefined ? (
             <i className="mx-10">Select Technology and Module to get tests</i>
           ) : state === "resolved" ? (
             <i className="mx-10">No data available on this module</i>
-          ) : (
-            isError && (
-              <i className="mx-10">
-                Something went wrong!. please try refreshing
-              </i>
-            )
-          )}
+          ) : null}
         </td>
-        <td colSpan="0"></td>
-        <td colSpan="0"></td>
-        <td colSpan="0"></td>
       </tr>
     </tbody>
   );

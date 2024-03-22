@@ -2,12 +2,35 @@ import React, { useState } from "react";
 import { Checkbox, Button } from "@mui/material";
 import { Table, Column } from "react-virtualized";
 import "react-virtualized/styles.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  insertExcludedStudent,
+  removeStudentFromExcludes,
+} from "../../../store/slice/enrollStudent.slice";
 
-function StudentRenderer({ students }) {
+function StudentRenderer({ students, testId, batchId }) {
+  const dispatch = useDispatch();
   const { excludedStudents } = useSelector(
     (store) => store.enrollStudentReducer
   );
+
+  const onStudentSelection = (e, student) => {
+    const flag = e.target.checked;
+
+    if (flag) {
+      dispatch(
+        insertExcludedStudent({ testId, batchId, studentId: student.StudentID })
+      );
+    } else {
+      dispatch(
+        removeStudentFromExcludes({
+          testId,
+          batchId,
+          studentId: student.StudentID,
+        })
+      );
+    }
+  };
 
   const rowRenderer = ({ index, key, style }) => {
     const student = students[index];
@@ -19,7 +42,7 @@ function StudentRenderer({ students }) {
             <Checkbox
               size=""
               color="default"
-              defaultChecked={!excludedStudents.includes(student.StudentID)}
+              onClick={(e) => onStudentSelection(e, student)}
             />
             {student.StudentID}
           </div>

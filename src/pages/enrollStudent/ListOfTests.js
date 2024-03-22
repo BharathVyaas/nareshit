@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
-import { NavLink } from "react-router-dom";
 import { fetchBatchList, fetchTestList } from "../../store/root.actions";
 import { setTestIdList } from "../../store/slice/enrollStudent.slice";
 import EnrollStudentNavigation from "../../ui/EnrollStudent/EnrollStudentNavigation";
 import TechnologySelector from "../../components/enrollStudent/TechnologySelector/TechnologySelector";
 import TestTable from "../../components/enrollStudent/TestTable/TestTable";
+import axios from "axios";
+import {
+  getEnrollmentSubmitData,
+  getFormatedExcludes,
+} from "../../util/helper";
 
 /**
  * Component for listing tests and selecting them for enrollment.
@@ -27,6 +31,9 @@ function ListOfTests() {
   );
   const { technology: selectedTechnology, module: selectedModule } =
     useSelector((store) => store.enrollStudentReducer);
+  const { excludedStudents } = useSelector(
+    (store) => store.enrollStudentReducer
+  );
 
   // Update local test data when the API response changes
   useEffect(() => {
@@ -83,6 +90,20 @@ function ListOfTests() {
     dispatch(setTestIdList(selectedTests));
   }, [selectedTests]);
 
+  const submitHandler = () => {
+    const enrollmentId = 0;
+
+    let filteredExcludedStudents = getFormatedExcludes(excludedStudents);
+    let result = getEnrollmentSubmitData({
+      enrollmentId,
+      selectedTechnology,
+      selectedModule,
+      filteredExcludedStudents,
+    });
+
+    console.log(result);
+  };
+
   return (
     <>
       <header className="bg-gray-100 max-w-full overflow-hidden">
@@ -103,8 +124,8 @@ function ListOfTests() {
           <TestTable testData={testData} onTestSelect={onTestSelect} />
           <div className="w-4/6 mx-auto mt-5">
             {/*  */}
-            <Button variant="contained">
-              <NavLink to="/enroll-student/batch-selection">Submit</NavLink>
+            <Button variant="contained" onClick={submitHandler}>
+              Submit
             </Button>
           </div>
         </section>

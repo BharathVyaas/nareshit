@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import BatchRenderer from "./BatchRenderer";
 
-function BatchDataRenderer() {
+function BatchDataRenderer({ testId }) {
   const {
     data: batchList,
     isLoading,
@@ -18,7 +18,7 @@ function BatchDataRenderer() {
   return batchList.length > 0 ? (
     batchList.map((batch) => (
       <div key={batch.BatchId}>
-        <BatchRenderer batch={batch} />
+        <BatchRenderer batch={batch} testId={testId} />
       </div>
     ))
   ) : (

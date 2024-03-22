@@ -123,7 +123,7 @@ function Td({ test, onTestSelect }) {
                     </span>
                   </div>
                   <div className="m-8">
-                    <BatchDataRenderer />
+                    <BatchDataRenderer testId={test.TestID} />
                   </div>
                 </div>
               </section>

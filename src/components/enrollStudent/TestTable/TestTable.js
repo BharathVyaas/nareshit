@@ -1,8 +1,8 @@
 import { Close } from "@mui/icons-material";
 import { Button, Checkbox, Collapse, FormControlLabel } from "@mui/material";
+import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
 
 function TestTable({ testData, onTestSelect }) {
   return (
@@ -34,7 +34,7 @@ function Tbody({ testData, onTestSelect }) {
   const { isLoading, isError, state, data } = useSelector(
     (store) => store.testListReducer
   );
-  console.log(testData.length > 0, state, isLoading, isError);
+
   return testData.length > 0 ? (
     <tbody>
       {testData.map((test) => (
@@ -104,25 +104,32 @@ function Td({ test, onTestSelect }) {
         </td>
       </tr>
       {showDetails && (
-        <tr>
-          <td colSpan="4">
-            <section className="p-2">
-              <Collapse in={showDetails} timeout="auto" unmountOnExit>
-                <div className="flex justify-between">
-                  <h2>Batch Details</h2>
-                  <span className="hover:cursor-pointer">
-                    <Close onClick={() => setShowDetails(false)} />
-                  </span>
+        <AnimatePresence>
+          <motion.tr
+            initial={{ y: -70, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -70, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          >
+            <td colSpan="4">
+              <section className="p-2">
+                <div>
+                  <div className="flex justify-between">
+                    <h2>Batch Details</h2>
+                    <span className="hover:cursor-pointer">
+                      <Close onClick={() => setShowDetails(false)} />
+                    </span>
+                  </div>
+                  <p className="m-10">Table Goes Here</p>
+                  <Button variant="contained">Fetch Students</Button>
                 </div>
-                <p className="m-10">Table Goes Here</p>
-                <Button variant="contained">Fetch Students</Button>
-              </Collapse>
-            </section>
-          </td>
-          <td colSpan="0"></td>
-          <td colSpan="0"></td>
-          <td colSpan="0"></td>
-        </tr>
+              </section>
+            </td>
+            <td colSpan="0"></td>
+            <td colSpan="0"></td>
+            <td colSpan="0"></td>
+          </motion.tr>
+        </AnimatePresence>
       )}
     </>
   );

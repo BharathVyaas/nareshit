@@ -1,67 +1,63 @@
 import { useEffect, useState } from "react";
-import SelectMenu from "../../../ui/EnrollStudent/Select";
 import axios from "axios";
+import SelectMenu from "../../../ui/EnrollStudent/Select";
 import { FormControl, FormHelperText, InputLabel } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { types } from "../../../store/root.actions";
+import { fetchTechnologyList } from "../../../store/root.actions";
+import { setTechnology } from "../../../store/slice/enrollStudent.slice";
 
-const fetchHandler = async (setter) => {
+const fetchTechnologies = async (setter) => {
   try {
-    const res = await axios.get("https://www.nareshit.net/fetchTechnologies");
-
-    setter([
-      ...res.data.map((ele) => {
-        return {
-          id: ele.TechnologyID,
-          value: ele.TechnologyID,
-          option: ele.TechnologyName,
-        };
-      }),
-    ]);
-  } catch (err) {
-    console.error(err);
+    const response = await axios.get(
+      "https://www.nareshit.net/fetchTechnologies"
+    );
+    setter(
+      response.data.map((tech) => ({
+        id: tech.TechnologyID,
+        value: tech.TechnologyID,
+        option: tech.TechnologyName,
+      }))
+    );
+  } catch (error) {
+    console.error(error);
   }
 };
 
-function TechnologyDropDown({
-  dispatcher,
-  setSelectedTechnology,
-  isNotSelected,
-}) {
-  //
-  const technologyData = useSelector((state) => state.technologiesListReducer);
+function TechnologyDropDown({ dispatcher, isNotSelected }) {
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch({ type: `fetch/${types.TECHNOLOGY_LIST}` });
-  }, []);
-
   const [technologyId, setTechnologyId] = useState("0");
-
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
-    fetchHandler(setOptions);
+    fetchTechnologies(setOptions);
   }, []);
 
+  const handleTechnologyChange = (selectedTechnologyId) => {
+    dispatch(setTechnology(selectedTechnologyId));
+    setTechnologyId(selectedTechnologyId);
+  };
+
   useEffect(() => {
-    // updates technologyData in TechnologySelector.js
     dispatcher({ type: "technologyId", payload: Number(technologyId) });
   }, [technologyId]);
+
+  useEffect(() => {
+    dispatch(fetchTechnologyList());
+  }, []);
 
   return (
     <div className="w-1/3 flex justify-start">
       <FormControl sx={{ minWidth: 300 }} error={isNotSelected.technology}>
-        <InputLabel id="demo-simple-select-label">Technology</InputLabel>
+        <InputLabel id="technology-dropdown-label">Technology</InputLabel>
         <SelectMenu
           defaultValue={technologyId}
           setter={setTechnologyId}
-          options={options}
           label="Technology"
-          changeHandler={setSelectedTechnology}
+          options={options}
+          changeHandler={handleTechnologyChange}
         />
         {isNotSelected.technology && (
-          <FormHelperText>Must Selcet A Technology</FormHelperText>
+          <FormHelperText>Must Select a Technology</FormHelperText>
         )}
       </FormControl>
     </div>

@@ -1,107 +1,101 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Button } from "@mui/material";
+import { NavLink } from "react-router-dom";
+import { fetchTestList } from "../../store/root.actions";
+import { setTestIdList } from "../../store/slice/enrollStudent.slice";
+import EnrollStudentNavigation from "../../ui/EnrollStudent/EnrollStudentNavigation";
 import TechnologySelector from "../../components/enrollStudent/TechnologySelector/TechnologySelector";
 import TestTable from "../../components/enrollStudent/TestTable/TestTable";
-import EnrollStudentNavigation from "../../ui/EnrollStudent/EnrollStudentNavigation";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchTestList } from "../../store/root.actions";
-import { Button } from "@mui/material";
-import { setTestIdList } from "../../store/slice/enrollStudent.slice";
-import { NavLink } from "react-router-dom";
 
+/**
+ * Component for listing tests and selecting them for enrollment.
+ * @returns {JSX.Element} ListOfTests component.
+ */
 function ListOfTests() {
   const dispatch = useDispatch();
-  const [selectedTechnology, setSelectedTechnology] = useState(0);
-  const [selectedModule, setSelectedModule] = useState(0);
-  const [testData, setTestData] = useState([]);
   const [selectedTests, setSelectedTests] = useState([]);
+  const [testData, setTestData] = useState([]);
+  // To validate select fileds on fetch button for tests
   const [isNotSelected, setIsNotSelected] = useState({
     technology: false,
     module: false,
   });
+
   const { data: testList, isLoading } = useSelector(
     (store) => store.testListReducer
   );
+  const { technology: selectedTechnology, module: selectedModule } =
+    useSelector((store) => store.enrollStudentReducer);
 
+  // Update local test data when the API response changes
   useEffect(() => {
     setTestData(testList || []);
   }, [testList]);
 
+  // Reset warning flags when technology or module changes
   useEffect(() => {
     if (isNotSelected.technology || isNotSelected.module) {
-      setIsNotSelected((prev) => {
-        const updatedObj = { ...prev };
-        if (updatedObj.technology || updatedObj.module) {
-          updatedObj.technology = false;
-          updatedObj.module = false;
-        }
-        return updatedObj;
-      });
+      setIsNotSelected((prev) => ({
+        ...prev,
+        technology: false,
+        module: false,
+      }));
     }
   }, [selectedTechnology, selectedModule, isLoading]);
 
+  // Handle test selection
   const onTestSelect = (e, selectedTest_Id) => {
     if (!e.target.checked) {
-      if (selectedTests.includes(selectedTest_Id)) {
-        const index = selectedTests.indexOf(selectedTest_Id);
-        if (index !== -1) {
-          const updatedselectedTests = [...selectedTests];
-          updatedselectedTests.splice(index, 1);
-          setSelectedTests(updatedselectedTests);
-        }
-      }
+      setSelectedTests((prev) => prev.filter((id) => id !== selectedTest_Id));
     } else {
-      if (e.target.checked) {
-        setSelectedTests((prev) => {
-          const updatedselectedTests = [...prev];
-          updatedselectedTests.push(selectedTest_Id);
-          return updatedselectedTests;
-        });
-      }
+      setSelectedTests((prev) => [...prev, selectedTest_Id]);
     }
   };
 
+  // Fetch test data based on selected technology and module
   const fetchTestTableHandler = () => {
     if (selectedTechnology && selectedModule) {
-      dispatch(fetchTestList({ selectedTechnology, selectedModule }));
+      dispatch(
+        fetchTestList({
+          technologyId: selectedTechnology,
+          moduleId: selectedModule,
+        })
+      );
     } else {
-      setIsNotSelected((prev) => {
-        const updatedObj = { ...prev };
-        if (!selectedTechnology) updatedObj.technology = true;
-        if (!selectedModule) updatedObj.module = true;
-        return updatedObj;
-      });
+      setIsNotSelected((prev) => ({
+        ...prev,
+        technology: !selectedTechnology,
+        module: !selectedModule,
+      }));
     }
   };
 
+  // Update Redux store with selected test IDs
   useEffect(() => {
     dispatch(setTestIdList(selectedTests));
   }, [selectedTests]);
 
   return (
     <>
-      {/*  */}
       <header className="bg-gray-100 max-w-full overflow-hidden">
         <EnrollStudentNavigation />
       </header>
 
       <main className="mt-8">
-        {/**  DropDowns */}
         <section className="">
+          {/* Technology & Module selection */}
           <TechnologySelector
-            setter={setTestData}
             fetchHandler={fetchTestTableHandler}
-            selectedTechnology={selectedTechnology}
-            selectedModule={selectedModule}
-            setSelectedTechnology={setSelectedTechnology}
-            setSelectedModule={setSelectedModule}
             isNotSelected={isNotSelected}
           />
         </section>
 
-        {/**  Test Table */}
         <section className="mt-10">
+          {/* Test table component */}
           <TestTable testData={testData} onTestSelect={onTestSelect} />
           <div className="w-4/6 mx-auto mt-5">
+            {/*  */}
             <Button variant="contained">
               <NavLink to="/enroll-student/batch-selection">
                 Show Batches
@@ -111,7 +105,6 @@ function ListOfTests() {
         </section>
       </main>
 
-      {/*  */}
       <footer className="grid place-content-center p-6 w-full max-w-full overflow-hidden absolute bottom-0 bg-gray-100">
         © 2023 Naresh i Technologies | Software Training - Online | All Rights
         Reserved.

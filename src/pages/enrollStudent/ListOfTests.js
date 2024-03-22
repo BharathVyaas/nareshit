@@ -31,9 +31,11 @@ function ListOfTests() {
   );
   const { technology: selectedTechnology, module: selectedModule } =
     useSelector((store) => store.enrollStudentReducer);
-  const { excludedStudents } = useSelector(
+  const { excludedStudents, testIdList, batchIdList } = useSelector(
     (store) => store.enrollStudentReducer
   );
+
+  console.log(excludedStudents, testIdList, batchIdList);
 
   // Update local test data when the API response changes
   useEffect(() => {

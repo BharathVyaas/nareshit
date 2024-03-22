@@ -26,6 +26,7 @@ function BatchRenderer({ batch, testId }) {
   const dispatch = useDispatch();
   const [displayStudents, setDisplayStudents] = useState(false);
   const [students, setStudents] = useState([]);
+  const { batchIdList } = useSelector((store) => store.enrollStudentReducer);
   const {
     data: studentList,
     isLoading,
@@ -36,6 +37,7 @@ function BatchRenderer({ batch, testId }) {
     staleTime: Infinity,
     gcTime: Infinity,
   });
+  const isChecked = batchIdList[testId]?.includes(batch.BatchId) || false;
 
   useEffect(() => {
     setStudents(studentList || []);
@@ -64,6 +66,7 @@ function BatchRenderer({ batch, testId }) {
                 size=""
                 sx={{ padding: 0, margin: 0 }}
                 color="default"
+                checked={isChecked}
                 onClick={onBatchSelection}
               />
             }

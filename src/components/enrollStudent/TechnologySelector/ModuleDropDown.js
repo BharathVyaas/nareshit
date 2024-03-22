@@ -4,45 +4,35 @@ import { FormControl, FormHelperText, InputLabel } from "@mui/material";
 import SelectMenu from "../../../ui/EnrollStudent/Select";
 import { useDispatch, useSelector } from "react-redux";
 import { setModule } from "../../../store/slice/enrollStudent.slice";
-
-const fetchModules = async (technologyId) => {
-  try {
-    const response = await axios.get(
-      `https://www.nareshit.net/fetchModules/${technologyId}`
-    );
-    return response.data.map((module) => ({
-      id: module.ModuleID,
-      value: module.ModuleID,
-      option: module.ModuleName,
-    }));
-  } catch (error) {
-    console.error("Error fetching modules:", error);
-    return [];
-  }
-};
+import { fetchModuleList } from "../../../store/root.actions";
 
 function ModuleDropDown({ isNotSelected }) {
   const dispatch = useDispatch();
-  const [moduleId, setModuleId] = useState("0");
+  const [moduleId, setModuleId] = useState(0);
   const [options, setOptions] = useState([]);
-  const { technology: technologyId } = useSelector(
+  const { technology: technologyId, module } = useSelector(
     (store) => store.enrollStudentReducer
   );
+  const { data: moduleList } = useSelector((store) => store.modulesListReducer);
 
   useEffect(() => {
-    const fetchModulesData = async () => {
-      if (technologyId) {
-        const modules = await fetchModules(technologyId);
-        setOptions(modules);
-        setModuleId("0");
-      } else {
-        setOptions([]);
-        setModuleId("0");
-      }
-    };
-
-    fetchModulesData();
+    if (technologyId) dispatch(fetchModuleList(technologyId));
   }, [technologyId]);
+
+  useEffect(() => {
+    if (moduleList) {
+      setOptions(
+        moduleList.map((module) => ({
+          id: module.ModuleID,
+          value: module.ModuleID,
+          option: module.ModuleName,
+        }))
+      );
+
+      if (module) setModuleId(module);
+      else setModuleId(0);
+    }
+  }, [moduleList]);
 
   const handleModuleChange = (selectedModule) => {
     dispatch(setModule(selectedModule));

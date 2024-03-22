@@ -14,7 +14,7 @@ function SelectMenu({ defaultValue, options, setter, label, changeHandler }) {
       }}
       sx={{ textAlign: "start" }}
     >
-      <MenuItem key={-1} value={0}>
+      <MenuItem key={-1} value={"0"}>
         {`Select a ${label}`}
       </MenuItem>
       {options.map((ele, index) => {

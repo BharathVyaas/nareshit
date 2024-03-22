@@ -6,31 +6,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchTechnologyList } from "../../../store/root.actions";
 import { setTechnology } from "../../../store/slice/enrollStudent.slice";
 
-const fetchTechnologies = async (setter) => {
-  try {
-    const response = await axios.get(
-      "https://www.nareshit.net/fetchTechnologies"
-    );
-    setter(
-      response.data.map((tech) => ({
-        id: tech.TechnologyID,
-        value: tech.TechnologyID,
-        option: tech.TechnologyName,
-      }))
-    );
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 function TechnologyDropDown({ isNotSelected }) {
   const dispatch = useDispatch();
-  const [technologyId, setTechnologyId] = useState("0");
+  const [technologyId, setTechnologyId] = useState(0);
   const [options, setOptions] = useState([]);
+  const { data: technologyList } = useSelector(
+    (store) => store.technologiesListReducer
+  );
+  const { technology } = useSelector((store) => store.enrollStudentReducer);
 
   useEffect(() => {
-    fetchTechnologies(setOptions);
-  }, []);
+    if (technologyList) {
+      setOptions(
+        technologyList.map((tech) => ({
+          id: tech.TechnologyID,
+          value: tech.TechnologyID,
+          option: tech.TechnologyName,
+        }))
+      );
+      if (technology) setTechnologyId(technology);
+      else setTechnologyId(0);
+    } else {
+      setOptions([]);
+    }
+  }, [technologyList]);
 
   const handleTechnologyChange = (selectedTechnologyId) => {
     dispatch(setTechnology(selectedTechnologyId));

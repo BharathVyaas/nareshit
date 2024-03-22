@@ -70,6 +70,7 @@ function Tbody({ testData, onTestSelect }) {
 
 function Td({ test, onTestSelect }) {
   const [showDetails, setShowDetails] = useState(false);
+  const { testIdList } = useSelector((store) => store.enrollStudentReducer);
 
   return (
     <>
@@ -81,6 +82,7 @@ function Td({ test, onTestSelect }) {
                 size=""
                 sx={{ padding: 0, margin: 0 }}
                 color="default"
+                checked={testIdList.includes(test.TestID)}
                 onClick={(e) => onTestSelect(e, test.TestID)}
               />
             }

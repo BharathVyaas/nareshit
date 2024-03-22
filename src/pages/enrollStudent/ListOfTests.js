@@ -90,18 +90,34 @@ function ListOfTests() {
     dispatch(setTestIdList(selectedTests));
   }, [selectedTests]);
 
-  const submitHandler = () => {
-    const enrollmentId = 0;
+  const submitHandler = async () => {
+    try {
+      const enrollmentId = 0;
 
-    let filteredExcludedStudents = getFormatedExcludes(excludedStudents);
-    let result = getEnrollmentSubmitData({
-      enrollmentId,
-      selectedTechnology,
-      selectedModule,
-      filteredExcludedStudents,
-    });
+      let filteredExcludedStudents = getFormatedExcludes(excludedStudents);
+      let result = getEnrollmentSubmitData({
+        enrollmentId,
+        selectedTechnology,
+        selectedModule,
+        filteredExcludedStudents,
+      });
 
-    console.log(result);
+      const response = await axios.post(
+        "https://www.nareshit.net/EnrollTest",
+        result
+      );
+
+      console.log(
+        "url",
+        "https://www.nareshit.net/EnrollTest",
+        "req",
+        result,
+        "res",
+        response
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (

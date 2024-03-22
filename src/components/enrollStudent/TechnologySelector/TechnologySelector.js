@@ -35,11 +35,7 @@ function TechnologySelector({ fetchHandler, isNotSelected }) {
   return (
     <div className="w-4/6 text-center mb-6 mt-4 container flex justify-between mx-auto">
       {/* Technology dropdown component */}
-      <TechnologyDropDown
-        technologyData={technologyData}
-        dispatcher={dispatcher}
-        isNotSelected={isNotSelected}
-      />
+      <TechnologyDropDown isNotSelected={isNotSelected} />
 
       {/* Module dropdown component */}
       <ModuleDropDown

@@ -3,6 +3,7 @@ import { Button, Checkbox, Collapse, FormControlLabel } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import BatchDataRenderer from "../BatchTable/BatchDataRenderer";
 
 function TestTable({ testData, onTestSelect }) {
   return (
@@ -110,6 +111,7 @@ function Td({ test, onTestSelect }) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -70, opacity: 0 }}
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            className="border-b-2"
           >
             <td colSpan="4">
               <section className="p-2">
@@ -120,7 +122,9 @@ function Td({ test, onTestSelect }) {
                       <Close onClick={() => setShowDetails(false)} />
                     </span>
                   </div>
-                  <p className="m-10">Table Goes Here</p>
+                  <div className="m-8">
+                    <BatchDataRenderer />
+                  </div>
                   <Button variant="contained">Fetch Students</Button>
                 </div>
               </section>

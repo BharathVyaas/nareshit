@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import { NavLink } from "react-router-dom";
-import { fetchTestList } from "../../store/root.actions";
+import { fetchBatchList, fetchTestList } from "../../store/root.actions";
 import { setTestIdList } from "../../store/slice/enrollStudent.slice";
 import EnrollStudentNavigation from "../../ui/EnrollStudent/EnrollStudentNavigation";
 import TechnologySelector from "../../components/enrollStudent/TechnologySelector/TechnologySelector";
@@ -62,6 +62,13 @@ function ListOfTests() {
           moduleId: selectedModule,
         })
       );
+
+      dispatch(
+        fetchBatchList({
+          technologyId: selectedTechnology,
+          moduleId: selectedModule,
+        })
+      );
     } else {
       setIsNotSelected((prev) => ({
         ...prev,
@@ -97,9 +104,7 @@ function ListOfTests() {
           <div className="w-4/6 mx-auto mt-5">
             {/*  */}
             <Button variant="contained">
-              <NavLink to="/enroll-student/batch-selection">
-                Show Batches
-              </NavLink>
+              <NavLink to="/enroll-student/batch-selection">Submit</NavLink>
             </Button>
           </div>
         </section>

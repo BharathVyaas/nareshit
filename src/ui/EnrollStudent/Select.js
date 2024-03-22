@@ -17,9 +17,9 @@ function SelectMenu({ defaultValue, options, setter, label, changeHandler }) {
       <MenuItem key={-1} value={0}>
         {`Select a ${label}`}
       </MenuItem>
-      {options.map((ele) => {
+      {options.map((ele, index) => {
         return (
-          <MenuItem key={ele.key} value={ele.value}>
+          <MenuItem key={index} value={ele.value}>
             {ele.option}
           </MenuItem>
         );

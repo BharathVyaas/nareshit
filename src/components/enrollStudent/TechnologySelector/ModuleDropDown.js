@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { FormControl, FormHelperText, InputLabel } from "@mui/material";
 import SelectMenu from "../../../ui/EnrollStudent/Select";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setModule } from "../../../store/slice/enrollStudent.slice";
 
 const fetchModules = async (technologyId) => {
@@ -21,15 +21,18 @@ const fetchModules = async (technologyId) => {
   }
 };
 
-function ModuleDropDown({ technologyData, dispatcher, isNotSelected }) {
+function ModuleDropDown({ isNotSelected }) {
   const dispatch = useDispatch();
   const [moduleId, setModuleId] = useState("0");
   const [options, setOptions] = useState([]);
+  const { technology: technologyId } = useSelector(
+    (store) => store.enrollStudentReducer
+  );
 
   useEffect(() => {
     const fetchModulesData = async () => {
-      if (technologyData.technologyId) {
-        const modules = await fetchModules(technologyData.technologyId);
+      if (technologyId) {
+        const modules = await fetchModules(technologyId);
         setOptions(modules);
         setModuleId("0");
       } else {
@@ -39,12 +42,7 @@ function ModuleDropDown({ technologyData, dispatcher, isNotSelected }) {
     };
 
     fetchModulesData();
-  }, [technologyData.technologyId]);
-
-  useEffect(() => {
-    // Update the technology data in the parent component
-    dispatcher({ type: "moduleId", payload: Number(moduleId) });
-  }, [moduleId]);
+  }, [technologyId]);
 
   const handleModuleChange = (selectedModule) => {
     dispatch(setModule(selectedModule));

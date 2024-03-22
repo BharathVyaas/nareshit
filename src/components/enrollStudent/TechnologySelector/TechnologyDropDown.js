@@ -23,7 +23,7 @@ const fetchTechnologies = async (setter) => {
   }
 };
 
-function TechnologyDropDown({ dispatcher, isNotSelected }) {
+function TechnologyDropDown({ isNotSelected }) {
   const dispatch = useDispatch();
   const [technologyId, setTechnologyId] = useState("0");
   const [options, setOptions] = useState([]);
@@ -36,10 +36,6 @@ function TechnologyDropDown({ dispatcher, isNotSelected }) {
     dispatch(setTechnology(selectedTechnologyId));
     setTechnologyId(selectedTechnologyId);
   };
-
-  useEffect(() => {
-    dispatcher({ type: "technologyId", payload: Number(technologyId) });
-  }, [technologyId]);
 
   useEffect(() => {
     dispatch(fetchTechnologyList());

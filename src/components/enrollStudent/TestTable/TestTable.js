@@ -125,7 +125,6 @@ function Td({ test, onTestSelect }) {
                   <div className="m-8">
                     <BatchDataRenderer />
                   </div>
-                  <Button variant="contained">Fetch Students</Button>
                 </div>
               </section>
             </td>

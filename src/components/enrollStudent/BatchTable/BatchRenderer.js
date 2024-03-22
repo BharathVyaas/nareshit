@@ -1,35 +1,69 @@
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchStudentList } from "../../../store/root.actions";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { motion } from "framer-motion";
+import StudentRenderer from "./StudentRenderer";
+
+const fetchStudent = async (id) => {
+  const response = await axios.post(
+    "https://www.nareshit.net/GetStudentNameByBatchId",
+    {
+      BatchId: id,
+    }
+  );
+
+  return response.data.dbresult;
+};
 
 function BatchRenderer({ batch }) {
-  const dispatch = useDispatch();
   const [displayStudents, setDisplayStudents] = useState(false);
-  const { data } = useSelector((store) => store.studentListReducer);
+  const [students, setStudents] = useState([]);
+
+  const {
+    data: studentList,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["student", batch.BatchId],
+    queryFn: () => fetchStudent(batch.BatchId),
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
 
   useEffect(() => {
-    if (displayStudents) dispatch(fetchStudentList(batch.BatchId));
-  }, [displayStudents]);
+    setStudents(studentList || []);
+  }, [studentList]);
+
+  if (isLoading) return <i>Loading...</i>;
+  if (isError) return <i>Something went wrong</i>;
 
   return (
     <>
       <div className="flex">
-        <p
+        <motion.p
+          style={{ rotate: displayStudents ? "90deg" : "0deg" }}
           onClick={() => {
             setDisplayStudents((prev) => !prev);
           }}
           className="cursor-pointer"
         >
           <ArrowForwardIosIcon fontSize="10" />
-        </p>
+        </motion.p>
         <p className="px-3">{batch.BatchName}</p>
       </div>
-      {displayStudents && (
-        <div className="ms-7">
-          <p>hi</p>
-        </div>
-      )}
+
+      {displayStudents ? (
+        students.length > 0 ? (
+          <div className="mb-4 mt-4 ms-10">
+            <StudentRenderer students={students} />
+          </div>
+        ) : (
+          <div className="mb-4 mt-4 ms-10">
+            <i>No data to show.</i>
+          </div>
+        )
+      ) : null}
     </>
   );
 }

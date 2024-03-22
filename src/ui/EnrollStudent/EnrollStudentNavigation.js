@@ -19,7 +19,7 @@ function EnrollStudentNavigation() {
                 }
                 end
               >
-                Student Enrollment
+                List of Enrollments
               </NavLink>
             </li>
             <li className="">
@@ -32,33 +32,7 @@ function EnrollStudentNavigation() {
                 }
                 end
               >
-                List Of Tests
-              </NavLink>
-            </li>
-            <li className="">
-              <NavLink
-                to="/enroll-student/batch-selection"
-                onClick={(e) => e.preventDefault()}
-                className={({ isActive }) =>
-                  isActive
-                    ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
-                    : "text-white cursor-default font-medium rounded px-6 py-3"
-                }
-              >
-                Batch Selection
-              </NavLink>
-            </li>
-            <li className="">
-              <NavLink
-                to="/enroll-student/student-selection"
-                onClick={(e) => e.preventDefault()}
-                className={({ isActive }) =>
-                  isActive
-                    ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
-                    : "text-white cursor-default font-medium rounded px-6 py-3"
-                }
-              >
-                Student Selection
+                Test Selection
               </NavLink>
             </li>
           </ul>

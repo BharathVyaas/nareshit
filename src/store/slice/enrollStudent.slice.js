@@ -10,7 +10,7 @@ const initialState = {
   // Selected BatchID List
   batchIdList: null,
   // Excluded students from all Batches excludedStudents: {batchId: [...(excluded students)]}
-  excludedStudents: {},
+  excludedStudents: [],
 };
 
 export const enrollStudentSlice = createSlice({

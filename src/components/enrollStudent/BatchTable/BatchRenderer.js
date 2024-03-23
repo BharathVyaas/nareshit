@@ -38,7 +38,7 @@ function BatchRenderer({ batch, testId }) {
     gcTime: Infinity,
   });
   const isChecked = batchIdList[testId]?.includes(batch.BatchId) || false;
-
+  console.log(batchIdList[16292]?.includes(batch.BatchId));
   useEffect(() => {
     setStudents(studentList || []);
   }, [studentList]);

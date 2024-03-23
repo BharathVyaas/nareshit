@@ -16,6 +16,10 @@ function TechnologyDropDown({ isNotSelected }) {
   const { technology } = useSelector((store) => store.enrollStudentReducer);
 
   useEffect(() => {
+    setTechnologyId(technology);
+  }, [technology]);
+
+  useEffect(() => {
     if (technologyList) {
       setOptions(
         technologyList.map((tech) => ({

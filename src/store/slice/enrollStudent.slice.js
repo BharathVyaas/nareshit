@@ -27,7 +27,7 @@ export const enrollStudentSlice = createSlice({
       state.testIdList = action.payload;
     },
     setBatchIdList(state, action) {
-      state.batchId = action.payload;
+      state.batchIdList = action.payload;
     },
     insertBatchId(state, action) {
       const { testId, batchId } = action.payload;
@@ -75,7 +75,7 @@ export const enrollStudentSlice = createSlice({
         }
       }
     },
-    includedStudents(state, action) {
+    setIncludedStudents(state, action) {
       state.includedStudents = action.payload;
     },
     insertIncludedStudent(state, action) {
@@ -181,11 +181,12 @@ export const {
   setModule,
   setTestIdList,
   setBatchIdList,
-  includedStudents,
+  setIncludedStudents,
   insertIncludedStudent,
   includeStudentListByBatchId,
   insertBatchId,
   removeBatchId,
   removeStudentFromIncludes,
   removeStudentListByBatchId,
+  resetEnrollStudentDetailsSlice,
 } = enrollStudentSlice.actions;

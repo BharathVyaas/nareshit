@@ -187,7 +187,6 @@ function* enrollListSage(action) {
 }
 
 function* testListSaga(action) {
-  console.log(action);
   try {
     yield put(testListSlice.actions.fetchStart());
     const response = yield call(

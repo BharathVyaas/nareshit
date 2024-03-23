@@ -1,10 +1,19 @@
 import React from "react";
 import EnrollStudentNavigation from "../../ui/EnrollStudent/EnrollStudentNavigation";
 import { Button } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import EnrollListRenderer from "../../components/enrollStudent/EnrollStudent/EnrollListRenderer";
+import { useDispatch } from "react-redux";
+import { resetEnrollStudentDetailsSlice } from "../../store/slice/enrollStudent.slice";
 
 function EnrollStudent() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const onCreate = () => {
+    dispatch(resetEnrollStudentDetailsSlice());
+    navigate("/enroll-student/tests?edit=false&enrollId=0");
+  };
+
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -14,10 +23,8 @@ function EnrollStudent() {
 
         <main className="flex-grow mt-8 mb-8">
           <section className="w-4/6 mx-auto mt-5">
-            <Button variant="contained">
-              <NavLink to="/enroll-student/tests?edit=false&enrollId=0">
-                Create New
-              </NavLink>
+            <Button variant="contained" onClick={onCreate}>
+              Create New
             </Button>
           </section>
           <section className="mt-8">

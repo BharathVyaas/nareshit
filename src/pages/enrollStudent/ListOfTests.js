@@ -7,6 +7,8 @@ import {
   retriveTestSelectionPageDetails,
 } from "../../store/root.actions";
 import {
+  setBatchIdList,
+  setIncludedStudents,
   setModule,
   setTechnology,
   setTestIdList,
@@ -17,6 +19,7 @@ import TestTable from "../../components/enrollStudent/TestTable/TestTable";
 import axios from "axios";
 import {
   getEnrollmentSubmitData,
+  getFilteredEnrollStudentSlice,
   getFormatedExcludes,
 } from "../../util/helper";
 import { useLocation } from "react-router";
@@ -25,6 +28,7 @@ function ListOfTests() {
   const dispatch = useDispatch();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const edit = queryParams.get("edit") === "true" ? true : false;
   const enrollId = queryParams.get("enrollId") || 0;
   const [selectedTests, setSelectedTests] = useState([]);
   const [testData, setTestData] = useState([]);
@@ -43,15 +47,55 @@ function ListOfTests() {
   );
 
   const { TechnologyId: retrivedTechnologyId, ModuleId: retrivedModuleId } =
-    useSelector((store) => store?.testSelectionPageReducer?.data?.[0] || {});
+    useSelector((store) => store.testSelectionPageReducer.data?.[0] || {});
+
+  const { data: retrivedData } = useSelector(
+    (store) => store.testSelectionPageReducer
+  );
 
   useEffect(() => {
-    dispatch(setTechnology(retrivedTechnologyId || 0));
-    dispatch(setModule(retrivedModuleId || 0));
+    if (edit === true) {
+      if (
+        (!retrivedTechnologyId || !retrivedModuleId) &&
+        retrivedTechnologyId === undefined &&
+        retrivedModuleId === undefined
+      ) {
+        console.error(
+          `Must pass both retriveTechnologyId ${retrivedTechnologyId}, retriveModuleId ${retrivedModuleId} tobe able to fetch testlist`
+        );
+      } else {
+        dispatch(setTechnology(retrivedTechnologyId));
+        dispatch(setModule(retrivedModuleId));
+        dispatch(
+          fetchTestList({
+            technologyId: retrivedTechnologyId,
+            moduleId: retrivedModuleId,
+          })
+        );
+        dispatch(
+          fetchBatchList({
+            technologyId: retrivedTechnologyId,
+            moduleId: retrivedModuleId,
+          })
+        );
+      }
+    }
   }, [retrivedTechnologyId, retrivedModuleId]);
 
   useEffect(() => {
-    if (enrollId) dispatch(retriveTestSelectionPageDetails(enrollId));
+    if (retrivedData) {
+      const { testIdList, batchIdList, studentIdList } =
+        getFilteredEnrollStudentSlice(retrivedData);
+
+      dispatch(setIncludedStudents(studentIdList));
+      dispatch(setTestIdList(testIdList));
+      dispatch(setBatchIdList(batchIdList));
+    }
+  }, [retrivedData]);
+
+  useEffect(() => {
+    if (enrollId && edit === true)
+      dispatch(retriveTestSelectionPageDetails(enrollId));
   }, []);
 
   useEffect(() => {

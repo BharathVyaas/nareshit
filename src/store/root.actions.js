@@ -11,6 +11,7 @@ export const types = {
   TEST_LIST: "listoftests",
   BATCH_LIST: "listofbatches",
   STUDENT_LIST: "listofstudent",
+  ENROLL_LIST: "enrolllist",
 
   // PAGES
 
@@ -19,6 +20,8 @@ export const types = {
   TECHNOLOGY_PAGE: "technologypage",
   ASSESSMENT_PAGE: "assessmentpage",
   SCHEDULE_PAGE: "schedulepage",
+  // ENROLL-STUDENTS
+  TESTSELECTION_PAGE: "testselectionpage",
 
   // UTIL
   /**
@@ -82,6 +85,13 @@ export const fetchStudentList = (payload) => {
   };
 };
 
+export const fetchEnrollList = (payload) => {
+  return {
+    type: types.ENROLL_LIST,
+    payload,
+  };
+};
+
 //  PAGES
 
 export const fetchAssessmentPageDetails = (payload) => {
@@ -97,4 +107,12 @@ export const fetchTechnologyPageDetails = (payload) => {
     payload,
   };
 };
+
+export const retriveTestSelectionPageDetails = (payload) => {
+  return {
+    type: types.TESTSELECTION_PAGE,
+    payload,
+  };
+};
+
 export const userSelectionAction = userSelectionSlice.actions;

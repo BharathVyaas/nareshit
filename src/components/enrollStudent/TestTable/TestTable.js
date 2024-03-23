@@ -101,17 +101,22 @@ function Td({ test, onTestSelect }) {
             : ""}
         </td>
       </tr>
-      {showDetails && (
-        <AnimatePresence>
+      <AnimatePresence>
+        {showDetails && (
           <motion.tr
             initial={{ y: -70, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -70, opacity: 0 }}
+            exit={{
+              scaleY: 0,
+              y: -20,
+              opacity: 0,
+              transition: { duration: 0.1 },
+            }}
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
             className="border-b-2"
           >
             <td colSpan="4">
-              <section className="p-2">
+              <section className="p-2 pe-0">
                 <div>
                   <div className="flex justify-between">
                     <h2>Batch Details</h2>
@@ -129,8 +134,8 @@ function Td({ test, onTestSelect }) {
             <td colSpan="0"></td>
             <td colSpan="0"></td>
           </motion.tr>
-        </AnimatePresence>
-      )}
+        )}
+      </AnimatePresence>
     </>
   );
 }

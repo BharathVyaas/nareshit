@@ -16,6 +16,7 @@ const questionListSlice = getSlice(types.QUESTION_LIST);
 const testListSlice = getSlice(types.TEST_LIST);
 const batchListSlice = getSlice(types.BATCH_LIST);
 const studentListSlice = getSlice(types.STUDENT_LIST);
+const enrollListSlice = getSlice(types.ENROLL_LIST);
 
 // LOADERS
 {
@@ -25,6 +26,10 @@ const listOfAssessmentPageSlice = getSlice(types.LISTOFASSESSMENT_PAGE);
 const technologyPageSlice = getSlice(types.TECHNOLOGY_PAGE);
 const assessmentPageSlice = getSlice(types.ASSESSMENT_PAGE);
 const schedulePageSlice = getSlice(types.SCHEDULE_PAGE);
+{
+  /* Enroll-Student */
+}
+const testSelectionPageSlice = getSlice(types.TESTSELECTION_PAGE);
 
 // UTIL
 const availableDBQuestionCountSlice = getSlice(types.AVAILABLEDBQUESTIONCOUNT);
@@ -35,6 +40,7 @@ export {
   topicsListSlice,
   subTopicsListSlice,
   questionListSlice,
+  enrollListSlice,
   testListSlice,
   batchListSlice,
   studentListSlice,
@@ -44,5 +50,6 @@ export {
   technologyPageSlice,
   assessmentPageSlice,
   schedulePageSlice,
+  testSelectionPageSlice,
 };
 export { availableDBQuestionCountSlice };

@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
-import { fetchBatchList, fetchTestList } from "../../store/root.actions";
-import { setTestIdList } from "../../store/slice/enrollStudent.slice";
+import {
+  fetchBatchList,
+  fetchTestList,
+  retriveTestSelectionPageDetails,
+} from "../../store/root.actions";
+import {
+  setModule,
+  setTechnology,
+  setTestIdList,
+} from "../../store/slice/enrollStudent.slice";
 import EnrollStudentNavigation from "../../ui/EnrollStudent/EnrollStudentNavigation";
 import TechnologySelector from "../../components/enrollStudent/TechnologySelector/TechnologySelector";
 import TestTable from "../../components/enrollStudent/TestTable/TestTable";
@@ -11,9 +19,13 @@ import {
   getEnrollmentSubmitData,
   getFormatedExcludes,
 } from "../../util/helper";
+import { useLocation } from "react-router";
 
 function ListOfTests() {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const enrollId = queryParams.get("enrollId") || 0;
   const [selectedTests, setSelectedTests] = useState([]);
   const [testData, setTestData] = useState([]);
   const [isNotSelected, setIsNotSelected] = useState({
@@ -26,9 +38,21 @@ function ListOfTests() {
   );
   const { technology: selectedTechnology, module: selectedModule } =
     useSelector((store) => store.enrollStudentReducer);
-  const { excludedStudents, testIdList, batchIdList } = useSelector(
+  const { includedStudents, testIdList, batchIdList } = useSelector(
     (store) => store.enrollStudentReducer
   );
+
+  const { TechnologyId: retrivedTechnologyId, ModuleId: retrivedModuleId } =
+    useSelector((store) => store?.testSelectionPageReducer?.data?.[0] || {});
+
+  useEffect(() => {
+    dispatch(setTechnology(retrivedTechnologyId || 0));
+    dispatch(setModule(retrivedModuleId || 0));
+  }, [retrivedTechnologyId, retrivedModuleId]);
+
+  useEffect(() => {
+    if (enrollId) dispatch(retriveTestSelectionPageDetails(enrollId));
+  }, []);
 
   useEffect(() => {
     setTestData(testList || []);
@@ -82,14 +106,12 @@ function ListOfTests() {
 
   const submitHandler = async () => {
     try {
-      const enrollmentId = 0;
-
-      let filteredExcludedStudents = getFormatedExcludes(excludedStudents);
+      let filteredIncludedStudents = getFormatedExcludes(includedStudents);
       let result = getEnrollmentSubmitData({
-        enrollmentId,
+        enrollId,
         selectedTechnology,
         selectedModule,
-        filteredExcludedStudents,
+        filteredIncludedStudents,
       });
 
       const response = await axios.post(

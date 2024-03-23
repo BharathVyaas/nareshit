@@ -4,13 +4,15 @@ import { Table, Column } from "react-virtualized";
 import "react-virtualized/styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  insertExcludedStudent,
-  removeStudentFromExcludes,
+  includeStudentListByBatchId,
+  insertIncludedStudent,
+  removeStudentFromIncludes,
+  removeStudentListByBatchId,
 } from "../../../store/slice/enrollStudent.slice";
 
 function StudentRenderer({ students, testId, batchId }) {
   const dispatch = useDispatch();
-  const { excludedStudents } = useSelector(
+  const { includedStudents } = useSelector(
     (store) => store.enrollStudentReducer
   );
 
@@ -19,11 +21,11 @@ function StudentRenderer({ students, testId, batchId }) {
 
     if (flag) {
       dispatch(
-        insertExcludedStudent({ testId, batchId, studentId: student.StudentID })
+        insertIncludedStudent({ testId, batchId, studentId: student.StudentID })
       );
     } else {
       dispatch(
-        removeStudentFromExcludes({
+        removeStudentFromIncludes({
           testId,
           batchId,
           studentId: student.StudentID,
@@ -32,9 +34,26 @@ function StudentRenderer({ students, testId, batchId }) {
     }
   };
 
+  const includeAllHandler = () => {
+    dispatch(
+      includeStudentListByBatchId({
+        testId,
+        batchId,
+        studentList: students.map((student) => student.StudentID),
+      })
+    );
+  };
+
+  const excludeAllHandler = () => {
+    dispatch(removeStudentListByBatchId({ testId, batchId }));
+  };
   const rowRenderer = ({ index, key, style }) => {
     const student = students[index];
 
+    console.log(
+      includedStudents?.[testId]?.[batchId]?.includes(student.StudentID) ||
+        false
+    );
     return (
       <div key={key} style={style}>
         <div className="border-b border-gray-300 flex items-center py-2">
@@ -42,8 +61,14 @@ function StudentRenderer({ students, testId, batchId }) {
             <Checkbox
               size=""
               color="default"
+              checked={
+                includedStudents?.[testId]?.[batchId]?.includes(
+                  student.StudentID
+                ) || false
+              }
               onClick={(e) => onStudentSelection(e, student)}
             />
+
             {student.StudentID}
           </div>
           <div style={{ width: 200 }}>
@@ -57,19 +82,25 @@ function StudentRenderer({ students, testId, batchId }) {
 
   return (
     <div>
-      <Table
-        width={600}
-        height={400}
-        rowHeight={50}
-        rowCount={students.length}
-        rowGetter={({ index }) => students[index]}
-        rowRenderer={rowRenderer}
-        headerHeight={40}
-      >
-        <Column label="ID" dataKey="StudentID" width={100} />
-        <Column label="FirstName" dataKey="FirstName" width={200} />
-        <Column label="Email" dataKey="Email" width={300} />
-      </Table>
+      <div className="flex">
+        <Button onClick={includeAllHandler}>Include All</Button>
+        <Button onClick={excludeAllHandler}>Exclude All</Button>
+      </div>
+      <div>
+        <Table
+          width={600}
+          height={400}
+          rowHeight={50}
+          rowCount={students.length}
+          rowGetter={({ index }) => students[index]}
+          rowRenderer={rowRenderer}
+          headerHeight={40}
+        >
+          <Column label="ID" dataKey="StudentID" width={100} />
+          <Column label="FirstName" dataKey="FirstName" width={200} />
+          <Column label="Email" dataKey="Email" width={300} />
+        </Table>
+      </div>
     </div>
   );
 }

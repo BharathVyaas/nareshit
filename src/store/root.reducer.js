@@ -3,6 +3,7 @@ import {
   assessmentPageSlice,
   availableDBQuestionCountSlice,
   batchListSlice,
+  enrollListSlice,
   listOfAssessmentPageSlice,
   modulesListSlice,
   questionListSlice,
@@ -12,6 +13,7 @@ import {
   technologiesListSlice,
   technologyPageSlice,
   testListSlice,
+  testSelectionPageSlice,
   topicsListSlice,
 } from "./root.slice";
 import { userSelectionSlice } from "./slice/userSelectionsSlice";
@@ -26,15 +28,19 @@ const reducersSlice = {
   subTopicsListReducer: subTopicsListSlice.reducer,
   questionListReducer: questionListSlice.reducer,
   /* Enroll-Student */
+  enrollListReducer: enrollListSlice.reducer,
   testListReducer: testListSlice.reducer,
   batchListReducer: batchListSlice.reducer,
   studentListReducer: studentListSlice.reducer,
 
   // LOADERS
+  /* Assessment-View*/
   listOfAssessmentPageReducer: listOfAssessmentPageSlice.reducer,
   technologyPageReducer: technologyPageSlice.reducer,
   assessmentPageReducer: assessmentPageSlice.reducer,
   schedulePageReducer: schedulePageSlice.reducer,
+  /* Enroll-Student */
+  testSelectionPageReducer: testSelectionPageSlice.reducer,
 
   // UTIL
   availableDBQuestionCountReducer: availableDBQuestionCountSlice.reducer,

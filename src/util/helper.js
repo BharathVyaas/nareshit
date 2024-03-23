@@ -24,15 +24,15 @@ export function getFormatedExcludes(excludedStudents) {
 }
 
 export function getEnrollmentSubmitData({
-  enrollmentId,
+  enrollId,
   selectedTechnology,
   selectedModule,
-  filteredExcludedStudents,
+  filteredIncludedStudents,
 }) {
   return {
-    data: filteredExcludedStudents,
+    data: filteredIncludedStudents,
     TechnologyId: selectedTechnology,
     ModuleId: selectedModule,
-    EnrollmentId: enrollmentId,
+    EnrollmentId: enrollId,
   };
 }

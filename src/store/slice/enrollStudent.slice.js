@@ -9,12 +9,12 @@ const initialState = {
   testIdList: [],
   // Selected BatchID List {testId: [...batchId]}
   batchIdList: {},
-  // Excluded students from all Batches excludedStudents: {batchId: [...(excluded students)]}
-  excludedStudents: {},
+  // Included students from all Batches includedStudents: {batchId: [...(included students)]}
+  includedStudents: {},
 };
 
 export const enrollStudentSlice = createSlice({
-  name: "enrollStudent",
+  name: "enrollStudentInclude", // Renamed from "enrollStudent" to "enrollStudentInclude"
   initialState,
   reducers: {
     setTechnology(state, action) {
@@ -75,62 +75,103 @@ export const enrollStudentSlice = createSlice({
         }
       }
     },
-    excludedStudents(state, action) {
-      state.excludedStudents = action.payload;
+    includedStudents(state, action) {
+      state.includedStudents = action.payload;
     },
-    insertExcludedStudent(state, action) {
+    insertIncludedStudent(state, action) {
       const { testId, batchId, studentId } = action.payload;
 
       if (!testId || !batchId || !studentId) {
         throw new Error("Must pass valid data to insertExcludedStudent");
       }
 
-      // also add testId and batchId to there lists
+      // also add testId and batchId to their lists
       if (!state.testIdList.includes(testId)) state.testIdList.push(testId);
       if (!state.batchIdList[testId]) state.batchIdList[testId] = [];
       if (!state.batchIdList[testId].includes(batchId))
         state.batchIdList[testId].push(batchId);
 
-      if (!state.excludedStudents[testId]) state.excludedStudents[testId] = {};
+      if (!state.includedStudents[testId]) state.includedStudents[testId] = {};
 
-      if (!Array.isArray(state.excludedStudents[testId][batchId]))
-        state.excludedStudents[testId][batchId] = [];
+      if (!Array.isArray(state.includedStudents[testId][batchId]))
+        state.includedStudents[testId][batchId] = [];
 
-      if (state.excludedStudents[testId][batchId].includes(studentId)) {
+      if (state.includedStudents[testId][batchId].includes(studentId)) {
         console.warn("studentId already exists in the batch");
       } else {
-        state.excludedStudents[testId][batchId].push(studentId);
+        state.includedStudents[testId][batchId].push(studentId);
       }
     },
-    removeStudentFromExcludes(state, action) {
+    includeStudentListByBatchId(state, action) {
+      const { testId, batchId, studentList } = action.payload;
+
+      if (!testId || !batchId || !studentList) {
+        throw new Error("Must pass valid data to insertExcludedStudent");
+      }
+
+      if (!Array.isArray(studentList)) throw new Error("Not a valid argument");
+
+      // also add testId and batchId to their lists
+      if (!state.testIdList.includes(testId)) state.testIdList.push(testId);
+      if (!state.batchIdList[testId]) state.batchIdList[testId] = [];
+      if (!state.batchIdList[testId].includes(batchId))
+        state.batchIdList[testId].push(batchId);
+
+      if (!state.includedStudents[testId]) state.includedStudents[testId] = {};
+
+      state.includedStudents[testId][batchId] = studentList;
+    },
+    removeStudentFromIncludes(state, action) {
       const { testId, batchId, studentId } = action.payload;
       if (!testId || !batchId || !studentId) {
         throw new Error("Must pass valid data to removeStudentFromExcludes");
       }
 
-      if (!state.excludedStudents[testId]) state.excludedStudents[testId] = {};
+      if (!state.includedStudents[testId]) state.includedStudents[testId] = {};
 
-      if (!state.excludedStudents[testId][batchId].includes(studentId))
-        console.warn("sutdent dosen't exists in the batch");
+      if (!state.includedStudents[testId][batchId].includes(studentId))
+        console.warn("student doesn't exists in the batch");
 
-      if (!Array.isArray(state.excludedStudents[testId][batchId])) {
+      if (!Array.isArray(state.includedStudents[testId][batchId])) {
         console.error("removeStudentFromExcludes:action cannot be performed");
       } else {
         const index =
-          state.excludedStudents[testId][batchId].indexOf(studentId);
+          state.includedStudents[testId][batchId].indexOf(studentId);
 
-        state.excludedStudents[testId][batchId].splice(index, 1);
+        state.includedStudents[testId][batchId].splice(index, 1);
 
         // if array is empty remove testId and batchId properties.
-        if (state.excludedStudents[testId][batchId].length === 0) {
-          let flag = delete state.excludedStudents[testId][batchId];
-          flag = flag && delete state.excludedStudents[testId];
+        if (state.includedStudents[testId][batchId].length === 0) {
+          let flag = delete state.includedStudents[testId][batchId];
+          flag = flag && delete state.includedStudents[testId];
 
           if (!flag) {
             console.warn("Deleting testId and batchId failed");
           }
         }
       }
+    },
+    removeStudentListByBatchId(state, action) {
+      const { testId, batchId } = action.payload;
+
+      if (!testId || !batchId) {
+        throw new Error("Must pass valid data to insertExcludedStudent");
+      }
+
+      let flag;
+      if (state.includedStudents[testId])
+        flag = delete state.includedStudents[testId];
+
+      if (!flag) {
+        console.warn("Coudn't finesh process");
+      }
+    },
+    resetEnrollStudentDetailsSlice(state, action) {
+      state.technology = null;
+      state.module = null;
+      state.testIdList = [];
+      state.batchIdList = {};
+      state.includedStudents = {};
     },
   },
 });
@@ -140,9 +181,11 @@ export const {
   setModule,
   setTestIdList,
   setBatchIdList,
-  excludedStudents,
-  insertExcludedStudent,
+  includedStudents,
+  insertIncludedStudent,
+  includeStudentListByBatchId,
   insertBatchId,
   removeBatchId,
-  removeStudentFromExcludes,
+  removeStudentFromIncludes,
+  removeStudentListByBatchId,
 } = enrollStudentSlice.actions;

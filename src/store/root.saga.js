@@ -3,6 +3,7 @@ import {
   assessmentPageSlice,
   availableDBQuestionCountSlice,
   batchListSlice,
+  enrollListSlice,
   listOfAssessmentPageSlice,
   modulesListSlice,
   questionListSlice,
@@ -12,6 +13,7 @@ import {
   technologiesListSlice,
   technologyPageSlice,
   testListSlice,
+  testSelectionPageSlice,
   topicsListSlice,
 } from "./root.slice";
 import axios from "axios";
@@ -139,6 +141,43 @@ function* questionSaga(action) {
     console.error(error);
     yield put(
       questionListSlice.fetchFailure({
+        error,
+        statusCode: error.response.status,
+        statusText: error.message,
+      })
+    );
+  }
+}
+
+function* enrollListSage(action) {
+  console.log(action);
+  try {
+    yield put(enrollListSlice.actions.fetchStart());
+    const response = yield call(
+      axios.post,
+      "https://www.nareshit.net/CreateNewEnrollId"
+    );
+
+    // Log
+    console.log(
+      "url",
+      "https://www.nareshit.net/CreateNewEnrollId",
+      "req",
+      undefined,
+      "res",
+      response
+    );
+
+    yield put(
+      enrollListSlice.actions.fetchSuccess({
+        data: response.data.dbresult,
+        statusCode: response.status,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    yield put(
+      enrollListSlice.actions.fetchFailure({
         error,
         statusCode: error.response.status,
         statusText: error.message,
@@ -386,6 +425,47 @@ function* schedulePageSaga(action) {
   }
 }
 
+function* testSelectionPageSaga(action) {
+  yield put(testSelectionPageSlice.actions.fetchStart());
+  try {
+    const response = yield call(
+      axios.post,
+      "https://www.nareshit.net/Retrive_Enroll",
+      {
+        EnrollmentId: action.payload,
+      }
+    );
+
+    // Log
+    console.log(
+      "url",
+      "https://www.nareshit.net/Retrive_Enroll",
+      "req",
+      {
+        EnrollmentId: action.payload,
+      },
+      "res",
+      response
+    );
+
+    yield put(
+      testSelectionPageSlice.actions.fetchSuccess({
+        data: response.data.dbresult,
+        statusCode: response.status,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    yield put(
+      testSelectionPageSlice.actions.fetchFailure({
+        error,
+        statusCode: error.response.status,
+        statusText: error.message,
+      })
+    );
+  }
+}
+
 // UTIL
 
 function* availableDBQuestionCount(action) {
@@ -430,15 +510,23 @@ function* adminWatcher() {
   {
     /* Enroll-Student */
   }
+  yield takeLatest(types.ENROLL_LIST, enrollListSage);
   yield takeLatest(types.TEST_LIST, testListSaga);
   yield takeLatest(types.BATCH_LIST, batchListSaga);
   yield takeLatest(types.STUDENT_LIST, studentListSaga);
 
   // PAGES
+  {
+    /* Assessment-View*/
+  }
   yield takeLatest(types.LISTOFASSESSMENT_PAGE, listOfAssessmentPageSaga);
   yield takeLatest(types.TECHNOLOGY_PAGE, technologiesPageSaga);
   yield takeLatest(types.ASSESSMENT_PAGE, assessmentPageSaga);
   yield takeLatest(types.SCHEDULE_PAGE, schedulePageSaga);
+  {
+    /* Enroll-Student */
+  }
+  yield takeLatest(types.TESTSELECTION_PAGE, testSelectionPageSaga);
 
   // UTIL
   yield takeLatest(types.AVAILABLEDBQUESTIONCOUNT, availableDBQuestionCount);

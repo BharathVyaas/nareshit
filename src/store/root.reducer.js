@@ -10,6 +10,7 @@ import {
   schedulePageSlice,
   studentListSlice,
   subTopicsListSlice,
+  submitEnrollStudentPageSlice,
   technologiesListSlice,
   technologyPageSlice,
   testListSlice,
@@ -41,6 +42,10 @@ const reducersSlice = {
   schedulePageReducer: schedulePageSlice.reducer,
   /* Enroll-Student */
   testSelectionPageReducer: testSelectionPageSlice.reducer,
+
+  // ACTIONS
+  /* Enroll-Student */
+  submitEnrollStudentPageReducer: submitEnrollStudentPageSlice.reducer,
 
   // UTIL
   availableDBQuestionCountReducer: availableDBQuestionCountSlice.reducer,

@@ -5,8 +5,10 @@ import {
   fetchBatchList,
   fetchTestList,
   retriveTestSelectionPageDetails,
+  submitEnrollStudentPage,
 } from "../../store/root.actions";
 import {
+  resetEnrollStudentDetailsSlice,
   setBatchIdList,
   setIncludedStudents,
   setModule,
@@ -16,22 +18,26 @@ import {
 import EnrollStudentNavigation from "../../ui/EnrollStudent/EnrollStudentNavigation";
 import TechnologySelector from "../../components/enrollStudent/TechnologySelector/TechnologySelector";
 import TestTable from "../../components/enrollStudent/TestTable/TestTable";
-import axios from "axios";
 import {
   getEnrollmentSubmitData,
   getFilteredEnrollStudentSlice,
   getFormatedExcludes,
 } from "../../util/helper";
-import { useLocation } from "react-router";
+import { useLocation, useNavigation } from "react-router";
+import { testListSlice } from "../../store/root.slice";
+import SubmitModal from "../../ui/EnrollStudent/modal/SubmitModal";
+import Modal from "../../ui/Modal";
 
 function ListOfTests() {
   const dispatch = useDispatch();
+  const navigate = useNavigation();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const edit = queryParams.get("edit") === "true" ? true : false;
   const enrollId = queryParams.get("enrollId") || 0;
   const [selectedTests, setSelectedTests] = useState([]);
   const [testData, setTestData] = useState([]);
+  const [showSubmitModal, setShowSubmitModal] = useState(true);
   const [isNotSelected, setIsNotSelected] = useState({
     technology: false,
     module: false,
@@ -47,11 +53,33 @@ function ListOfTests() {
   );
 
   const { TechnologyId: retrivedTechnologyId, ModuleId: retrivedModuleId } =
-    useSelector((store) => store.testSelectionPageReducer.data?.[0] || {});
+    useSelector((store) => store.testSelectionPageReducer).data?.[0] || {};
 
   const { data: retrivedData } = useSelector(
     (store) => store.testSelectionPageReducer
   );
+
+  const {
+    data: submitResponse,
+    isLoading: isSubmitting,
+    isError: isErrorSubmitting,
+    state: submittionState,
+    isSuccess: isSubmittionSuccess,
+  } = useSelector((store) => store.submitEnrollStudentPageReducer);
+
+  useEffect(() => {
+    if (isSubmittionSuccess && submittionState === "resloved") {
+      navigate("/enroll-student");
+    }
+  }, []);
+
+  // Reset Data if id is 0
+  useEffect(() => {
+    if (enrollId === "0") {
+      dispatch(resetEnrollStudentDetailsSlice());
+      dispatch(testListSlice.actions.resetState());
+    }
+  }, [enrollId]);
 
   useEffect(() => {
     if (edit === true) {
@@ -83,7 +111,7 @@ function ListOfTests() {
   }, [retrivedTechnologyId, retrivedModuleId]);
 
   useEffect(() => {
-    if (retrivedData) {
+    if (retrivedData && enrollId !== "0") {
       const { testIdList, batchIdList, studentIdList } =
         getFilteredEnrollStudentSlice(retrivedData);
 
@@ -158,19 +186,7 @@ function ListOfTests() {
         filteredIncludedStudents,
       });
 
-      const response = await axios.post(
-        "https://www.nareshit.net/EnrollTest",
-        result
-      );
-
-      console.log(
-        "url",
-        "https://www.nareshit.net/EnrollTest",
-        "req",
-        result,
-        "res",
-        response
-      );
+      dispatch(submitEnrollStudentPage({ ...result }));
     } catch (err) {
       console.error(err);
     }
@@ -194,7 +210,11 @@ function ListOfTests() {
           <TestTable testData={testData} onTestSelect={onTestSelect} />
           <div className="w-4/6 mx-auto mt-5">
             <Button variant="contained" onClick={submitHandler}>
-              Submit
+              {isErrorSubmitting
+                ? "Error Submitting retry?"
+                : isSubmitting
+                ? "Loading..."
+                : "Submit"}
             </Button>
           </div>
         </section>
@@ -211,3 +231,20 @@ function ListOfTests() {
 }
 
 export default ListOfTests;
+
+function SubmitModalHandler({
+  submitResponse,
+  setShowSubmitModal,
+  SubmitModal,
+  handler,
+}) {
+  return (
+    <Modal
+      data={submitResponse}
+      setter={setShowSubmitModal}
+      ModalParam={SubmitModal}
+      handler={handler}
+      styles={"w-[34rem]"}
+    />
+  );
+}

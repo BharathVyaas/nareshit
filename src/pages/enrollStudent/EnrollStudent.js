@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import EnrollStudentNavigation from "../../ui/EnrollStudent/EnrollStudentNavigation";
 import { Button } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -10,9 +10,12 @@ function EnrollStudent() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onCreate = () => {
-    dispatch(resetEnrollStudentDetailsSlice());
     navigate("/enroll-student/tests?edit=false&enrollId=0");
   };
+
+  useEffect(() => {
+    dispatch(resetEnrollStudentDetailsSlice());
+  }, []);
 
   return (
     <>

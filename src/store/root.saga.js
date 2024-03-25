@@ -10,6 +10,7 @@ import {
   schedulePageSlice,
   studentListSlice,
   subTopicsListSlice,
+  submitEnrollStudentPageSlice,
   technologiesListSlice,
   technologyPageSlice,
   testListSlice,
@@ -272,6 +273,7 @@ function* batchListSaga(action) {
   }
 }
 
+// using tanstack instad of saga
 function* studentListSaga(action) {
   console.log(action);
   try {
@@ -425,8 +427,8 @@ function* schedulePageSaga(action) {
 }
 
 function* testSelectionPageSaga(action) {
-  yield put(testSelectionPageSlice.actions.fetchStart());
   try {
+    yield put(testSelectionPageSlice.actions.fetchStart());
     const response = yield call(
       axios.post,
       "https://www.nareshit.net/Retrive_Enroll",
@@ -457,6 +459,44 @@ function* testSelectionPageSaga(action) {
     console.error(error);
     yield put(
       testSelectionPageSlice.actions.fetchFailure({
+        error,
+        statusCode: error.response.status,
+        statusText: error.message,
+      })
+    );
+  }
+}
+
+// ACTIONS
+function* submitEnrollStudentPageSaga(action) {
+  try {
+    yield put(submitEnrollStudentPageSlice.actions.fetchStart());
+    const response = yield call(
+      axios.post,
+      "https://www.nareshit.net/EnrollTest",
+      action.payload
+    );
+
+    // Log
+    console.log(
+      "url",
+      "https://www.nareshit.net/EnrollTest",
+      "req",
+      action.payload,
+      "res",
+      response
+    );
+
+    yield put(
+      submitEnrollStudentPageSlice.actions.fetchSuccess({
+        data: response.data,
+        statusCode: response.status,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    yield put(
+      submitEnrollStudentPageSlice.actions.fetchFailure({
         error,
         statusCode: error.response.status,
         statusText: error.message,
@@ -526,6 +566,12 @@ function* adminWatcher() {
     /* Enroll-Student */
   }
   yield takeLatest(types.TESTSELECTION_PAGE, testSelectionPageSaga);
+
+  // ACTIONS
+  {
+    /* Enroll-Student */
+  }
+  yield takeLatest(types.ENROLLSTUDENTS_ACTION, submitEnrollStudentPageSaga);
 
   // UTIL
   yield takeLatest(types.AVAILABLEDBQUESTIONCOUNT, availableDBQuestionCount);

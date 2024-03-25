@@ -50,10 +50,6 @@ function StudentRenderer({ students, testId, batchId }) {
   const rowRenderer = ({ index, key, style }) => {
     const student = students[index];
 
-    console.log(
-      includedStudents?.[testId]?.[batchId]?.includes(student.StudentID) ||
-        false
-    );
     return (
       <div key={key} style={style}>
         <div className="border-b border-gray-300 flex items-center py-2">

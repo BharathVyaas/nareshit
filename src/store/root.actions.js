@@ -23,6 +23,11 @@ export const types = {
   // ENROLL-STUDENTS
   TESTSELECTION_PAGE: "testselectionpage",
 
+  // ACTIONS
+
+  // ENROLL-STUDENTS
+  ENROLLSTUDENTS_ACTION: "enrollstudentsaction",
+
   // UTIL
   /**
    * In Question View Getting DB Count for each selected combination from backend to show DBCount column in Question View Edit Modal table.
@@ -111,6 +116,13 @@ export const fetchTechnologyPageDetails = (payload) => {
 export const retriveTestSelectionPageDetails = (payload) => {
   return {
     type: types.TESTSELECTION_PAGE,
+    payload,
+  };
+};
+
+export const submitEnrollStudentPage = (payload) => {
+  return {
+    type: types.ENROLLSTUDENTS_ACTION,
     payload,
   };
 };

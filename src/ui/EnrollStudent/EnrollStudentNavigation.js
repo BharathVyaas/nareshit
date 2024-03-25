@@ -24,10 +24,11 @@ function EnrollStudentNavigation() {
             <li className="">
               <NavLink
                 to="/enroll-student/tests"
+                onClick={(e) => e.preventDefault()}
                 className={({ isActive }) =>
                   isActive
-                    ? "bg-gray-500 font-medium rounded px-6 py-3 text-white"
-                    : "text-white cursor-default font-medium rounded px-6 py-3"
+                    ? "bg-gray-500 font-medium rounded px-6 py-3 text-white hover:cursor-not-allowed"
+                    : "text-white cursor-default font-medium rounded px-6 py-3 hover:cursor-not-allowed"
                 }
                 end
               >

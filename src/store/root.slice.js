@@ -31,6 +31,12 @@ const schedulePageSlice = getSlice(types.SCHEDULE_PAGE);
 }
 const testSelectionPageSlice = getSlice(types.TESTSELECTION_PAGE);
 
+// ACTIONS
+{
+  /* Enroll-Student */
+}
+const submitEnrollStudentPageSlice = getSlice(types.ENROLLSTUDENTS_ACTION);
+
 // UTIL
 const availableDBQuestionCountSlice = getSlice(types.AVAILABLEDBQUESTIONCOUNT);
 
@@ -52,4 +58,5 @@ export {
   schedulePageSlice,
   testSelectionPageSlice,
 };
+export { submitEnrollStudentPageSlice };
 export { availableDBQuestionCountSlice };

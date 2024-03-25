@@ -27,6 +27,7 @@ export const enrollStudentSlice = createSlice({
       state.testIdList = action.payload;
     },
     setBatchIdList(state, action) {
+      console.log("list", action.payload);
       state.batchIdList = action.payload;
     },
     insertBatchId(state, action) {
@@ -166,7 +167,7 @@ export const enrollStudentSlice = createSlice({
         console.warn("Coudn't finesh process");
       }
     },
-    resetEnrollStudentDetailsSlice(state, action) {
+    resetEnrollStudentDetailsSlice(state) {
       state.technology = null;
       state.module = null;
       state.testIdList = [];

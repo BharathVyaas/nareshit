@@ -34,11 +34,11 @@ function BatchRenderer({ batch, testId }) {
   } = useQuery({
     queryKey: ["student", batch.BatchId],
     queryFn: () => fetchStudent(batch.BatchId),
-    staleTime: Infinity,
-    gcTime: Infinity,
+    staleTime: 50000,
+    gcTime: 50000,
   });
   const isChecked = batchIdList[testId]?.includes(batch.BatchId) || false;
-  console.log(batchIdList[16292]?.includes(batch.BatchId));
+
   useEffect(() => {
     setStudents(studentList || []);
   }, [studentList]);
@@ -54,8 +54,8 @@ function BatchRenderer({ batch, testId }) {
     }
   };
 
-  if (isLoading) return <i>Loading...</i>;
   if (isError) return <i>Something went wrong</i>;
+  if (isLoading) return <i>Loading...</i>;
 
   return (
     <>

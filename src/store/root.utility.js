@@ -60,6 +60,12 @@ function getSlice(name) {
         state.isLoading = false;
         state.state = "rejucted";
       },
+      resetState(state) {
+        Object.assign(state, initialState);
+      },
+      updateState(state, action) {
+        state.state = action.payload;
+      },
     },
   });
 }

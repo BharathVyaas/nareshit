@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Checkbox, Button } from "@mui/material";
+import { Checkbox, Button, Input } from "@mui/material";
 import { Table, Column } from "react-virtualized";
 import "react-virtualized/styles.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,9 +9,11 @@ import {
   removeStudentFromIncludes,
   removeStudentListByBatchId,
 } from "../../../store/slice/enrollStudent.slice";
+import { Search } from "@mui/icons-material";
 
 function StudentRenderer({ students, testId, batchId }) {
   const dispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState("");
   const { includedStudents } = useSelector(
     (store) => store.enrollStudentReducer
   );
@@ -47,8 +49,16 @@ function StudentRenderer({ students, testId, batchId }) {
   const excludeAllHandler = () => {
     dispatch(removeStudentListByBatchId({ testId, batchId }));
   };
+
+  const filteredStudents = students.filter((student) => {
+    const studentName =
+      student?.FirstName || "" + " " + student?.LastName || "";
+
+    return studentName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
   const rowRenderer = ({ index, key, style }) => {
-    const student = students[index];
+    const student = filteredStudents[index];
 
     return (
       <div key={key} style={style}>
@@ -71,6 +81,7 @@ function StudentRenderer({ students, testId, batchId }) {
             {student.FirstName} {student.LastName}
           </div>
           <div style={{ width: 300 }}>{student.Email}</div>
+          <div style={{ width: 150 }}>{student.PhoneNumber}</div>
         </div>
       </div>
     );
@@ -78,23 +89,31 @@ function StudentRenderer({ students, testId, batchId }) {
 
   return (
     <div>
-      <div className="flex">
+      <div className="flex items-center justify-between mb-2">
         <Button onClick={includeAllHandler}>Include All</Button>
         <Button onClick={excludeAllHandler}>Exclude All</Button>
+
+        <Input
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search by name"
+          className="me-8"
+        />
       </div>
       <div>
         <Table
-          width={600}
+          width={750}
           height={400}
           rowHeight={50}
-          rowCount={students.length}
-          rowGetter={({ index }) => students[index]}
+          rowCount={filteredStudents.length}
+          rowGetter={({ index }) => filteredStudents[index]}
           rowRenderer={rowRenderer}
           headerHeight={40}
         >
           <Column label="ID" dataKey="StudentID" width={100} />
-          <Column label="FirstName" dataKey="FirstName" width={200} />
+          <Column label="Student Name" dataKey="FirstName" width={200} />
           <Column label="Email" dataKey="Email" width={300} />
+          <Column label="Contact" dataKey="PhoneNumber" width={150} />
         </Table>
       </div>
     </div>

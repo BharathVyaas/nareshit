@@ -35,7 +35,7 @@ function BatchRenderer({ batch, testId }) {
     queryKey: ["student", batch.BatchId],
     queryFn: () => fetchStudent(batch.BatchId),
     staleTime: 50000,
-    gcTime: 50000,
+    gcTime: 300000,
   });
   const isChecked = batchIdList[testId]?.includes(batch.BatchId) || false;
 

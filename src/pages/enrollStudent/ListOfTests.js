@@ -10,6 +10,7 @@ import {
 import {
   resetEnrollStudentDetailsSlice,
   setBatchIdList,
+  setExcludedArray,
   setIncludedStudents,
   setModule,
   setTechnology,
@@ -48,7 +49,7 @@ function ListOfTests() {
   );
   const { technology: selectedTechnology, module: selectedModule } =
     useSelector((store) => store.enrollStudentReducer);
-  const { includedStudents, testIdList, batchIdList } = useSelector(
+  const { excludedStudents, testIdList, batchIdList } = useSelector(
     (store) => store.enrollStudentReducer
   );
 
@@ -115,7 +116,23 @@ function ListOfTests() {
       const { testIdList, batchIdList, studentIdList } =
         getFilteredEnrollStudentSlice(retrivedData);
 
-      dispatch(setIncludedStudents(studentIdList));
+      dispatch(
+        setExcludedArray(
+          Array.from(
+            new Set(
+              retrivedData.flatMap((_batch) => {
+                const studentIds = _batch.StudentName?.split(",") || [];
+
+                return studentIds.map(
+                  (student) =>
+                    _batch.TestID + ":" + _batch.BatchID + ":" + student
+                );
+              })
+            )
+          )
+        )
+      );
+      // dispatch(setIncludedStudents(studentIdList));
       dispatch(setTestIdList(testIdList));
       dispatch(setBatchIdList(batchIdList));
     }
@@ -178,15 +195,20 @@ function ListOfTests() {
 
   const submitHandler = async () => {
     try {
-      let filteredIncludedStudents = getFormatedExcludes(includedStudents);
+      const filteredExcludedStudents = getFormatedExcludes(
+        excludedStudents,
+        testIdList,
+        batchIdList
+      );
+      console.log(filteredExcludedStudents);
       let result = getEnrollmentSubmitData({
         enrollId,
         selectedTechnology,
         selectedModule,
-        filteredIncludedStudents,
+        filteredIncludedStudents: filteredExcludedStudents,
       });
-
-      dispatch(submitEnrollStudentPage({ ...result }));
+      console.log(result);
+      //dispatch(submitEnrollStudentPage({ ...result }));
     } catch (err) {
       console.error(err);
     }

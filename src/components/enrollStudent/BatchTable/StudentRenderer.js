@@ -1,53 +1,38 @@
 import React, { useState } from "react";
-import { Checkbox, Button, Input } from "@mui/material";
+import { Checkbox, Input } from "@mui/material";
 import { Table, Column } from "react-virtualized";
 import "react-virtualized/styles.css";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  includeStudentListByBatchId,
-  insertIncludedStudent,
-  removeStudentFromIncludes,
-  removeStudentListByBatchId,
-} from "../../../store/slice/enrollStudent.slice";
-import { Search } from "@mui/icons-material";
+import { setExcludedArray } from "../../../store/slice/enrollStudent.slice";
 
 function StudentRenderer({ students, testId, batchId }) {
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
-  const { includedStudents } = useSelector(
+  const { excludedStudents } = useSelector(
     (store) => store.enrollStudentReducer
   );
 
-  const onStudentSelection = (e, student) => {
+  const onStudentSelection = (e, student, hashedStudentId) => {
     const flag = e.target.checked;
-
     if (flag) {
-      dispatch(
-        insertIncludedStudent({ testId, batchId, studentId: student.StudentID })
-      );
+      if (
+        typeof excludedStudents === "object" &&
+        excludedStudents.includes(hashedStudentId)
+      ) {
+        const index = excludedStudents.indexOf(hashedStudentId);
+
+        if (index < 0)
+          console.warn("Trying to remove student that doesn't exist.");
+        else {
+          const updatedExcludes = [...excludedStudents];
+          updatedExcludes.splice(index, 1);
+          console.log(updatedExcludes);
+          dispatch(setExcludedArray(updatedExcludes));
+        }
+      }
     } else {
-      dispatch(
-        removeStudentFromIncludes({
-          testId,
-          batchId,
-          studentId: student.StudentID,
-        })
-      );
+      dispatch(setExcludedArray([...excludedStudents, hashedStudentId]));
     }
-  };
-
-  const includeAllHandler = () => {
-    dispatch(
-      includeStudentListByBatchId({
-        testId,
-        batchId,
-        studentList: students.map((student) => student.StudentID),
-      })
-    );
-  };
-
-  const excludeAllHandler = () => {
-    dispatch(removeStudentListByBatchId({ testId, batchId }));
   };
 
   const filteredStudents = students.filter((student) => {
@@ -59,6 +44,7 @@ function StudentRenderer({ students, testId, batchId }) {
 
   const rowRenderer = ({ index, key, style }) => {
     const student = filteredStudents[index];
+    const hashedStudentId = testId + ":" + batchId + ":" + student.StudentID;
 
     return (
       <div key={key} style={style}>
@@ -67,12 +53,8 @@ function StudentRenderer({ students, testId, batchId }) {
             <Checkbox
               size=""
               color="default"
-              checked={
-                includedStudents?.[testId]?.[batchId]?.includes(
-                  student.StudentID
-                ) || false
-              }
-              onClick={(e) => onStudentSelection(e, student)}
+              checked={!excludedStudents.includes(hashedStudentId)}
+              onClick={(e) => onStudentSelection(e, student, hashedStudentId)}
             />
 
             {student.StudentID}
@@ -89,10 +71,7 @@ function StudentRenderer({ students, testId, batchId }) {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-2">
-        <Button onClick={includeAllHandler}>Include All</Button>
-        <Button onClick={excludeAllHandler}>Exclude All</Button>
-
+      <div className="flex items-center justify-end mb-7 w-[750px]">
         <Input
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

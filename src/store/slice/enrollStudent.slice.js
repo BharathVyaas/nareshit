@@ -9,6 +9,10 @@ const initialState = {
   testIdList: [],
   // Selected BatchID List {testId: [...batchId]}
   batchIdList: {},
+  // Stores Excluded students [testId:batchId:stdentdId]
+  excludedStudents: [],
+
+  /** IncludedStudents will be removed use as less as possible */
   // Included students from all Batches includedStudents: {batchId: [...(included students)]}
   includedStudents: {},
 };
@@ -76,10 +80,21 @@ export const enrollStudentSlice = createSlice({
         }
       }
     },
+    setExcludedArray(state, action) {
+      state.excludedStudents = action.payload;
+    },
     setIncludedStudents(state, action) {
+      console.warn(
+        "The 'includedStudents' field is deprecated and will be removed in future versions."
+      );
+
       state.includedStudents = action.payload;
     },
     insertIncludedStudent(state, action) {
+      console.warn(
+        "The 'includedStudents' field is deprecated and will be removed in future versions."
+      );
+
       const { testId, batchId, studentId } = action.payload;
 
       if (!testId || !batchId || !studentId) {
@@ -104,6 +119,10 @@ export const enrollStudentSlice = createSlice({
       }
     },
     includeStudentListByBatchId(state, action) {
+      console.warn(
+        "The 'includedStudents' field is deprecated and will be removed in future versions."
+      );
+
       const { testId, batchId, studentList } = action.payload;
 
       if (!testId || !batchId || !studentList) {
@@ -123,6 +142,10 @@ export const enrollStudentSlice = createSlice({
       state.includedStudents[testId][batchId] = studentList;
     },
     removeStudentFromIncludes(state, action) {
+      console.warn(
+        "The 'includedStudents' field is deprecated and will be removed in future versions."
+      );
+
       const { testId, batchId, studentId } = action.payload;
       if (!testId || !batchId || !studentId) {
         throw new Error("Must pass valid data to removeStudentFromExcludes");
@@ -130,29 +153,39 @@ export const enrollStudentSlice = createSlice({
 
       if (!state.includedStudents[testId]) state.includedStudents[testId] = {};
 
-      if (!state.includedStudents[testId][batchId].includes(studentId))
-        console.warn("student doesn't exists in the batch");
-
-      if (!Array.isArray(state.includedStudents[testId][batchId])) {
-        console.error("removeStudentFromExcludes:action cannot be performed");
+      if (!state.includedStudents[testId][batchId]) {
+        console.warn(
+          "Trying to remove student from batchId that doesn't exists"
+        );
       } else {
-        const index =
-          state.includedStudents[testId][batchId].indexOf(studentId);
+        if (!state.includedStudents[testId][batchId].includes(studentId))
+          console.warn("student doesn't exists in the batch");
 
-        state.includedStudents[testId][batchId].splice(index, 1);
+        if (!Array.isArray(state.includedStudents[testId][batchId])) {
+          console.error("removeStudentFromExcludes:action cannot be performed");
+        } else {
+          const index =
+            state.includedStudents[testId][batchId].indexOf(studentId);
 
-        // if array is empty remove testId and batchId properties.
-        if (state.includedStudents[testId][batchId].length === 0) {
-          let flag = delete state.includedStudents[testId][batchId];
-          flag = flag && delete state.includedStudents[testId];
+          state.includedStudents[testId][batchId].splice(index, 1);
 
-          if (!flag) {
-            console.warn("Deleting testId and batchId failed");
+          // if array is empty remove testId and batchId properties.
+          if (state.includedStudents[testId][batchId].length === 0) {
+            let flag = delete state.includedStudents[testId][batchId];
+            flag = flag && delete state.includedStudents[testId];
+
+            if (!flag) {
+              console.warn("Deleting testId and batchId failed");
+            }
           }
         }
       }
     },
     removeStudentListByBatchId(state, action) {
+      console.warn(
+        "The 'includedStudents' field is deprecated and will be removed in future versions."
+      );
+
       const { testId, batchId } = action.payload;
 
       if (!testId || !batchId) {
@@ -173,6 +206,7 @@ export const enrollStudentSlice = createSlice({
       state.testIdList = [];
       state.batchIdList = {};
       state.includedStudents = {};
+      state.excludedStudents = [];
     },
   },
 });
@@ -187,6 +221,7 @@ export const {
   includeStudentListByBatchId,
   insertBatchId,
   removeBatchId,
+  setExcludedArray,
   removeStudentFromIncludes,
   removeStudentListByBatchId,
   resetEnrollStudentDetailsSlice,

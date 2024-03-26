@@ -1,5 +1,21 @@
-export function getFormatedExcludes(excludedStudents) {
-  let obj = { ...excludedStudents };
+export function getFormatedExcludes(excludedStudents, testIdList, batchIdList) {
+  const excludedStudentsObj = {};
+  console.log(excludedStudents, testIdList, batchIdList);
+  excludedStudents.forEach((combo) => {
+    const comboArr = combo.split(":");
+    const testId = comboArr[0];
+    const batchId = comboArr[1];
+    const studentId = comboArr[2];
+
+    if (!excludedStudentsObj[testId]) excludedStudentsObj[testId] = {};
+
+    if (!excludedStudentsObj[testId][batchId])
+      excludedStudentsObj[testId][batchId] = [];
+
+    excludedStudentsObj[testId][batchId].push(studentId);
+  });
+
+  let obj = { ...excludedStudentsObj };
   let data = [];
 
   const tests = Object.keys(obj);
@@ -14,12 +30,12 @@ export function getFormatedExcludes(excludedStudents) {
     const excludedStudents = values[0].join(",");
 
     data.push({
-      TestId: testId,
-      BatchId: batchId,
+      TestId: Number(testId),
+      BatchId: Number(batchId),
       StudentId: excludedStudents,
     });
   });
-
+  console.log(data);
   return data;
 }
 
@@ -70,7 +86,7 @@ export function getFilteredEnrollStudentSlice(retrivedData) {
       result.studentIdList[TestID][BatchID] = [];
     }
     // Split StudentName and add individual student IDs to the list
-    const studentIds = StudentName.split(",");
+    const studentIds = StudentName?.split(",") || [];
     studentIds.forEach((studentId) => {
       if (!result.studentIdList[TestID][BatchID].includes(Number(studentId))) {
         result.studentIdList[TestID][BatchID].push(Number(studentId));

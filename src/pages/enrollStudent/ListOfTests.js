@@ -21,6 +21,7 @@ import TechnologySelector from "../../components/enrollStudent/TechnologySelecto
 import TestTable from "../../components/enrollStudent/TestTable/TestTable";
 import {
   getEnrollmentSubmitData,
+  getEnrollmentSubmitDataFromExcludes,
   getFilteredEnrollStudentSlice,
   getFormatedExcludes,
 } from "../../util/helper";
@@ -195,20 +196,16 @@ function ListOfTests() {
 
   const submitHandler = async () => {
     try {
-      const filteredExcludedStudents = getFormatedExcludes(
-        excludedStudents,
-        testIdList,
-        batchIdList
-      );
-      console.log(filteredExcludedStudents);
-      let result = getEnrollmentSubmitData({
+      let result = getEnrollmentSubmitDataFromExcludes({
         enrollId,
         selectedTechnology,
         selectedModule,
-        filteredIncludedStudents: filteredExcludedStudents,
+        testIdList,
+        batchIdList,
+        excludedStudents,
       });
-      console.log(result);
-      //dispatch(submitEnrollStudentPage({ ...result }));
+
+      dispatch(submitEnrollStudentPage({ ...result }));
     } catch (err) {
       console.error(err);
     }

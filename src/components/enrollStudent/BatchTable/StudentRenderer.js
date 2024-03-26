@@ -12,7 +12,7 @@ function StudentRenderer({ students, testId, batchId }) {
     (store) => store.enrollStudentReducer
   );
 
-  const onStudentSelection = (e, student, hashedStudentId) => {
+  const onStudentSelection = (e, hashedStudentId) => {
     const flag = e.target.checked;
     if (flag) {
       if (
@@ -35,15 +35,8 @@ function StudentRenderer({ students, testId, batchId }) {
     }
   };
 
-  const filteredStudents = students.filter((student) => {
-    const studentName =
-      student?.FirstName || "" + " " + student?.LastName || "";
-
-    return studentName.toLowerCase().includes(searchTerm.toLowerCase());
-  });
-
   const rowRenderer = ({ index, key, style }) => {
-    const student = filteredStudents[index];
+    const student = students[index];
     const hashedStudentId = testId + ":" + batchId + ":" + student.StudentID;
 
     return (
@@ -54,7 +47,7 @@ function StudentRenderer({ students, testId, batchId }) {
               size=""
               color="default"
               checked={!excludedStudents.includes(hashedStudentId)}
-              onClick={(e) => onStudentSelection(e, student, hashedStudentId)}
+              onClick={(e) => onStudentSelection(e, hashedStudentId)}
             />
 
             {student.StudentID}
@@ -71,21 +64,13 @@ function StudentRenderer({ students, testId, batchId }) {
 
   return (
     <div>
-      <div className="flex items-center justify-end mb-7 w-[750px]">
-        <Input
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search by name"
-          className="me-8"
-        />
-      </div>
       <div>
         <Table
           width={750}
           height={400}
           rowHeight={50}
-          rowCount={filteredStudents.length}
-          rowGetter={({ index }) => filteredStudents[index]}
+          rowCount={students.length}
+          rowGetter={({ index }) => students[index]}
           rowRenderer={rowRenderer}
           headerHeight={40}
         >

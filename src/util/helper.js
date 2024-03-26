@@ -96,3 +96,49 @@ export function getFilteredEnrollStudentSlice(retrivedData) {
 
   return result;
 }
+
+export function getEnrollmentSubmitDataFromExcludes({
+  enrollId,
+  selectedTechnology,
+  selectedModule,
+  testIdList,
+  batchIdList,
+  excludedStudents,
+}) {
+  let result = [];
+  if (testIdList)
+    testIdList.map((test) => {
+      if (batchIdList[test] && batchIdList[test].length > 0) {
+        const testId = test;
+        batchIdList[test].forEach((batch) => {
+          const batchId = batch;
+          const hashedStudentId = testId + ":" + batchId + ":";
+          let currentExcludes = [];
+
+          excludedStudents.map((exclude) => {
+            const studentId = exclude.split(":")[2];
+            const student = hashedStudentId + studentId;
+            if (excludedStudents.includes(student))
+              if (!currentExcludes.includes(studentId))
+                currentExcludes.push(studentId);
+          });
+
+          currentExcludes = currentExcludes.join(",") || null;
+          result.push({
+            TestId: testId,
+            BatchId: batchId,
+            StudentId: currentExcludes,
+          });
+        });
+      }
+    });
+
+  const resultObj = {
+    TechnologyId: selectedTechnology,
+    ModuleId: selectedModule,
+    EnrollmentId: enrollId,
+    data: result,
+  };
+
+  return resultObj;
+}

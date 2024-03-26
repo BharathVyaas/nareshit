@@ -134,6 +134,7 @@ function ListOfTests() {
         )
       );
       // dispatch(setIncludedStudents(studentIdList));
+      setSelectedTests(testIdList);
       dispatch(setTestIdList(testIdList));
       dispatch(setBatchIdList(batchIdList));
     }

@@ -38,7 +38,7 @@ function* technologySaga() {
     console.error(error);
     yield put(
       technologiesListSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -64,7 +64,7 @@ function* moduleSaga(action) {
     console.error(error);
     yield put(
       modulesListSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -90,7 +90,7 @@ function* topicSaga(action) {
     console.error(error);
     yield put(
       topicsListSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -116,7 +116,7 @@ function* subTopicSaga(action) {
     console.error(error);
     yield put(
       subTopicsListSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -142,7 +142,7 @@ function* questionSaga(action) {
     console.error(error);
     yield put(
       questionListSlice.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -179,7 +179,7 @@ function* enrollListSage(action) {
     console.error(error);
     yield put(
       enrollListSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -222,7 +222,7 @@ function* testListSaga(action) {
     console.error(error);
     yield put(
       testListSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -265,7 +265,7 @@ function* batchListSaga(action) {
     console.error(error);
     yield put(
       batchListSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -308,7 +308,7 @@ function* studentListSaga(action) {
     console.error(error);
     yield put(
       studentListSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -336,7 +336,7 @@ function* listOfAssessmentPageSaga() {
     console.error(error);
     yield put(
       listOfAssessmentPageSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -364,7 +364,7 @@ function* technologiesPageSaga(action) {
     console.error(error);
     yield put(
       technologyPageSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -391,7 +391,7 @@ function* assessmentPageSaga(action) {
     console.error(error);
     yield put(
       assessmentPageSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -418,7 +418,7 @@ function* schedulePageSaga(action) {
     console.error(error);
     yield put(
       schedulePageSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -459,7 +459,7 @@ function* testSelectionPageSaga(action) {
     console.error(error);
     yield put(
       testSelectionPageSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -497,7 +497,7 @@ function* submitEnrollStudentPageSaga(action) {
     console.error(error);
     yield put(
       submitEnrollStudentPageSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })
@@ -526,7 +526,7 @@ function* availableDBQuestionCount(action) {
     console.error(error);
     yield put(
       availableDBQuestionCountSlice.actions.fetchFailure({
-        error,
+        error: error,
         statusCode: error.response.status,
         statusText: error.message,
       })

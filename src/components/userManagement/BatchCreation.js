@@ -1,8 +1,4 @@
-import React, { useEffect } from "react";
-
 function BatchCreation() {
-  useEffect(() => {}, []);
-
   return (
     <>
       <h2>Batch Creation</h2>

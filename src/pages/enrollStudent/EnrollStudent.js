@@ -36,9 +36,11 @@ function EnrollStudent() {
         </main>
 
         <footer className="bg-gray-100 p-6">
-          <div className="max-w-full overflow-hidden">
-            © 2023 Naresh i Technologies | Software Training - Online | All
-            Rights Reserved.
+          <div className="max-w-full grid place-content-center overflow-hidden">
+            <span className="">
+              © 2023 Naresh i Technologies | Software Training - Online | All
+              Rights Reserved.
+            </span>
           </div>
         </footer>
       </div>

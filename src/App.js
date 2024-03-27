@@ -34,6 +34,8 @@ import UserManagement from "./pages/userManagement/UserManagement";
 import BatchTablePage from "./pages/enrollStudent/BatchTablePage";
 import StudentSelectionPage from "./pages/enrollStudent/StudentSelectionPage";
 import ListOfTests from "./pages/enrollStudent/ListOfTests";
+import ListOfBatches from "./components/userManagement/ListOfBatches";
+import BatchDetails from "./components/userManagement/BatchDetails/BatchDetails";
 
 /**
  *
@@ -110,8 +112,12 @@ function App() {
       ],
     },
     {
-      path: "user-management",
+      path: "/user-management",
       element: <UserManagement />,
+      children: [
+        { index: true, element: <ListOfBatches /> },
+        { path: "batch-details/:batchId", element: <BatchDetails /> },
+      ],
     },
     {
       path: "/enroll-student",

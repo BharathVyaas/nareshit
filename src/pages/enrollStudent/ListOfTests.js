@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@mui/material";
 import {
-  fetchBatchList,
+  fetchBatchDetailsList,
   fetchTestList,
   retriveTestSelectionPageDetails,
   submitEnrollStudentPage,
@@ -25,19 +25,20 @@ import {
   getFilteredEnrollStudentSlice,
   getFormatedExcludes,
 } from "../../util/helper";
-import { useLocation, useNavigation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { testListSlice } from "../../store/root.slice";
 import SubmitModal from "../../ui/EnrollStudent/modal/SubmitModal";
 import Modal from "../../ui/Modal";
 
 function ListOfTests() {
   const dispatch = useDispatch();
-  const navigate = useNavigation();
+  const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const edit = queryParams.get("edit") === "true" ? true : false;
   const enrollId = queryParams.get("enrollId") || 0;
   const [selectedTests, setSelectedTests] = useState([]);
+  const [onSubmitButtonClick, setOnSubmitButtonClick] = useState(false);
   const [testData, setTestData] = useState([]);
   const [showSubmitModal, setShowSubmitModal] = useState(true);
   const [isNotSelected, setIsNotSelected] = useState({
@@ -69,12 +70,6 @@ function ListOfTests() {
     isSuccess: isSubmittionSuccess,
   } = useSelector((store) => store.submitEnrollStudentPageReducer);
 
-  useEffect(() => {
-    if (isSubmittionSuccess && submittionState === "resloved") {
-      navigate("/enroll-student");
-    }
-  }, []);
-
   // Reset Data if id is 0
   useEffect(() => {
     if (enrollId === "0") {
@@ -103,7 +98,7 @@ function ListOfTests() {
           })
         );
         dispatch(
-          fetchBatchList({
+          fetchBatchDetailsList({
             technologyId: retrivedTechnologyId,
             moduleId: retrivedModuleId,
           })
@@ -177,7 +172,7 @@ function ListOfTests() {
       );
 
       dispatch(
-        fetchBatchList({
+        fetchBatchDetailsList({
           technologyId: selectedTechnology,
           moduleId: selectedModule,
         })
@@ -195,6 +190,36 @@ function ListOfTests() {
     dispatch(setTestIdList(selectedTests));
   }, [selectedTests]);
 
+  useEffect(() => {
+    console.log(
+      submitResponse,
+      isSubmitting,
+      isErrorSubmitting,
+      submittionState,
+      isSubmittionSuccess
+    );
+
+    if (
+      submitResponse &&
+      submittionState === "resolved" &&
+      !isSubmitting &&
+      onSubmitButtonClick
+    ) {
+      window.alert(
+        `Test ${enrollId === "0" ? "created" : "updated"} successfully`
+      );
+      navigate("/enroll-student");
+    }
+  }, [
+    submitResponse,
+    isSubmitting,
+    isErrorSubmitting,
+    submittionState,
+    isSubmittionSuccess,
+    onSubmitButtonClick,
+    navigate,
+  ]);
+
   const submitHandler = async () => {
     try {
       let result = getEnrollmentSubmitDataFromExcludes({
@@ -207,6 +232,7 @@ function ListOfTests() {
       });
 
       dispatch(submitEnrollStudentPage({ ...result }));
+      setOnSubmitButtonClick(true);
     } catch (err) {
       console.error(err);
     }
@@ -229,7 +255,11 @@ function ListOfTests() {
         <section className="mt-10 flex-grow">
           <TestTable testData={testData} onTestSelect={onTestSelect} />
           <div className="w-4/6 mx-auto mt-5">
-            <Button variant="contained" onClick={submitHandler}>
+            <Button
+              variant="contained"
+              disabled={Object.keys(batchIdList).length <= 0}
+              onClick={submitHandler}
+            >
               {isErrorSubmitting
                 ? "Error Submitting retry?"
                 : isSubmitting
@@ -241,9 +271,11 @@ function ListOfTests() {
       </main>
 
       <footer className="bg-gray-100 p-6">
-        <div className="max-w-full overflow-hidden">
-          © 2023 Naresh i Technologies | Software Training - Online | All Rights
-          Reserved.
+        <div className="max-w-full grid place-content-center overflow-hidden">
+          <span className="">
+            © 2023 Naresh i Technologies | Software Training - Online | All
+            Rights Reserved.
+          </span>
         </div>
       </footer>
     </div>

@@ -2,12 +2,16 @@ import { put, call, takeLatest } from "redux-saga/effects";
 import {
   assessmentPageSlice,
   availableDBQuestionCountSlice,
+  batchDetailsListSlice,
   batchListSlice,
   enrollListSlice,
+  facultyListSlice,
   listOfAssessmentPageSlice,
+  mentorListSlice,
   modulesListSlice,
   questionListSlice,
   schedulePageSlice,
+  studentListByTechModuleSlice,
   studentListSlice,
   subTopicsListSlice,
   submitEnrollStudentPageSlice,
@@ -230,27 +234,21 @@ function* testListSaga(action) {
   }
 }
 
-function* batchListSaga(action) {
+function* batchListSaga(_) {
   try {
     yield put(batchListSlice.actions.fetchStart());
     const response = yield call(
       axios.post,
-      "https://www.nareshit.net/Listof_BatchDetails",
-      {
-        TechnologyId: action.payload.technologyId,
-        ModuleId: action.payload.moduleId,
-      }
+      "https://www.nareshit.net/Fetch_Batches",
+      {}
     );
 
     // Log
     console.log(
       "url",
-      "https://www.nareshit.net/Listof_BatchDetails",
+      "https://www.nareshit.net/Fetch_Batches",
       "req",
-      {
-        TechnologyId: action.payload.technologyId,
-        ModuleId: action.payload.moduleId,
-      },
+      {},
       "res",
       response
     );
@@ -273,16 +271,59 @@ function* batchListSaga(action) {
   }
 }
 
+function* batchDetailsListSaga(action) {
+  try {
+    yield put(batchDetailsListSlice.actions.fetchStart());
+    const response = yield call(
+      axios.post,
+      "https://www.nareshit.net/Listof_BatchDetails",
+      {
+        TechnologyId: action.payload.technologyId,
+        ModuleId: action.payload.moduleId,
+      }
+    );
+
+    // Log
+    console.log(
+      "url",
+      "https://www.nareshit.net/Listof_BatchDetails",
+      "req",
+      {
+        TechnologyId: action.payload.technologyId,
+        ModuleId: action.payload.moduleId,
+      },
+      "res",
+      response
+    );
+
+    yield put(
+      batchDetailsListSlice.actions.fetchSuccess({
+        data: response.data.dbresult,
+        statusCode: response.status,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    yield put(
+      batchDetailsListSlice.actions.fetchFailure({
+        error: error,
+        statusCode: error.response.status,
+        statusText: error.message,
+      })
+    );
+  }
+}
+
 // using tanstack instad of saga
 function* studentListSaga(action) {
-  console.log(action);
   try {
     yield put(studentListSlice.actions.fetchStart());
     const response = yield call(
       axios.post,
       "https://www.nareshit.net/GetStudentNameByBatchId",
       {
-        BatchId: action.payload,
+        TechnologyId: action.payload.technologyId,
+        ModuleId: action.payload.moduleId,
       }
     );
 
@@ -292,7 +333,8 @@ function* studentListSaga(action) {
       "https://www.nareshit.net/GetStudentNameByBatchId",
       "req",
       {
-        BatchId: action.payload,
+        TechnologyId: action.payload.technologyId,
+        ModuleId: action.payload.moduleId,
       },
       "res",
       response
@@ -308,6 +350,114 @@ function* studentListSaga(action) {
     console.error(error);
     yield put(
       studentListSlice.actions.fetchFailure({
+        error: error,
+        statusCode: error.response.status,
+        statusText: error.message,
+      })
+    );
+  }
+}
+
+function* facultyListSaga(_) {
+  try {
+    yield put(facultyListSlice.actions.fetchStart());
+    const response = yield call(
+      axios.post,
+      "https://www.nareshit.net/Get_Facaulty"
+    );
+
+    // Log
+    console.log(
+      "url",
+      "https://www.nareshit.net/Get_Facaulty",
+      "req",
+      {},
+      "res",
+      response
+    );
+
+    yield put(
+      facultyListSlice.actions.fetchSuccess({
+        data: response.data.dbresult,
+        statusCode: response.status,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    yield put(
+      facultyListSlice.actions.fetchFailure({
+        error: error,
+        statusCode: error.response.status,
+        statusText: error.message,
+      })
+    );
+  }
+}
+
+function* mentoreListSaga(_) {
+  try {
+    yield put(mentorListSlice.actions.fetchStart());
+    const response = yield call(
+      axios.post,
+      "https://www.nareshit.net/Get_Mentors"
+    );
+
+    // Log
+    console.log(
+      "url",
+      "https://www.nareshit.net/Get_Mentors",
+      "req",
+      {},
+      "res",
+      response
+    );
+
+    yield put(
+      mentorListSlice.actions.fetchSuccess({
+        data: response.data.dbresult,
+        statusCode: response.status,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    yield put(
+      mentorListSlice.actions.fetchFailure({
+        error: error,
+        statusCode: error.response.status,
+        statusText: error.message,
+      })
+    );
+  }
+}
+
+function* studentListByTechModuleSaga(action) {
+  try {
+    yield put(studentListByTechModuleSlice.actions.fetchStart());
+    const response = yield call(
+      axios.post,
+      "https://www.nareshit.net/Fetch_Students"
+    );
+
+    // Log
+    console.log(
+      "url",
+      "https://www.nareshit.net/Fetch_Students",
+      "req",
+      {},
+      "res",
+      response
+    );
+
+    yield put(
+      studentListByTechModuleSlice.actions.fetchSuccess({
+        data: response.data.dbresult,
+        statusCode: response.status,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    yield put(
+      studentListByTechModuleSlice.actions.fetchFailure({
         error: error,
         statusCode: error.response.status,
         statusText: error.message,
@@ -505,6 +655,43 @@ function* submitEnrollStudentPageSaga(action) {
   }
 }
 
+function* submitBatchCreationActionSaga(action) {
+  try {
+    yield put(submitEnrollStudentPageSlice.actions.fetchStart());
+    const response = yield call(
+      axios.post,
+      "https://www.nareshit.net/EnrollTest",
+      action.payload
+    );
+
+    // Log
+    console.log(
+      "url",
+      "https://www.nareshit.net/EnrollTest",
+      "req",
+      action.payload,
+      "res",
+      response
+    );
+
+    yield put(
+      submitEnrollStudentPageSlice.actions.fetchSuccess({
+        data: response.data,
+        statusCode: response.status,
+      })
+    );
+  } catch (error) {
+    console.error(error);
+    yield put(
+      submitEnrollStudentPageSlice.actions.fetchFailure({
+        error: error,
+        statusCode: error.response.status,
+        statusText: error.message,
+      })
+    );
+  }
+}
+
 // UTIL
 
 function* availableDBQuestionCount(action) {
@@ -550,9 +737,20 @@ function* adminWatcher() {
     /* Enroll-Student */
   }
   yield takeLatest(types.ENROLL_LIST, enrollListSage);
+  yield takeLatest(types.BATCHDETAILS_LIST, batchDetailsListSaga);
   yield takeLatest(types.TEST_LIST, testListSaga);
-  yield takeLatest(types.BATCH_LIST, batchListSaga);
   yield takeLatest(types.STUDENT_LIST, studentListSaga);
+  {
+    /* User-Management */
+  }
+
+  yield takeLatest(types.BATCH_LIST, batchListSaga);
+  yield takeLatest(types.FACULTY_LIST, facultyListSaga);
+  yield takeLatest(types.MENTORE_LIST, mentoreListSaga);
+  yield takeLatest(
+    types.STUDENT_LIST_BY_TECH_MODULE,
+    studentListByTechModuleSaga
+  );
 
   // PAGES
   {
@@ -572,6 +770,10 @@ function* adminWatcher() {
     /* Enroll-Student */
   }
   yield takeLatest(types.ENROLLSTUDENTS_ACTION, submitEnrollStudentPageSaga);
+  {
+    /* User-Management */
+  }
+  yield takeLatest(types.BATCHCREATION_ACTION, submitBatchCreationActionSaga);
 
   // UTIL
   yield takeLatest(types.AVAILABLEDBQUESTIONCOUNT, availableDBQuestionCount);

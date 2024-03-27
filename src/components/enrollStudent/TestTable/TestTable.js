@@ -20,7 +20,7 @@ function TestTable({ testData, onTestSelect }) {
 
 function Thead() {
   return (
-    <thead className="bg-gray-100">
+    <thead className="bg-gray-100 sticky top-0 z-10">
       <tr className="border-b border-gray-300">
         <th className="py-3 px-4 text-left w-1/4">Test ID</th>
         <th className="py-3 px-4 text-left w-1/4">Test Name</th>

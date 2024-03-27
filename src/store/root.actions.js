@@ -9,9 +9,14 @@ export const types = {
   QUESTION_LIST: "questionlist",
   // Enroll-Student
   TEST_LIST: "listoftests",
-  BATCH_LIST: "listofbatches",
+  BATCHDETAILS_LIST: "listofbatchdetails",
   STUDENT_LIST: "listofstudent",
   ENROLL_LIST: "enrolllist",
+  // User-management
+  BATCH_LIST: "listofbatches",
+  FACULTY_LIST: "listoffaculty",
+  MENTORE_LIST: "listofmentore",
+  STUDENT_LIST_BY_TECH_MODULE: "studentlistByTechModule",
 
   // PAGES
 
@@ -22,11 +27,15 @@ export const types = {
   SCHEDULE_PAGE: "schedulepage",
   // ENROLL-STUDENTS
   TESTSELECTION_PAGE: "testselectionpage",
+  // USER-MANAGEMENT
+  USERMANAGEMENT_PAGE: "userselectionpage",
 
   // ACTIONS
 
   // ENROLL-STUDENTS
   ENROLLSTUDENTS_ACTION: "enrollstudentsaction",
+  // User-management
+  BATCHCREATION_ACTION: "usermanagementaction",
 
   // UTIL
   /**
@@ -76,9 +85,9 @@ export const fetchTestList = (payload) => {
   };
 };
 
-export const fetchBatchList = (payload) => {
+export const fetchBatchDetailsList = (payload) => {
   return {
-    type: types.BATCH_LIST,
+    type: types.BATCHDETAILS_LIST,
     payload,
   };
 };
@@ -96,6 +105,34 @@ export const fetchEnrollList = (payload) => {
     payload,
   };
 };
+
+export function fetchBatchList(payload) {
+  return {
+    type: types.BATCH_LIST,
+    payload,
+  };
+}
+
+export function fetchStudentListbyTechModule(payload) {
+  return {
+    type: types.STUDENT_LIST_BY_TECH_MODULE,
+    payload,
+  };
+}
+
+export function fetchFacultyList(payload) {
+  return {
+    type: types.FACULTY_LIST,
+    payload,
+  };
+}
+
+export function fetchMentorList(payload) {
+  return {
+    type: types.MENTORE_LIST,
+    payload,
+  };
+}
 
 //  PAGES
 
@@ -120,9 +157,18 @@ export const retriveTestSelectionPageDetails = (payload) => {
   };
 };
 
+//  ACTIONS
+
 export const submitEnrollStudentPage = (payload) => {
   return {
     type: types.ENROLLSTUDENTS_ACTION,
+    payload,
+  };
+};
+
+export const submitBatchCreationPage = (payload) => {
+  return {
+    type: types.BATCHCREATION_ACTION,
     payload,
   };
 };

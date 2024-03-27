@@ -19,8 +19,8 @@ function EnrollListRendererComponent({ enrollList, fetchEnrollListAction }) {
   return (
     <div>
       <div className="max-h-[60vh] overflow-y-auto w-4/6 mx-auto border-collapse border border-gray-300">
-        <table className="w-full">
-          <thead className="bg-gray-100">
+        <table className="w-full relative">
+          <thead className="bg-gray-100 sticky top-0 z-10">
             <tr className="border-b border-gray-300">
               <th className="py-3 px-4 text-left">EnrollmentId</th>
               <th className="py-3 px-4 text-left">No_Of_Batches</th>

@@ -9,7 +9,7 @@ function BatchDataRenderer({ testId }) {
     data: batchList,
     isLoading,
     isError,
-  } = useSelector((store) => store.batchListReducer);
+  } = useSelector((store) => store.batchDetailsListReducer);
 
   useEffect(() => {
     setBatchData(batchList || []);

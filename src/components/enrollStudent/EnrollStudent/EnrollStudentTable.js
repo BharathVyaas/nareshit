@@ -30,7 +30,7 @@ function EnrollStudentTable({ testData }) {
     const test = batchList[index];
     const isRowExpanded = index === expandedRowIndex;
     console.log(isRowExpanded);
-    // Adjust row height based on whether it's expanded or not
+
     const rowHeight = isRowExpanded ? 100 : 50;
 
     return (
